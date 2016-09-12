@@ -110,17 +110,22 @@ class CSVParser(object):
             return None
 
         if schema['type'] == 'string':
-            return self.parse_string(value, nulls)
+            return self.parse_string(value)
         elif schema['type'] == 'integer':
-            return self.parse_integer(value, nulls)
+            return self.parse_integer(value)
+        elif schema['type'] == 'float':
+            return self.parse_float(value)
         else:
             raise ParseError('unknown property type: \'%s\'' % schema['type'])
 
-    def parse_string(self, value, nulls=None):
+    def parse_string(self, value):
         return value.strip()
 
-    def parse_integer(self, value, nulls=None):
+    def parse_integer(self, value):
         return int(value.strip())
+
+    def parse_float(self, value):
+        return float(value.strip())
 
 
 class Parser(object):
