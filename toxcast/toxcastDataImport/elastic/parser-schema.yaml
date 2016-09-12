@@ -1,0 +1,63 @@
+assay:
+  # File: Assay_Summary_151020.csv
+  startAtRow: 1
+  properties:
+    aid:
+      col: 0
+      type: "integer"
+    acid:
+      col: 1
+      type: "integer"
+    aeid:
+      col: 2
+      type: "integer"
+    asid:
+      col: 3
+      type: "integer"
+    assay_name:
+      col: 7
+      type: "string"
+    assay_desc:
+      col: 8
+      type: "string"
+    organism:
+      col: 11
+      type: "string"
+    tissue:
+      col: 12
+      type: "string"
+      nulls: ['NA']
+
+compound:
+  # File: Chemical_Summary_151020.csv
+  startAtRow: 1
+  properties:
+    chid:
+      col: 0
+      type: "integer"
+    chnm:
+      col: 1
+      type: "string"
+    casn:
+      col: 2
+      type: "string"
+
+result:
+  # File: EXPORT_LVL5&6_ASID2_APR_151020.csv ...
+  startAtRow: 1
+  properties:
+    chid:
+      col: 7
+      type: "integer"
+    chnm:
+      col: 9
+      type: "string"
+    casn:
+      col: 8
+      type: "string"
+    aeid:
+      col: 11
+      type: "integer"
+    hitc:
+      col: 18
+      type: "integer"

@@ -1,0 +1,40 @@
+version: '2'
+services:
+  elasticsearch:
+    image: elasticsearch:2.3
+    ports:
+      - "9200:9200"
+    volumes:
+      - d:/projects/douglasconnect/data/toxcast-elastic:/usr/share/elasticsearch/data
+  chemidconvert:
+    build: https://github.com/DouglasConnect/ChemIdConvert.git
+  toxcast-importer:
+    build: ./toxcastDataImport
+    depends_on:
+      - elasticsearch
+    environment:
+      IDENTIFIERCONVERTER: chemidconvert:8080
+      ELASTICSEARCHHOSTNAME: elasticsearch
+  kibana-sense:
+    image: serandel/kibana-sense
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+  toxcast-api:
+    build: ./toxcastApi
+    depends_on:
+      - elasticsearch
+    ports:
+      - "8080:8080"
+    environment:
+      ELASTICSEARCHHOSTNAME: elasticsearch
+  cpsign-toxcast-adapter:
+    build: ./cpsignToxCastAdapter
+    ports:
+      - "8010:8080"
+    depends_on:
+      - toxcast-api
+    environment:
+      TOXCASTAPIHOSTNAME: toxcast-api
+      TOXCASTAPIPORT: 8080

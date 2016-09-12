@@ -1,0 +1,4 @@
+docopt==0.6.2
+PyYAML==3.11
+elasticsearch>=2.0.0,<3.0.0
+requests==2.11.0

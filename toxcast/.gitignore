@@ -1,0 +1,9 @@
+.DS_Store
+
+*.pyc
+
+/var/data/
+/var/virtualenv/
+toxcastApi/.idea/
+toxcastApi/var/
+cpsignToxcastAdapter/.idea/

@@ -1,0 +1,764 @@
+---
+swagger: "2.0"
+info:
+  description: "This Api exposes the EPA's ToxCast summary dataset (October 2015 release).\n\
+    \nToxCast contains data for a single chemical endpoint pair for thousands of chemicals\
+    \ and 821 assay endpoints for 20 variables such\nas the activity or hit call,\
+    \ activity concentrations, whether the chemical was tested in a specific assay,\
+    \ etc.\n"
+  version: "1.0.0"
+  title: "ToxcastDB interface (Assay information, Compound information and assay values\
+    \ for tested compounts)"
+host: "toxcastdb"
+basePath: "/v1"
+schemes:
+- "http"
+produces:
+- "application/json"
+paths:
+  /assays:
+    get:
+      tags:
+      - "assays, assay endpoints"
+      summary: "Returns all assay endpoints known to toxcast including metadata about\
+        \ each assay"
+      description: "For each assay (endpoint), returns metadata like assay description,\
+        \ assay source, organism, tissue, cell format, ..."
+      operationId: "controllers.default_controller.assays_get"
+      parameters:
+      - name: "assayIds"
+        in: "query"
+        description: "Assay endpoint names to filter on a subset of assay endpoints"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      - name: "offset"
+        in: "query"
+        description: "Number of assay endpoints to skip (for paging)"
+        required: false
+        type: "integer"
+      - name: "limit"
+        in: "query"
+        description: "Maximum count of assay endpoints to return (for paging)"
+        required: false
+        type: "integer"
+      - name: "facetOrganism"
+        in: "query"
+        description: "Facetting terms for the organism field"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      - name: "facetAssayName"
+        in: "query"
+        description: "Facetting terms for the assay name field"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      - name: "facetTissue"
+        in: "query"
+        description: "Facetting terms for the tissue field"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      - name: "facetCellFormat"
+        in: "query"
+        description: "Facetting terms for the cell format field"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      - name: "facetAssayDesignType"
+        in: "query"
+        description: "Facetting terms for the assay design type field"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      - name: "facetFunction"
+        in: "query"
+        description: "Facetting terms for the assay function field"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      - name: "facetIntendedTarget"
+        in: "query"
+        description: "Facetting terms for the intended Target field"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      responses:
+        200:
+          description: "An array of assay endpoints including metadata about the assay\
+            \ endpoints"
+          schema:
+            $ref: "#/definitions/AssayEndpoints"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-tags:
+      - tag: "assays, assay endpoints"
+  /assays/{assayId}:
+    get:
+      tags:
+      - "assays, assay endpoints"
+      summary: "Returns all assay endpoints known to toxcast including metadata about\
+        \ each assay"
+      description: "For each assay, returns metadata like assay description, assay\
+        \ source, organism, tissue, cell format, ..."
+      operationId: "controllers.default_controller.assays_assay_id_get"
+      parameters:
+      - name: "assayId"
+        in: "path"
+        description: "Assay endpoint id to get metadata for"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "An array of assay endpoints including metadata about the assay\
+            \ endpoints"
+          schema:
+            $ref: "#/definitions/AssayEndpoint"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-tags:
+      - tag: "assays, assay endpoints"
+  /compounds:
+    get:
+      tags:
+      - "compound"
+      summary: "Get data on compounds and a list of assay endpoint names that tested\
+        \ this compound"
+      description: "Returns, for a given compound, a list of assay endpoint names\
+        \ that tested this compound"
+      operationId: "controllers.default_controller.compounds_get"
+      parameters:
+      - name: "compoundIds"
+        in: "query"
+        description: "Optional list of toxcast compound Ids to get data for"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      - name: "offset"
+        in: "query"
+        description: "Number of assay endpoints to skip (for paging)"
+        required: false
+        type: "integer"
+      - name: "limit"
+        in: "query"
+        description: "Maximum count of assay endpoints to return (for paging)"
+        required: false
+        type: "integer"
+      responses:
+        200:
+          description: "An array of items containing identifiers for the compound\
+            \ and the assay values (hitcall etc)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Compound"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-tags:
+      - tag: "compound"
+  /compounds/{compoundId}:
+    get:
+      tags:
+      - "compound"
+      summary: "Get data on one specific compound and a list of assay endpoint names\
+        \ that tested this compound"
+      description: "Returns, for a given compound, a list of assay endpoint names\
+        \ that tested this compound"
+      operationId: "controllers.default_controller.compounds_compound_id_get"
+      parameters:
+      - name: "compoundId"
+        in: "path"
+        description: "Toxcast Compound Id to query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "An array of items containing identifiers for the compound\
+            \ and the assay values (hitcall etc)"
+          schema:
+            $ref: "#/definitions/Compound"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-tags:
+      - tag: "compound"
+  /results:
+    get:
+      tags:
+      - "assay"
+      summary: "Assay endpoint result values for all successfully tested compounds"
+      description: "Returns a list of rows containing the assayId, compound identifiers\
+        \ and the measured/derived assay endpoint values"
+      operationId: "controllers.default_controller.results_get"
+      parameters:
+      - name: "assayIds"
+        in: "query"
+        description: "Assay endpoint ids to query"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      - name: "compounds"
+        in: "query"
+        description: "list of compounds to include in the result. Uses toxcast internal\
+          \ identifier for compounds (toxcastCompoundId)"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
+      - name: "offset"
+        in: "query"
+        description: "Number of assay endpoints to skip (for paging)"
+        required: false
+        type: "integer"
+      - name: "limit"
+        in: "query"
+        description: "Maximum count of assay endpoints to return (for paging)"
+        required: false
+        type: "integer"
+      responses:
+        200:
+          description: "An array of items containing a smiles string and the assay\
+            \ values (hitcall etc)"
+          schema:
+            $ref: "#/definitions/AssayResults"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-tags:
+      - tag: "assay"
+definitions:
+  Compound:
+    type: "object"
+    properties:
+      compoundId:
+        type: "string"
+        description: "Internal identifier of compounds within Toxcast"
+      chemicalName:
+        type: "string"
+        description: "Chemical name (as stored in ToxCast)          "
+      casNumber:
+        type: "string"
+        description: "CAS Number as stored in Toxcast. Can be empty string if no valid\
+          \ CAS number is stored in ToxCast."
+        x-ontology: "http://edamontology.org/data_3102"
+      inchi:
+        type: "string"
+        description: "Compound structure converted to InChI notation. This string\
+          \ can be empty if a conversion from the\ninternal id to an inchi string\
+          \ was not successful.\n"
+        x-ontology: "http://edamontology.org/format_1197"
+      inchiKey:
+        type: "string"
+        description: "Compound structure converted to InChIKey. This string can be\
+          \ empty if a conversion from the\ninternal id to an inchiKey string was\
+          \ not successful.\n"
+        x-ontology: "http://edamontology.org/format_1199"
+      smiles:
+        type: "string"
+        description: "Compound structure converted to SMILES notation. This string\
+          \ can be empty if a conversion from the\ninternal id to a SMILES string\
+          \ was not successful.\n"
+        x-ontology: "http://edamontology.org/format_1196"
+      assaysTested:
+        type: "array"
+        items:
+          $ref: "#/definitions/Compound_assaysTested"
+  AssayResults:
+    type: "array"
+    items:
+      $ref: "#/definitions/AssayResults_inner"
+  AssayEndpoints:
+    type: "object"
+    properties:
+      facets:
+        $ref: "#/definitions/AssayEndpoints_facets"
+      assayEndpoints:
+        type: "array"
+        items:
+          $ref: "#/definitions/AssayEndpoint"
+  AssayEndpoint:
+    type: "object"
+    properties:
+      assayId:
+        type: "string"
+        description: "Assay endpoint id"
+      assaySourceName:
+        type: "string"
+        description: "a short name for the entity that conducted the assay"
+      assaySourceLongName:
+        type: "string"
+        description: "the long name for the entity that conducted the assay"
+      assaySourceDesc:
+        type: "string"
+        description: "Description of the organization that performed the assay"
+      assayName:
+        type: "string"
+        description: "a short name for the assay, e.g. BSK_3C"
+      assayDesc:
+        type: "string"
+        description: "Description of the assay"
+      assayComponentName:
+        type: "string"
+        description: "a short name containing the assay and a component readout, e.g.\
+          \ BSK_3C_IL8"
+      assayComponentDesc:
+        type: "string"
+        description: "assay component description"
+      assayComponentTargetDesc:
+        type: "string"
+        description: "assay component target description"
+      assayEndpointName:
+        type: "string"
+        description: "A short name containing the assay, the component readout, and\
+          \ an analysis applied, e.g. BSK_3C_IL8_up"
+      assayEndpointDesc:
+        type: "string"
+        description: "Description of the assay endpoint"
+      timepointHr:
+        type: "number"
+        description: "the duration length to conduct the test portion of the assay"
+      organismId:
+        type: "integer"
+        description: "The NCBI Taxonomy id of the organism"
+        x-ontology: "http://purl.obolibrary.org/obo/OGG_0000000015"
+      organism:
+        type: "string"
+        description: "The target organism"
+      tissue:
+        type: "string"
+        description: "the organ-level, anatomical entity of the protein or cell used\
+          \ in the assay"
+      cellFormat:
+        type: "string"
+        description: "The target cell format"
+      cellFreeComponentSource:
+        type: "string"
+        description: "the cellular or sample tissue source of the assayed gene protein"
+      cellShortName:
+        type: "string"
+        description: "Cell short name"
+      cellGrowthMode:
+        type: "string"
+        description: "Cell growth mode"
+      assayFootprint:
+        type: "string"
+        description: "the physical format, such as plate density, in which an assay\
+          \ is performed"
+      assayFormatType:
+        type: "string"
+        description: "the conceptual biological and/or chemical features of the assay\
+          \ system"
+      assayFormatTypeSub:
+        type: "string"
+        description: "assay format subtype"
+      contentReadoutType:
+        type: "string"
+        description: "the throughput and information content generated"
+      dilutionSolvent:
+        type: "string"
+        description: "the solvent used as the negative control and to solubilize the\
+          \ test chemical"
+      dilutionSolventPercentMax:
+        type: "number"
+        description: "the maximal amount of the dilution solvent tolerable for a particular\
+          \ assay"
+      parameterReadoutType:
+        type: "string"
+        description: "parameter readout type"
+      assayDesignType:
+        type: "string"
+        description: "assay design type"
+      assayDesignTypeSub:
+        type: "string"
+        description: "assay design subtype"
+      biologicalProcessTarget:
+        type: "string"
+        description: "biological process target"
+      detectionTechnologyType:
+        type: "string"
+        description: "detection technology type"
+      detectionTechnologyTypeSub:
+        type: "string"
+        description: "detection technology subtype"
+      detectionTechnology:
+        type: "string"
+        description: "detection technology"
+      signalDirectionType:
+        type: "string"
+        description: "signal direction type"
+      keyAssayReagentType:
+        type: "string"
+        description: "key assay reagent type"
+      keyAssayReagent:
+        type: "string"
+        description: "key assay reagent"
+      technologicalTargetType:
+        type: "string"
+        description: "the measured chemical, molecular, cellular, or anatomical entity"
+      technologicalTargetTypeSub:
+        type: "string"
+        description: "the measured chemical, molecular, cellular, or anatomical subtype"
+      assayFunctionType:
+        type: "string"
+        description: "assay function type"
+      normalizedDataType:
+        type: "string"
+        description: "normalized data type"
+      analysisDirection:
+        type: "string"
+        description: "analysis direction (used values: positive/negative)"
+      burstAssay:
+        type: "boolean"
+        description: "burst assay"
+      keyPositiveControl:
+        type: "string"
+        description: "key positive control"
+      signalDirection:
+        type: "string"
+        description: "signal direction (used values: loss/gain)"
+      intendedTargetType:
+        type: "string"
+        description: "the objective chemical, molecular, cellular, pathway or anatomical\
+          \ entity"
+      intendedTargetTypeSub:
+        type: "string"
+        description: "the objective chemical, molecular, cellular, pathway or anatomical\
+          \ entity"
+      intendedTargetFamily:
+        type: "string"
+        description: "the target family of the objective target for the assay"
+      intendedTargetFamilySub:
+        type: "string"
+        description: "the target family of the objective target for the assay"
+      intendedTargetGeneId:
+        type: "array"
+        description: "List of target gene ids that are the objective "
+        items:
+          type: "integer"
+      intendedTargetEntrezGeneId:
+        type: "array"
+        description: "List of target gene ids that are the objective (NCBI Entrez\
+          \ gene id)"
+        items:
+          type: "integer"
+      intendedTargetOfficialFullName:
+        type: "array"
+        description: "List of objective target offical full names"
+        items:
+          type: "string"
+      intendedTargetGeneName:
+        type: "array"
+        description: "List of objective target gene names"
+        items:
+          type: "string"
+      intendedTargetOfficialSymbol:
+        type: "array"
+        description: "List of objective target offical symbols"
+        items:
+          type: "string"
+      intendedTargetGeneSymbol:
+        type: "array"
+        description: "List of objective target symbols"
+        items:
+          type: "string"
+      intendedTargetDescription:
+        type: "string"
+        description: "objective target description"
+      intendedTargetUniprotAccessionNumber:
+        type: "string"
+        description: "objective target uniprot accesscion number"
+      intendedTargetOrganismId:
+        type: "integer"
+        description: "intended target organism id"
+      intendedTargetTrackStatus:
+        type: "string"
+        description: "objective target track status (used values: live)"
+      technologicalTargetGeneId:
+        type: "array"
+        description: "measured molecular target gene id"
+        items:
+          type: "integer"
+      technologicalTargetEntrezGeneId:
+        type: "array"
+        description: "List of measured molecular target gene ids (NCBI Entrez gene\
+          \ id)"
+        items:
+          type: "integer"
+      technologicalTargetOfficialFullName:
+        type: "array"
+        description: "List of measured molecular target offical full names"
+        items:
+          type: "string"
+      technologicalTargetGeneName:
+        type: "array"
+        description: "List of technolmeasured molecularogical target gene names"
+        items:
+          type: "string"
+      technologicalTargetOfficialSymbol:
+        type: "array"
+        description: "List of measured molecular target offical symbols"
+        items:
+          type: "string"
+      technologicalTargetGeneSymbol:
+        type: "array"
+        description: "List of measured molecular target symbols"
+        items:
+          type: "string"
+      technologicalTargetDescription:
+        type: "string"
+        description: "measured molecular target description"
+      technologicalTargetUniprotAccessionNumber:
+        type: "string"
+        description: "measured molecular target uniprot accesscion number"
+      technologicalTargetOrganismId:
+        type: "integer"
+        description: "measured molecular target organism id"
+      technologicalTargetTrackStatus:
+        type: "string"
+        description: "measured molecular target track status (used values: live)"
+      citationsCitationId:
+        type: "array"
+        description: "List of citation ids"
+        items:
+          type: "string"
+      citationsPmid:
+        type: "array"
+        description: "List of PubMed citation ids"
+        items:
+          type: "string"
+      citationsDoi:
+        type: "array"
+        description: "List of citation digital object identifiers"
+        items:
+          type: "string"
+      citationsCitation:
+        type: "array"
+        description: "List of citation texts"
+        items:
+          type: "string"
+      citationsTitle:
+        type: "array"
+        description: "List of citation titles"
+        items:
+          type: "string"
+      citationsAuthor:
+        type: "array"
+        description: "List of citation authors"
+        items:
+          type: "string"
+      citationsUrl:
+        type: "array"
+        description: "List of citation urls"
+        items:
+          type: "string"
+          format: "url"
+  FacetGroup:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+        description: "Display title for the group of faceting terms"
+      terms:
+        type: "array"
+        description: "Faceting terms for this group"
+        items:
+          $ref: "#/definitions/FacetGroup_terms"
+  Error:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+      fields:
+        type: "string"
+  Compound_assaysTested:
+    properties:
+      assayId:
+        type: "string"
+        description: "Assay endoint id"
+      assayEndpointName:
+        type: "string"
+        description: "Assay endpoint name"
+      assayEndpointDesc:
+        type: "string"
+        description: "Verbose assay endpoint description"
+    description: "A list of assayIds that tested this compound."
+  AssayResults_inner:
+    properties:
+      assayId:
+        type: "string"
+        description: "Assay endpoint id"
+      assayEndpointName:
+        type: "string"
+        description: "Assay Endpoint name of this assay (also serves as the id of\
+          \ the endpoint)"
+      compoundId:
+        type: "string"
+        description: "Internal identifier of compounds within Toxcast"
+      chemicalName:
+        type: "string"
+        description: "Chemical name (as stored in ToxCast)"
+      casNumber:
+        type: "string"
+        description: "CAS Number as stored in Toxcast. Can be empty string if no valid\
+          \ CAS number is stored in ToxCast."
+        x-ontology: "http://edamontology.org/data_3102"
+      inchi:
+        type: "string"
+        description: "Compound structure converted to InChI notation. This string\
+          \ can be empty if a conversion from the\ninternal id to an inchi string\
+          \ was not successful.\n"
+        x-ontology: "http://edamontology.org/format_1197"
+      inchiKey:
+        type: "string"
+        description: "Compound structure converted to InChIKey. This string can be\
+          \ empty if a conversion from the\ninternal id to an inchiKey string was\
+          \ not successful.\n"
+        x-ontology: "http://edamontology.org/format_1199"
+      smiles:
+        type: "string"
+        description: "Compound structure converted to SMILES notation. This string\
+          \ can be empty if a conversion from the\ninternal id to a SMILES string\
+          \ was not successful.\n"
+        x-ontology: "http://edamontology.org/format_1196"
+      fitCategory:
+        type: "integer"
+        description: "Fit Category (numeric category id - See https://cran.rstudio.com/web/packages/tcpl/vignettes/tcpl_Overview.pdf)"
+      hitcall:
+        type: "boolean"
+        description: "ToxcastDB Assay HitCall value. Inactive = False, Active = True.\
+          \ // what to do with -1 inconclusive?"
+      level4Id:
+        type: "integer"
+        description: "level 4 id inside the full toxcast database"
+      log10ConcentrationMax:
+        type: "number"
+        description: "log base 10 of the maximum concentration tested"
+      log10ConcentrationMin:
+        type: "number"
+        description: "log base 10 of the minimum concentration tested"
+      maxMean:
+        type: "number"
+        description: "the maximum of the means at each concentration"
+      maxMedian:
+        type: "number"
+        description: "the maximum of the medians at each concentration"
+      ac10:
+        type: "number"
+        description: "AC10 (activity concentration at 10%) for the winning model"
+      acb:
+        type: "number"
+        description: "Activity concentration at baseline for the winning model"
+      acc:
+        type: "number"
+        description: "Activity concentration at cutoff for the winning model"
+      gainAc50:
+        type: "number"
+        description: "Gain AC50 (activity concentration at 50%) for the winning model"
+      gainHillCoefficient:
+        type: "number"
+        description: "Gain Hill coefficient for the winning model"
+      lossAc50:
+        type: "number"
+        description: "Loss AC50 (activity concentration at 50%) for the winning model"
+      lossHillCoefficient:
+        type: "number"
+        description: "Loss Hill coefficient for the winning model"
+      winningModel:
+        type: "string"
+        description: "Winning model. (Used values: cnst, hill, gnls)"
+      rmse:
+        type: "number"
+        description: "Root mean square error of the winnign model"
+      topAsymptote:
+        type: "number"
+        description: "Top asymptote for the winning model"
+      oldstyleAc50:
+        type: "number"
+        description: "gainAc50 in micromolar (not log10) units."
+      oldstyleNegLogAc50:
+        type: "number"
+        description: "The negative log10 transformation of the oldstyleAc5ß value\
+          \ anchored to zero"
+      sampleId:
+        type: "string"
+        description: "The id of the selected sample"
+      zScore:
+        type: "number"
+        description: "the zscore of AC50 values based on the chemical-specific cytotoxicity\
+          \ distribution file"
+  AssayEndpoints_facets:
+    properties:
+      assayName:
+        $ref: "#/definitions/FacetGroup"
+      organism:
+        $ref: "#/definitions/FacetGroup"
+      tissue:
+        $ref: "#/definitions/FacetGroup"
+      cellFormat:
+        $ref: "#/definitions/FacetGroup"
+      assayDesignType:
+        $ref: "#/definitions/FacetGroup"
+      assayFunction:
+        $ref: "#/definitions/FacetGroup"
+      intendedTarget:
+        $ref: "#/definitions/FacetGroup"
+  FacetGroup_terms:
+    properties:
+      term:
+        type: "string"
+        description: "term to display to the user"
+      count:
+        type: "integer"
+        description: "number of items if the current view is filtered by exactly this\
+          \ additional term"
+      url:
+        type: "string"
+        format: "url"
+        description: "Preconfigured endpoint url with the same result set as the current\
+          \ one but also filtered to this term"
+parameters:
+  OffsetParameter:
+    name: "offset"
+    in: "query"
+    description: "Number of assay endpoints to skip (for paging)"
+    required: false
+    type: "integer"
+  LimitParameter:
+    name: "limit"
+    in: "query"
+    description: "Maximum count of assay endpoints to return (for paging)"
+    required: false
+    type: "integer"
