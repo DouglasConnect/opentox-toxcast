@@ -22,7 +22,7 @@ To install python requirements (preferably inside [virtualenv](https://virtualen
 
 To delete an existing elasticsearch index:
 
-    ./toolbox.py elastic index delete toxcast
+    ./toolbox.py elastic index drop toxcast
 
 To create an elasticsearch index:
 

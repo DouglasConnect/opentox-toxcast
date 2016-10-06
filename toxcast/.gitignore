@@ -2,8 +2,6 @@
 
 *.pyc
 
-/var/data/
+.idea/
+
 /var/virtualenv/
-toxcastApi/.idea/
-toxcastApi/var/
-cpsignToxcastAdapter/.idea/

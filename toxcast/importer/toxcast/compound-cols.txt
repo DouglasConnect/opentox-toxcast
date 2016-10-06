@@ -1,5 +1,0 @@
-0 chid
-1 chnm
-2 casn
-3 code
-4 clib

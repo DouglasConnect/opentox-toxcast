@@ -36,7 +36,7 @@ echo "using identifierconverter at $IDENTIFIERCONVERTERHOSTNAME:$IDENTIFIERCONVE
 # fi
 # echo "pinging chemidconvert worked"
 
-if python /code/toolbox.py elastic index exists toxcast --elasticsearchhost $ELASTICSEARCHHOSTNAME
+if python /code/importer.py elastic index exists toxcast --elasticsearchhost $ELASTICSEARCHHOSTNAME
 then
   echo "Elasitsearch already contains a document called toxcast, aborting data loading"#
   exit 1
@@ -78,7 +78,7 @@ done
 
 echo "ingesting the following files now: $DATAFILES"
 
-python /code/toolbox.py elastic index create toxcast /code/elastic/index.yaml --elasticsearchhost $ELASTICSEARCHHOSTNAME
-python /code/toolbox.py elastic data load toxcast /code/elastic/parser-schema.yaml /data/csv/Assay_Summary_151020.csv /data/csv/Chemical_Summary_151020.csv $DATAFILES --elasticsearchhost $ELASTICSEARCHHOSTNAME --identifierconverter "$IDENTIFIERCONVERTERHOSTNAME:$IDENTIFIERCONVERTERPORT"
+python /code/importer.py elastic index create toxcast /code/elastic/index.yaml --elasticsearchhost $ELASTICSEARCHHOSTNAME
+python /code/importer.py elastic data load toxcast /code/elastic/parser-schema.yaml /data/csv/Assay_Summary_151020.csv /data/csv/Chemical_Summary_151020.csv $DATAFILES --elasticsearchhost $ELASTICSEARCHHOSTNAME --identifierconverter "$IDENTIFIERCONVERTERHOSTNAME:$IDENTIFIERCONVERTERPORT"
 
 echo "Finished importing toxcast data!"
