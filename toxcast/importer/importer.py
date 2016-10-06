@@ -32,6 +32,7 @@ logging.getLogger('__main__').setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 
 from docopt import docopt
+from elasticsearch.helpers import bulk
 from elasticsearch import Elasticsearch, ElasticsearchException
 
 
@@ -228,27 +229,16 @@ def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host,
 
     # Assays
     logger.info('Parsing assays from %s' % parser_schema['assays']['file'])
+    logger.info('Indexing assays in elasticsearch')
+    bulk(es, ({'_index': index, '_type': 'assay', '_source': assay} for assay in parser.parse_assays() if assay is not None))
     for assay in parser.parse_assays():
-        if assay is None:
-            continue
-        logger.debug('Indexing assay %s' % assay)
-        es.index(index=index, doc_type='assay', body=assay)
         assay_cache[assay['aeid']] = assay
 
     # Compounds
     logger.info('Parsing compounds from %s' % parser_schema['compounds']['file'])
+    logger.info('Indexing compounds in elasticsearch')
+    bulk(es, ({'_index': index, '_type': 'compound', '_source': compound} for compound in parser.parse_compounds() if compound is not None))
     for compound in parser.parse_compounds():
-        if compound is None:
-            continue
-        logger.debug('Indexing compound %s' % compound)
-
-        if perform_chemid_conversion:
-            try:
-                compound = annotate_with_aditional_chemical_identifiers(chemid_conversion_host, compound)
-            except ChemIdConversionError, e:
-                logger.warn('Can\'t connect to the chemical ID conversion service: %s' % e)
-
-        es.index(index=index, doc_type='compound', body=compound)
         compound_cache[compound['chid']] = compound
 
     # # Results
