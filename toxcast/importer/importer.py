@@ -169,13 +169,8 @@ class CSVParser(object):
         self.start_at_row = start_at_row if start_at_row is not None else 0
 
     def parse(self, filename):
-
-        def encoder(fi):
-            for line in fi:
-                yield line.encode('utf8')
-
         with codecs.open(filename, 'rb', encoding=self.encoding) as fi:
-            for i, line in enumerate(csv.reader(encoder(fi))):
+            for i, line in enumerate(csv.reader((line.encode('utf8') for line in fi))):
                 if i >= self.start_at_row:
                     yield(self.parse_line(filename, i, [x.decode('utf8') for x in line]))
 
@@ -188,7 +183,7 @@ class CSVParser(object):
 
     def parse_value(self, schema, line):
         value = line[schema['col']]
-        nulls = schema.get('nulls', None)
+        nulls = schema.get('nulls')
 
         if nulls is not None and value in nulls:
             return None
