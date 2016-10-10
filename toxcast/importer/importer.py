@@ -2,7 +2,6 @@
 
 '''
 Usage:
-    importer.py enumerate <filename>
     importer.py yaml-to-json <filename>
     importer.py json-to-yaml <filename>
     importer.py elastic index create <index> <index.yaml> [--elasticsearch-host=<hostname>]
@@ -23,6 +22,7 @@ import re
 import csv
 import yaml
 import json
+import math
 import codecs
 import logging
 import requests
@@ -50,17 +50,7 @@ def yaml_to_json(filename, indent=2):
 
 def json_to_yaml(filename, indent=2):
     with open(filename, 'r') as fi:
-        print yaml.dump(yaml.load(json.dumps(json.load(fi))))
-
-
-# -----------------------------------------------------------------------------
-# Enumerate
-
-def enum(filename):
-    with open(filename, 'r') as fi:
-        for i, line in enumerate(fi):
-            pass
-            # print i, line,
+        return yaml.dump(yaml.load(json.dumps(json.load(fi))))
 
 
 # -----------------------------------------------------------------------------
@@ -142,23 +132,53 @@ class Parser(object):
     def parse_assays(self):
         return CSVParser(
             schema=self.schema['assays']['properties'],
-            encoding=self.schema['assays'].get('encoding', None),
-            start_at_row=self.schema['assays'].get('startAtRow', None),
+            encoding=self.schema['assays'].get('encoding'),
+            start_at_row=self.schema['assays'].get('startAtRow'),
         ).parse(self.abspath(self.schema['assays']['file']))
 
     def parse_compounds(self):
         return CSVParser(
             schema=self.schema['compounds']['properties'],
-            encoding=self.schema['compounds'].get('encoding', None),
-            start_at_row=self.schema['compounds'].get('startAtRow', 0)
+            encoding=self.schema['compounds'].get('encoding'),
+            start_at_row=self.schema['compounds'].get('startAtRow')
         ).parse(self.abspath(self.schema['compounds']['file']))
 
-    # def parse_results(self, filename):
-    #     return CSVParser(
-    #         self.schema['result']['properties'],
-    #         encoding=self.schema['results'].get('encoding', None),
-    #         start_at_row=self.schema['results'].get('startAtRow', 0)
-    #     ).parse(filename)
+    def parse_results(self):
+
+        # get assays from the first results file (columns = assays)
+        with codecs.open(self.abspath(self.schema['results'][0]['file']), 'rb', encoding=self.schema['results'][0].get('encoding', 'utf8')) as fi:
+            for line in csv.reader((line.encode('utf8') for line in fi)):
+                assays = line[1:]
+                break
+
+        result_parsers = [
+            CSVParser(
+                # generate schema from assay list
+                schema=dict([('__COMPOUND__', {'col': 0, 'type': 'string'})] + [(assay, {'col': i + 1, 'type': result['type'], 'nulls': result['nulls']}) for i, assay in enumerate(assays)]),
+                encoding=result.get('encoding'),
+                start_at_row=result.get('startAtRow')
+            ).parse(self.abspath(result.get('file'))) for result in self.schema['results']
+        ]
+
+        result_parts = [result['name'] for result in self.schema['results']]
+        was_tested_result_part_index = result_parts.index('tested')
+
+        try:
+            while(True):
+                # while we can read results files, combine lines from all results files and yield over assays
+                line = [r.next() for r in result_parsers]
+                compound = line[0]['__COMPOUND__']
+                for assay in assays:
+                    result = dict([(part, line[i][assay]) for i, part in enumerate(result_parts)])
+                    # return data only if the assay was tested
+                    if line[was_tested_result_part_index][assay]:
+                        yield {
+                            'compound': compound,
+                            'assay': assay,
+                            'result': result
+                        }
+        except StopIteration:
+            pass
 
 
 class CSVParser(object):
@@ -178,7 +198,7 @@ class CSVParser(object):
         try:
             return dict([(key, self.parse_value(schema, line)) for key, schema in self.schema.items()])
         except Exception, e:
-            logger.warn('Error parsing file %s at line %s: %s)' % (filename, i, e))
+            logger.warn('Error parsing file %s at line %s: %s' % (filename, i, e))
             return None
 
     def parse_value(self, schema, line):
@@ -190,6 +210,8 @@ class CSVParser(object):
 
         if schema['type'] == 'string':
             return self.parse_string(value)
+        elif schema['type'] == 'boolean':
+            return self.parse_boolean(value)
         elif schema['type'] == 'integer':
             return self.parse_integer(value)
         elif schema['type'] == 'float':
@@ -200,8 +222,22 @@ class CSVParser(object):
     def parse_string(self, value):
         return value.strip()
 
+    def parse_boolean(self, value):
+        if int(value.strip()) in [0, 1]:
+            return bool(int(value.strip()))
+        else:
+            raise ParseError('invalid value for bool: %s' % value)
+
     def parse_integer(self, value):
-        return int(value.strip())
+        try:
+            return int(value.strip())
+        except ValueError:
+            # try parsing integers represented in scientific notation
+            frac, whole = math.modf(float(value.strip()))
+            if frac == 0:
+                return whole
+            else:
+                raise ParseError('invalid value for integer: %s' % value)
 
     def parse_float(self, value):
         return float(value.strip())
@@ -219,52 +255,44 @@ def annotate_with_aditional_chemical_identifiers(identifierconverter, compound):
 def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host, perform_chemid_conversion):
     parser = Parser(dirname, parser_schema)
 
-    assay_cache = {}
+    # Compounds
     compound_cache = {}
+    logger.info('Parsing compounds from %s' % parser_schema['compounds']['file'])
+    for compound in (compound for compound in parser.parse_compounds() if compound is not None):
+        compound_cache[compound['code']] = compound
+    logger.info('Indexing compounds in elasticsearch')
+    bulk(es, ({
+        '_index': index,
+        '_type': 'compound',
+        '_id': compound['chid'],
+        '_source': compound
+    } for compound in compound_cache.itervalues()))
 
     # Assays
+    assay_cache = {}
     logger.info('Parsing assays from %s' % parser_schema['assays']['file'])
+    for assay in (assay for assay in parser.parse_assays() if assay is not None):
+        assay_cache[assay['assay_component_endpoint_name']] = assay
     logger.info('Indexing assays in elasticsearch')
-    bulk(es, ({'_index': index, '_type': 'assay', '_source': assay} for assay in parser.parse_assays() if assay is not None))
-    for assay in parser.parse_assays():
-        assay_cache[assay['aeid']] = assay
+    bulk(es, ({
+        '_index': index,
+        '_type': 'assay',
+        '_id': assay['aeid'],
+        '_source': assay
+    } for assay in assay_cache.itervalues()))
 
-    # Compounds
-    logger.info('Parsing compounds from %s' % parser_schema['compounds']['file'])
-    logger.info('Indexing compounds in elasticsearch')
-    bulk(es, ({'_index': index, '_type': 'compound', '_source': compound} for compound in parser.parse_compounds() if compound is not None))
-    for compound in parser.parse_compounds():
-        compound_cache[compound['chid']] = compound
-
-    # # Results
-    # for filename in results_filenames:
-    #     logger.info('Parsing results from %s' % filename)
-    #     for result in parser.parse_results(filename):
-    #         if result is None:
-    #             continue
-    #         logger.debug('Indexing result %s' % result)
-    #
-    #         chid = result.get('chid', None)
-    #         compound = None
-    #         if chid is not None:
-    #             compound = compound_cache.get(chid, None)
-    #
-    #         if compound is None:
-    #             logger.warn('Found a result with unknown compound: %s' % chid)
-    #             compound = {
-    #                 'chid': result.get('chid'),
-    #                 'chnm': result.get('chnm'),
-    #                 'casn': result.get('casn'),
-    #             }
-    #
-    #         body = {
-    #             'assay': assay_cache[result.get('aeid')],
-    #             'compound': compound,
-    #             'result': {
-    #                 'hitc': result.get('hitc'),
-    #             }
-    #         }
-    #         es.index(index=index, doc_type='result', body=body)
+    # Results - use compoud ID chid-aeid
+    logger.info('Parsing and indexing results')
+    bulk(es, ({
+        '_index': index,
+        '_type': 'result',
+        '_id': '%s-%s' % (compound_cache[result['compound']]['chid'], assay_cache[result['assay']]['aeid']),
+        '_source': {
+            'compound': compound_cache[result['compound']],
+            'assay': assay_cache[result['assay']],
+            'result': result['result']
+        }
+    } for result in parser.parse_results()))
 
 
 # -----------------------------------------------------------------------------
@@ -284,10 +312,7 @@ def main(argv=None):
         print(e)
         sys.exit(2)
 
-    if args['enumerate']:
-        enum(args['<filename>'])
-
-    elif args['yaml-to-json']:
+    if args['yaml-to-json']:
         print yaml_to_json(args['<filename>'])
 
     elif args['json-to-yaml']:
@@ -307,8 +332,6 @@ def main(argv=None):
             sys.exit(1)
 
     elif args['import']:
-        elastic_index_delete(es, args['<index>'])
-        elastic_index_create(es, args['<index>'], 'elastic/index.yaml')
         import_to_elastic(
             es,
             args['<index>'],
@@ -317,6 +340,10 @@ def main(argv=None):
             chemid_conversion_host,
             perform_chemid_conversion,
         )
+
+        # Merge index
+        logger.info('Merging index %s' % args['<index>'])
+        es.indices.forcemerge(index=args['<index>'])
 
 if __name__ == '__main__':
     main()

@@ -45,7 +45,69 @@ mappings:
       compound: *compound
       result:
         properties:
+          fitc:
+            type: 'integer'
+            index: 'not_analyzed'
           hitc:
-            # facet candidate
-            type: "integer"
-            index: "not_analyzed"
+            type: 'integer'
+            index: 'not_analyzed'
+          logc_max:
+            type: 'float'
+            index: 'not_analyzed'
+          logc_min:
+            type: 'float'
+            index: 'not_analyzed'
+          m4id:
+            type: 'integer'
+            index: 'not_analyzed'
+          max_mean:
+            type: 'float'
+            index: 'not_analyzed'
+          max_med:
+            type: 'float'
+            index: 'not_analyzed'
+          modl:
+            type: 'string'
+            index: 'not_analyzed'
+          modl_ac10:
+            type: 'float'
+            index: 'not_analyzed'
+          modl_acb:
+            type: 'float'
+            index: 'not_analyzed'
+          modl_acc:
+            type: 'float'
+            index: 'not_analyzed'
+          modl_ga:
+            type: 'float'
+            index: 'not_analyzed'
+          modl_gw:
+            type: 'float'
+            index: 'not_analyzed'
+          modl_la:
+            type: 'float'
+            index: 'not_analyzed'
+          modl_lw:
+            type: 'float'
+            index: 'not_analyzed'
+          modl_rmse:
+            type: 'float'
+            index: 'not_analyzed'
+          modl_tp:
+            type: 'float'
+            index: 'not_analyzed'
+          oldstyle_ac50:
+            type: 'float'
+            index: 'not_analyzed'
+          oldstyle_neg_log_ac50:
+            type: 'float'
+            index: 'not_analyzed'
+          spid:
+            type: 'string'
+            index: 'not_analyzed'
+          tested:
+            type: 'boolean'
+            index: 'not_analyzed'
+          zscore:
+            type: 'float'
+            index: 'not_analyzed'

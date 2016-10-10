@@ -340,138 +340,126 @@ compounds:
     casn:
       col: 2
       type: 'string'
+    code:
+      col: 3
+      type: 'string'
+    clib:
+      col: 4
+      type: 'string'
 
 results:
-  - file: 'cyto_dist_Matrix_151020.csv'
-    startAtRow: 1
-    type: 'string'
-    nulls: ['NA']
+  # TODO this one is different from all the others
+  # - file: 'cyto_dist_Matrix_151020.csv'
+  #   startAtRow: 1
+  #   type: 'string'
+  #   nulls: ['NA']
   - file: 'fitc_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'fitc'
+    type: 'integer'
     nulls: ['NA']
   - file: 'hitc_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'hitc'
+    type: 'integer'
     nulls: ['NA']
   - file: 'logc_max_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'logc_max'
+    type: 'float'
     nulls: ['NA']
   - file: 'logc_min_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'logc_min'
+    type: 'float'
     nulls: ['NA']
   - file: 'm4id_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'm4id'
+    type: 'integer'
     nulls: ['NA']
   - file: 'max_mean_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'max_mean'
+    type: 'float'
     nulls: ['NA']
   - file: 'max_med_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'max_med'
+    type: 'float'
     nulls: ['NA']
   - file: 'modl_Matrix_151020.csv'
     startAtRow: 1
+    name: 'modl'
     type: 'string'
     nulls: ['NA']
   - file: 'modl_ac10_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'modl_ac10'
+    type: 'float'
     nulls: ['NA']
   - file: 'modl_acb_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'modl_acb'
+    type: 'float'
     nulls: ['NA']
   - file: 'modl_acc_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'modl_acc'
+    type: 'float'
     nulls: ['NA']
   - file: 'modl_ga_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'modl_ga'
+    type: 'float'
     nulls: ['NA']
   - file: 'modl_gw_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'modl_gw'
+    type: 'float'
     nulls: ['NA']
   - file: 'modl_la_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'modl_la'
+    type: 'float'
     nulls: ['NA']
   - file: 'modl_lw_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'modl_lw'
+    type: 'float'
     nulls: ['NA']
   - file: 'modl_rmse_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'modl_rmse'
+    type: 'float'
     nulls: ['NA']
   - file: 'modl_tp_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'modl_tp'
+    type: 'float'
     nulls: ['NA']
   - file: 'oldstyle_ac50_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'oldstyle_ac50'
+    type: 'float'
     nulls: ['NA']
   - file: 'oldstyle_neg_log_ac50_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'oldstyle_neg_log_ac50'
+    type: 'float'
     nulls: ['NA']
   - file: 'spid_Matrix_151020.csv'
     startAtRow: 1
+    name: 'spid'
     type: 'string'
     nulls: ['NA']
   - file: 'tested_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'tested'
+    type: 'boolean'
     nulls: ['NA']
   - file: 'zscore_Matrix_151020.csv'
     startAtRow: 1
-    type: 'string'
+    name: 'zscore'
+    type: 'float'
     nulls: ['NA']
-
-# - prefix: 'fitc'
-#   type: 'integer'
-# - prefix: 'hitc'
-#   type: 'integer'
-# - prefix: 'logc_max'
-#   type: 'float'
-# - prefix: 'logc_min'
-#   type: 'float'
-# - prefix: 'max_mean'
-#   type: 'float'
-# - prefix: 'max_med'
-#   type: 'float'
-# - prefix: 'modl_ac10'
-#   type: 'float'
-# - prefix: 'modl_acb'
-#   type: 'float'
-# - prefix: 'modl_acc'
-#   type: 'float'
-# - prefix: 'modl_ga'
-#   type: 'float'
-# - prefix: 'modl_gw'
-#   type: 'float'
-# - prefix: 'modl_la'
-#   type: 'float'
-# - prefix: 'modl_lw'
-#   type: 'float'
-# - prefix: 'modl'
-#   type: 'string'
-# - prefix: 'rmse'
-#   type: 'float'
-# - prefix: 'tp'
-#   type: 'float'
-# - prefix: 'oldstyle_ac50'
-#   type: 'float'
-# - prefix: 'oldstyle_neg_log_ac50'
-#   type: 'float'
-# - prefix: 'tested'
-#   type: 'integer'
-# - prefix: 'zscore'
-#   type: 'float'
