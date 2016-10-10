@@ -2,12 +2,10 @@
 
 '''
 Usage:
-    importer.py yaml-to-json <filename>
-    importer.py json-to-yaml <filename>
     importer.py elastic index create <index> <index.yaml> [--elasticsearch-host=<hostname>]
     importer.py elastic index drop <index> [--elasticsearch-host=<hostname>]
     importer.py elastic index exists <index> [--elasticsearch-host=<hostname>]
-    importer.py import <dirname> <parser-schema.yaml> <index> [--elasticsearch-host=<hostname>] [--chemid-conversion-host=<hostname>] [--without-chemid-conversion]
+    importer.py import <index> <dirname> <parser-schema.yaml> [--elasticsearch-host=<hostname>] [--chemid-conversion-host=<hostname>] [--without-chemid-conversion]
 
 Options:
   -h --help  Show this help.
@@ -21,7 +19,6 @@ import sys
 import re
 import csv
 import yaml
-import json
 import math
 import codecs
 import logging
@@ -37,20 +34,11 @@ from elasticsearch import Elasticsearch, ElasticsearchException
 
 
 # -----------------------------------------------------------------------------
-# YAML / JSON
+# Utilities
 
 def load_yaml_file(filename):
     with open(filename, 'r') as fi:
         return yaml.load(fi)
-
-
-def yaml_to_json(filename, indent=2):
-    return json.dumps(load_yaml_file(filename), indent=indent)
-
-
-def json_to_yaml(filename, indent=2):
-    with open(filename, 'r') as fi:
-        return yaml.dump(yaml.load(json.dumps(json.load(fi))))
 
 
 # -----------------------------------------------------------------------------
@@ -312,13 +300,7 @@ def main(argv=None):
         print(e)
         sys.exit(2)
 
-    if args['yaml-to-json']:
-        print yaml_to_json(args['<filename>'])
-
-    elif args['json-to-yaml']:
-        print json_to_yaml(args['<filename>'])
-
-    elif args['elastic'] and args['index'] and args['create']:
+    if args['elastic'] and args['index'] and args['create']:
         elastic_index_create(es, args['<index>'], load_yaml_file(args['<index.yaml>']))
 
     elif args['elastic'] and args['index'] and args['drop']:
