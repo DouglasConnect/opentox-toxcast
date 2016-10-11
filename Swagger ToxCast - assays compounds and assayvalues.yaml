@@ -244,7 +244,7 @@ definitions:
     type: object
     properties:
       compoundId:
-        type: string
+        type: integer
         description: "Internal identifier of compounds within Toxcast"
       chemicalName:
         type: string
@@ -277,82 +277,74 @@ definitions:
       type: object
       properties:
         assay:
-          type: object
-          properties:
-            assayId:
-              type: string
-              description: "Assay endpoint id"
-            assayEndpointName:
-              type: string
-              description: "Assay Endpoint name of this assay (also serves as the id of the endpoint)"
+          $ref: '#/definitions/AssayEndpoint'
         compound:
           $ref: '#/definitions/Compound'
         result:
-          type: object
-          properties:
-            fitCategory:
-              type: integer
-              description: "Fit Category (numeric category id - See https://cran.rstudio.com/web/packages/tcpl/vignettes/tcpl_Overview.pdf)"
-            hitcall:
-              type: integer
-              description: "ToxcastDB Assay HitCall value. Inactive = 0, Active = 1, Inconclusive = -1"
-            level4Id:
-              type: integer
-              description: "level 4 id inside the full toxcast database"
-            log10ConcentrationMax:
-              type: number
-              description: "log base 10 of the maximum concentration tested"
-            log10ConcentrationMin:
-              type: number
-              description: "log base 10 of the minimum concentration tested"
-            maxMean:
-              type: number
-              description: "the maximum of the means at each concentration"
-            maxMedian:
-              type: number
-              description: "the maximum of the medians at each concentration"
-            ac10:
-              type: number
-              description: "AC10 (activity concentration at 10%) for the winning model"
-            acb:
-              type: number
-              description: "Activity concentration at baseline for the winning model"
-            acc:
-              type: number
-              description: "Activity concentration at cutoff for the winning model"
-            gainAc50:
-              type: number
-              description: "Gain AC50 (activity concentration at 50%) for the winning model"
-            gainHillCoefficient:
-              type: number
-              description: "Gain Hill coefficient for the winning model"
-            lossAc50:
-              type: number
-              description: "Loss AC50 (activity concentration at 50%) for the winning model"
-            lossHillCoefficient:
-              type: number
-              description: "Loss Hill coefficient for the winning model"
-            winningModel:
-              type: string
-              description: "Winning model. (Used values: cnst, hill, gnls)"
-            rmse:
-              type: number
-              description: "Root mean square error of the winnign model"
-            topAsymptote:
-              type: number
-              description: "Top asymptote for the winning model"
-            oldstyleAc50:
-              type: number
-              description: "gainAc50 in micromolar (not log10) units."
-            oldstyleNegLogAc50:
-              type: number
-              description: "The negative log10 transformation of the oldstyleAc5ß value anchored to zero"
-            sampleId:
-              type: string
-              description: "The id of the selected sample"
-            zScore:
-              type: number
-              description: "the zscore of AC50 values based on the chemical-specific cytotoxicity distribution file"
+          $ref: '#/definitions/AssayResultValues'
+  AssayResultValues:
+    type: object
+    properties:
+      fitCategory:
+        type: integer
+        description: "Fit Category (numeric category id - See https://cran.rstudio.com/web/packages/tcpl/vignettes/tcpl_Overview.pdf)"
+      hitcall:
+        type: integer
+        description: "ToxcastDB Assay HitCall value. Inactive = 0, Active = 1, Inconclusive = -1"
+      level4Id:
+        type: integer
+        description: "level 4 id inside the full toxcast database"
+      log10ConcentrationMax:
+        type: number
+        description: "log base 10 of the maximum concentration tested"
+      log10ConcentrationMin:
+        type: number
+        description: "log base 10 of the minimum concentration tested"
+      maxMean:
+        type: number
+        description: "the maximum of the means at each concentration"
+      maxMedian:
+        type: number
+        description: "the maximum of the medians at each concentration"
+      ac10:
+        type: number
+        description: "AC10 (activity concentration at 10%) for the winning model"
+      acBaseline:
+        type: number
+        description: "Activity concentration at baseline for the winning model"
+      acCutoff:
+        type: number
+        description: "Activity concentration at cutoff for the winning model"
+      gainAc50:
+        type: number
+        description: "Gain AC50 (activity concentration at 50%) for the winning model"
+      gainHillCoefficient:
+        type: number
+        description: "Gain Hill coefficient for the winning model"
+      lossAc50:
+        type: number
+        description: "Loss AC50 (activity concentration at 50%) for the winning model"
+      lossHillCoefficient:
+        type: number
+        description: "Loss Hill coefficient for the winning model"
+      winningModel:
+        type: string
+        description: "Winning model. (Used values: cnst, hill, gnls)"
+      rmse:
+        type: number
+        description: "Root mean square error of the winnign model"
+      oldstyleAc50:
+        type: number
+        description: "gainAc50 in micromolar (not log10) units."
+      oldstyleNegLogAc50:
+        type: number
+        description: "The negative log10 transformation of the oldstyleAc5ß value anchored to zero"
+      sampleId:
+        type: string
+        description: "The id of the selected sample"
+      zScore:
+        type: number
+        description: "the zscore of AC50 values based on the chemical-specific cytotoxicity distribution file"
   AssayEndpoints:
     type: object
     properties:
@@ -381,7 +373,7 @@ definitions:
     type: object
     properties:
       assayId:
-        type: string
+        type: integer
         description: "Assay endpoint id"
       assaySourceName:
         type: string
@@ -398,21 +390,6 @@ definitions:
       assayDesc:
         type: string
         description: "Description of the assay"
-      assayComponentName:
-        type: string
-        description: "a short name containing the assay and a component readout, e.g. BSK_3C_IL8"
-      assayComponentDesc:
-        type: string
-        description: "assay component description"
-      assayComponentTargetDesc:
-        type: string
-        description: "assay component target description"
-      assayEndpointName:
-        type: string
-        description: "A short name containing the assay, the component readout, and an analysis applied, e.g. BSK_3C_IL8_up"
-      assayEndpointDesc:
-        type: string
-        description: "Description of the assay endpoint"
       timepointHr:
         type: number
         description: "the duration length to conduct the test portion of the assay"
@@ -456,6 +433,15 @@ definitions:
       dilutionSolventPercentMax:
         type: number
         description: "the maximal amount of the dilution solvent tolerable for a particular assay"
+      assayComponentName:
+        type: string
+        description: "a short name containing the assay and a component readout, e.g. BSK_3C_IL8"
+      assayComponentDesc:
+        type: string
+        description: "assay component description"
+      assayComponentTargetDesc:
+        type: string
+        description: "assay component target description"
       parameterReadoutType:
         type: string
         description: "parameter readout type"
@@ -492,6 +478,12 @@ definitions:
       technologicalTargetTypeSub:
         type: string
         description: "the measured chemical, molecular, cellular, or anatomical subtype"
+      assayEndpointName:
+        type: string
+        description: "A short name containing the assay, the component readout, and an analysis applied, e.g. BSK_3C_IL8_up"
+      assayEndpointDesc:
+        type: string
+        description: "Description of the assay endpoint"
       assayFunctionType:
         type: string
         description: "assay function type"
