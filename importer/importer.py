@@ -295,7 +295,7 @@ def main(argv=None):
     perform_chemid_conversion = not args.get('--without-chemid-conversion', False)
 
     try:
-        es = Elasticsearch(elasticsearch_host, timeout=30)
+        es = Elasticsearch(elasticsearch_host, timeout=90)
     except ElasticsearchException as e:
         print(e)
         sys.exit(2)
