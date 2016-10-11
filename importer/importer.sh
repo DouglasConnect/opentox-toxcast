@@ -6,12 +6,10 @@ set -o nounset
 ELASTICSEARCHHOSTNAME="${ELASTICSEARCHHOSTNAME:-elasticsearch}"
 IDENTIFIERCONVERTERHOSTNAME="${IDENTIFIERCONVERTERHOSTNAME:-chemidconvert}"
 IDENTIFIERCONVERTERPORT="${IDENTIFIERCONVERTERPORT:-8080}"
-# The data we need from the offical Toxcast release is split into two zip files, so we are using a repackaged zip file below.
-# The original data consists of the assay data files from this file:
-# ftp://newftp.epa.gov/comptox/High_Throughput_Screening_Data/ToxCast_Data_Oct_2015/INVITRODB_V2_LEVEL5.zip
-# plus the assay and compound summary files from this file:
+# The data we need from the offical Toxcast release the official summary data relase from
 # ftp://newftp.epa.gov/comptox/High_Throughput_Screening_Data/Summary_Files/INVITRODB_V2_SUMMARY.zip
-TOXCASTDATAURL="${TOXCASTDATAURL:-https://storage.googleapis.com/douglasconnect-public/data/toxcast/toxcast.zip}"
+# We use a mirror in europe for faster downloading:
+TOXCASTDATAURL="${TOXCASTDATAURL:-https://storage.googleapis.com/douglasconnect-public/data/toxcast/INVITRODB_V2_SUMMARY.zip}"
 
 echo "starting toxcast data import"
 echo "importing into elasticsearch at $ELASTICSEARCHHOSTNAME"
@@ -44,41 +42,33 @@ fi
 
 echo "Elasticsearch does not contain the toxcast document yet, downloading data from $TOXCASTDATAURL"
 
-if [ ! -e /data/toxcast.zip ]
+if [ ! -d /data/INVITRODB_V2_SUMMARY ]
 then
-  if [ ! -d /data ]
+  if [ ! -e /data/INVITRODB_V2_SUMMARY.zip ]
   then
-    mkdir /data
+    if [ ! -d /data ]
+    then
+      mkdir /data
+    fi
+
+    curl -o /data/INVITRODB_V2_SUMMARY.zip $TOXCASTDATAURL
+    echo "toxcast data downloaded, unzipping"
+  else
+    echo "toxcast download already existed"
   fi
 
-  curl -o /data/toxcast.zip $TOXCASTDATAURL
-  echo "toxcast data downloaded, unzipping"
-else
-  echo "toxcast download already existed"
-fi
-
-if [ ! -d /data/csv ]
-then
-  echo "/data/toxcast.zip did not exist, downloading data now"
+  echo "/data/INVITRODB_V2_SUMMARY did not exist, extracting data now"
   cd /data
-  unzip /data/toxcast.zip
+  unzip /data/INVITRODB_V2_SUMMARY.zip
   echo "toxcast data unzipped"
-  rm /data/toxcast.zip
+  rm /data/INVITRODB_V2_SUMMARY.zip
 else
   echo "toxcast was already unzipped"
 fi
 
+echo "ingesting toxcast data now"
 
-DATAFILES=""
-
-for file in /data/csv/results/*.csv
-do
-  DATAFILES+="$file "
-done
-
-echo "ingesting the following files now: $DATAFILES"
-
-python /code/importer.py elastic index create toxcast /code/elastic/index.yaml --elasticsearchhost $ELASTICSEARCHHOSTNAME
-python /code/importer.py elastic data load toxcast /code/elastic/parser-schema.yaml /data/csv/Assay_Summary_151020.csv /data/csv/Chemical_Summary_151020.csv $DATAFILES --elasticsearchhost $ELASTICSEARCHHOSTNAME --identifierconverter "$IDENTIFIERCONVERTERHOSTNAME:$IDENTIFIERCONVERTERPORT"
+python /code/importer.py elastic index create toxcast /code/releases/2015-10-20/elastic-mappings.yaml --elasticsearchhost $ELASTICSEARCHHOSTNAME
+python /code/importer.py import toxcast /data/INVITRODB_V2_SUMMARY /code/releases/2015-10-20/parser-schema.yaml --elasticsearchhost $ELASTICSEARCHHOSTNAME --identifierconverter "$IDENTIFIERCONVERTERHOSTNAME:$IDENTIFIERCONVERTERPORT"
 
 echo "Finished importing toxcast data!"
