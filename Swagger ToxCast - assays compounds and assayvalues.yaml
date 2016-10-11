@@ -253,28 +253,24 @@ definitions:
         type: string
         description: "CAS Number as stored in Toxcast. Can be empty string if no valid CAS number is stored in ToxCast."
         x-ontology: http://edamontology.org/data_3102
-      additionalIdentifiers:
-        type: object
-        description: "Additional chemical identfiers that are not part of the original toxcast data release. These were retrieved using conversion services and have not been checked for correctness."
-        properties:
-          inchi:
-            type: string
-            description: |
-              Compound structure converted to InChI notation. This string can be empty if a conversion from the
-              internal id to an inchi string was not successful.
-            x-ontology: http://edamontology.org/format_1197
-          inchiKey:
-            type: string
-            description: |
-              Compound structure converted to InChIKey. This string can be empty if a conversion from the
-              internal id to an inchiKey string was not successful.
-            x-ontology: http://edamontology.org/format_1199
-          smiles:
-            type: string
-            description: |
-              Compound structure converted to SMILES notation. This string can be empty if a conversion from the
-              internal id to a SMILES string was not successful.
-            x-ontology: http://edamontology.org/format_1196
+      inchi:
+        type: string
+        description: |
+          Compound structure converted to InChI notation. This string can be empty if a conversion from the
+          internal id to an inchi string was not successful.
+        x-ontology: http://edamontology.org/format_1197
+      inchiKey:
+        type: string
+        description: |
+          Compound structure converted to InChIKey. This string can be empty if a conversion from the
+          internal id to an inchiKey string was not successful.
+        x-ontology: http://edamontology.org/format_1199
+      smiles:
+        type: string
+        description: |
+          Compound structure converted to SMILES notation. This string can be empty if a conversion from the
+          internal id to a SMILES string was not successful.
+        x-ontology: http://edamontology.org/format_1196
   AssayResults:
     type: array
     items:
