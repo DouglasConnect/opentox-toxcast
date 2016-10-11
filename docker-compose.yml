@@ -9,7 +9,7 @@ services:
   chemidconvert:
     build: https://github.com/DouglasConnect/ChemIdConvert.git
   toxcast-importer:
-    build: ./toxcastDataImport
+    build: ./importer
     depends_on:
       - elasticsearch
     environment:
@@ -22,19 +22,19 @@ services:
     ports:
       - "5601:5601"
   toxcast-api:
-    build: ./toxcastApi
+    build: ./api
     depends_on:
       - elasticsearch
     ports:
       - "8080:8080"
     environment:
       ELASTICSEARCHHOSTNAME: elasticsearch
-  cpsign-toxcast-adapter:
-    build: ./cpsignToxCastAdapter
-    ports:
-      - "8010:8080"
-    depends_on:
-      - toxcast-api
-    environment:
-      TOXCASTAPIHOSTNAME: toxcast-api
-      TOXCASTAPIPORT: 8080
+#  cpsign-toxcast-adapter:
+#    build: ./cpsignToxCastAdapter
+#    ports:
+#      - "8010:8080"
+#    depends_on:
+#      - toxcast-api
+#    environment:
+#      TOXCASTAPIHOSTNAME: toxcast-api
+#      TOXCASTAPIPORT: 8080
