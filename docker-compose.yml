@@ -12,6 +12,7 @@ services:
     build: ./importer
     depends_on:
       - elasticsearch
+      - chemidconvert
     environment:
       IDENTIFIERCONVERTER: chemidconvert:8080
       ELASTICSEARCHHOSTNAME: elasticsearch
