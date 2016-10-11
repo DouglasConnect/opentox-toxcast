@@ -2,7 +2,7 @@
 
 ## API
 
-TODO: describe how to create an API from the swagger definition
+To recreate the api after an upodate to the swagger definition, either copy the content of the swagger file in this directory into the [online swagger editor](http://editor.swagger.io/#/) and download a generated server api (python flask) or use the command line tool from the [swagger codegen page](https://github.com/swagger-api/swagger-codegen). The generated batch of files can then be dropped into ./api, but take care not to overwrite default_controllers.py which contains the code to serve the various endpoints (but incorporating changes if endpoints were modified).
 
 ## ToxCast data importer for Elasticsearch
 
