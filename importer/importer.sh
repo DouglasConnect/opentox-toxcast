@@ -16,7 +16,7 @@ echo "importing into elasticsearch at $ELASTICSEARCHHOSTNAME"
 echo "using identifierconverter at $IDENTIFIERCONVERTERHOSTNAME:$IDENTIFIERCONVERTERPORT"
 
 # echo "sleeping now to give EL some time if run as part of docker-compose"
-# sleep 10
+sleep 10
 #
 # echo "Trying to ping elasticsearch"
 # if ! ping -c 1 $ELASTICSEARCHHOSTNAME &> /dev/null

@@ -14,7 +14,8 @@ services:
       - elasticsearch
       - chemidconvert
     environment:
-      IDENTIFIERCONVERTER: chemidconvert:8080
+      IDENTIFIERCONVERTERHOSTNAME: chemidconvert
+      IDENTIFIERCONVERTERPORT: "8080"
       ELASTICSEARCHHOSTNAME: elasticsearch
   kibana-sense:
     image: serandel/kibana-sense
