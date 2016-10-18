@@ -59,35 +59,35 @@ def result_es_to_toxcastapi(result):
         "intendedTargetTypeSub": result.assay.intended_target_type_sub,
         "intendedTargetFamily": result.assay.intended_target_family,
         "intendedTargetFamilySub": result.assay.intended_target_family_sub,
-        "intendedTargetGeneId": string.split(result.assay.intended_target_gene_id, "|"),
-        "intendedTargetEntrezGeneId": string.split(result.assay.intended_target_entrez_gene_id, "|"),
-        "intendedTargetOfficialFullName": string.split(result.assay.intended_target_official_full_name, "|"),
-        "intendedTargetGeneName": string.split(result.assay.intended_target_gene_name, "|"),
-        "intendedTargetOfficialSymbol": string.split(result.assay.intended_target_official_symbol, "|"),
-        "intendedTargetGeneSymbol": string.split(result.assay.intended_target_gene_symbol, "|"),
+        "intendedTargetGeneId": splitString(result.assay.intended_target_gene_id, "|"),
+        "intendedTargetEntrezGeneId": splitString(result.assay.intended_target_entrez_gene_id, "|"),
+        "intendedTargetOfficialFullName": splitString(result.assay.intended_target_official_full_name, "|"),
+        "intendedTargetGeneName": splitString(result.assay.intended_target_gene_name, "|"),
+        "intendedTargetOfficialSymbol": splitString(result.assay.intended_target_official_symbol, "|"),
+        "intendedTargetGeneSymbol": splitString(result.assay.intended_target_gene_symbol, "|"),
         "intendedTargetDescription": result.assay.intended_target_description,
         "intendedTargetUniprotAccessionNumber": result.assay.intended_target_uniprot_accession_number,
         "intendedTargetOrganismId": result.assay.intended_target_organism_id,
         "intendedTargetTrackStatus": result.assay.intended_target_track_status,
-        "technologicalTargetGeneId": string.split(result.assay.technological_target_gene_id, "|"),
-        "technologicalTargetEntrezGeneId": string.split(result.assay.technological_target_entrez_gene_id, "|"),
-        "technologicalTargetOfficialFullName": string.split(result.assay.technological_target_official_full_name, "|"),
-        "technologicalTargetGeneName": string.split(result.assay.technological_target_gene_name, "|"),
-        "technologicalTargetOfficialSymbol": string.split(result.assay.technological_target_official_symbol, "|"),
-        "technologicalTargetGeneSymbol": string.split(result.assay.technological_target_gene_symbol, "|"),
+        "technologicalTargetGeneId": splitString(result.assay.technological_target_gene_id, "|"),
+        "technologicalTargetEntrezGeneId": splitString(result.assay.technological_target_entrez_gene_id, "|"),
+        "technologicalTargetOfficialFullName": splitString(result.assay.technological_target_official_full_name, "|"),
+        "technologicalTargetGeneName": splitString(result.assay.technological_target_gene_name, "|"),
+        "technologicalTargetOfficialSymbol": splitString(result.assay.technological_target_official_symbol, "|"),
+        "technologicalTargetGeneSymbol": splitString(result.assay.technological_target_gene_symbol, "|"),
         "technologicalTargetDescription": result.assay.technological_target_description,
         "technologicalTargetUniprotAccessionNumber": result.assay.technological_target_uniprot_accession_number,
         "technologicalTargetOrganismId": result.assay.technological_target_organism_id,
         "technologicalTargetTrackStatus": result.assay.technological_target_track_status,
-        "citationsCitationId": string.split(result.assay.citations_citation_id, "|"),
-        "citationsPmid": string.split(result.assay.citations_pmid, "|"),
-        "citationsDoi": string.split(result.assay.citations_doi, "|"),
+        "citationsCitationId": splitString(result.assay.citations_citation_id, "|"),
+        "citationsPmid": splitString(result.assay.citations_pmid, "|"),
+        "citationsDoi": splitString(result.assay.citations_doi, "|"),
         # missing: citations_other_source
         # missing: citations_other_id
-        "citationsCitation": string.split(result.assay.citations_citation, "|"),
-        "citationsTitle": string.split(result.assay.citations_title, "|"),
-        "citationsAuthor": string.split(result.assay.citations_author, "|"),
-        "citationsUrl": string.split(result.assay.citations_url, "|"),
+        "citationsCitation": splitString(result.assay.citations_citation, "|"),
+        "citationsTitle": splitString(result.assay.citations_title, "|"),
+        "citationsAuthor": splitString(result.assay.citations_author, "|"),
+        "citationsUrl": splitString(result.assay.citations_url, "|"),
         #missing: reagent_arid
         #missing: reagent_reagent_name_value
         #missing: reagent_reagent_name_value_type
@@ -151,7 +151,16 @@ def assays_assay_id_get(assayId) -> str:
 
 def assays_get(assayIds=None, offset=None, limit=None, facetOrganism=None, facetAssayName=None, facetTissue=None,
                facetCellFormat=None, facetAssayDesignType=None, facetFunction=None, facetIntendedTarget=None) -> str:
-    return 'do some magic!'
+    query = Search(using=client, index="toxcast") \
+        .filter(_type="assay")
+    offset = 0 if offset is None else offset
+    limit = 10000 if limit is None else limit
+    query = query[offset:limit]
+    response = query.execute()
+    if not response.success():
+        return "Query was not successful", 500
+
+    return list(map(result_es_to_toxcastapi, response))
 
 
 def compounds_compound_id_get(compoundId) -> str:
@@ -159,4 +168,19 @@ def compounds_compound_id_get(compoundId) -> str:
 
 
 def compounds_get(compoundIds=None, offset=None, limit=None) -> str:
-    return 'do some magic!'
+    query = Search(using=client, index="toxcast") \
+        .filter(_type="compound")
+    offset = 0 if offset is None else offset
+    limit = 10000 if limit is None else limit
+    query = query[offset:limit]
+    response = query.execute()
+    if not response.success():
+        return "Query was not successful", 500
+
+    return list(map(result_es_to_toxcastapi, response))
+
+def splitString(str, seperator):
+    if (str):
+        return str.split(seperator)
+    else:
+        return str
