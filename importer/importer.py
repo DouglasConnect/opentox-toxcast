@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 '''
 Usage:
@@ -97,7 +97,7 @@ def query_additional_chemical_identifiers(identifierconverter, casnr):
         logger.debug('Converted %(casn)s to inchi %(inchi)s, inchikey %(inchikey)s and smiles %(smiles)s' % result)
         return result
 
-    except requests.exceptions.ConnectionError, e:
+    except requests.exceptions.ConnectionError as e:
         raise ChemIdConversionError(e)
 
 
@@ -135,7 +135,7 @@ class Parser(object):
 
         # get assays from the first results file (columns = assays)
         with codecs.open(self.abspath(self.schema['results'][0]['file']), 'rb', encoding=self.schema['results'][0].get('encoding', 'utf8')) as fi:
-            for line in csv.reader((line.encode('utf8') for line in fi)):
+            for line in csv.reader(fi):
                 assays = line[1:]
                 break
 
@@ -154,7 +154,7 @@ class Parser(object):
         try:
             while(True):
                 # while we can read results files, combine lines from all results files and yield over assays
-                line = [r.next() for r in result_parsers]
+                line = [next(r) for r in result_parsers]
                 compound = line[0]['__COMPOUND__']
                 for assay in assays:
                     result = dict([(part, line[i][assay]) for i, part in enumerate(result_parts)])
@@ -177,15 +177,15 @@ class CSVParser(object):
         self.start_at_row = start_at_row if start_at_row is not None else 0
 
     def parse(self, filename):
-        with codecs.open(filename, 'rb', encoding=self.encoding) as fi:
-            for i, line in enumerate(csv.reader((line.encode('utf8') for line in fi))):
+        with codecs.open(filename, 'r', encoding=self.encoding) as fi:
+            for i, line in enumerate(csv.reader(fi)):
                 if i >= self.start_at_row:
-                    yield(self.parse_line(filename, i, [x.decode('utf8') for x in line]))
+                    yield(self.parse_line(filename, i, line))
 
     def parse_line(self, filename, i, line):
         try:
             return dict([(key, self.parse_value(schema, line)) for key, schema in self.schema.items()])
-        except Exception, e:
+        except Exception as e:
             logger.warn('Error parsing file %s at line %s: %s' % (filename, i, e))
             return None
 
@@ -254,7 +254,7 @@ def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host,
         '_type': 'compound',
         '_id': compound['chid'],
         '_source': compound
-    } for compound in compound_cache.itervalues()))
+    } for compound in compound_cache.values()))
 
     # Assays
     assay_cache = {}
@@ -267,7 +267,7 @@ def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host,
         '_type': 'assay',
         '_id': assay['aeid'],
         '_source': assay
-    } for assay in assay_cache.itervalues()))
+    } for assay in assay_cache.values()))
 
     # Results - use compoud ID chid-aeid
     logger.info('Parsing and indexing results')

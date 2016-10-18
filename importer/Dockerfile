@@ -1,6 +1,7 @@
-FROM python:2.7
+FROM python:3
 MAINTAINER Daniel Bachler <daniel@douglasconnect.com>
-LABEL description="Toxcast data import container to fill elasticsearch with data from Toxcast csv files"
+LABEL description="ToxCast data import container to import ToxCast CVS files into Elasticsearch"
+ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get install -y unzip wget jq
 COPY requirements.txt /code/requirements.txt
 RUN cd /code && pip install -r requirements.txt --upgrade
