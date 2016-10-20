@@ -1,465 +1,507 @@
-assays:
-  file: 'Assay_Summary_151020.csv'
-  encoding: 'cp1252'
-  startAtRow: 1
-  properties:
-    aid:
-      col: 0
-      type: 'integer'
-    acid:
-      col: 1
-      type: 'integer'
-    aeid:
-      col: 2
-      type: 'integer'
-    asid:
-      col: 3
-      type: 'integer'
-    assay_source_name:
-      col: 4
-      type: 'string'
-    assay_source_long_name:
-      col: 5
-      type: 'string'
-    assay_source_desc:
-      col: 6
-      type: 'string'
-    assay_name:
-      col: 7
-      type: 'string'
-    assay_desc:
-      col: 8
-      type: 'string'
-      nulls: ['NA']
-    timepoint_hr:
-      col: 9
-      type: 'float'
-      nulls: ['NA']
-    organism_id:
-      col: 10
-      type: 'integer'
-      nulls: ['NA']
-    organism:
-      col: 11
-      type: 'string'
-      nulls: ['NA']
-    tissue:
-      col: 12
-      type: 'string'
-      nulls: ['NA']
-    cell_format:
-      col: 13
-      type: 'string'
-      nulls: ['NA']
-    cell_free_component_source:
-      col: 14
-      type: 'string'
-      nulls: ['NA']
-    cell_short_name:
-      col: 15
-      type: 'string'
-      nulls: ['NA']
-    cell_growth_mode:
-      col: 16
-      type: 'string'
-      nulls: ['NA']
-    assay_footprint:
-      col: 17
-      type: 'string'
-      nulls: ['NA']
-    assay_format_type:
-      col: 18
-      type: 'string'
-      nulls: ['NA']
-    assay_format_type_sub:
-      col: 19
-      type: 'string'
-      nulls: ['NA']
-    content_readout_type:
-      col: 20
-      type: 'string'
-      nulls: ['NA']
-    dilution_solvent:
-      col: 21
-      type: 'string'
-      nulls: ['NA']
-    dilution_solvent_percent_max:
-      col: 22
-      type: 'float'
-      nulls: ['NA']
-    assay_component_name:
-      col: 23
-      type: 'string'
-      nulls: ['NA']
-    assay_component_desc:
-      col: 24
-      type: 'string'
-      nulls: ['NA']
-    assay_component_target_desc:
-      col: 25
-      type: 'string'
-      nulls: ['NA']
-    parameter_readout_type:
-      col: 26
-      type: 'string'
-    assay_design_type:
-      col: 27
-      type: 'string'
-      nulls: ['NA']
-    assay_design_type_sub:
-      col: 28
-      type: 'string'
-      nulls: ['NA']
-    biological_process_target:
-      col: 29
-      type: 'string'
-      nulls: ['NA']
-    detection_technology_type:
-      col: 30
-      type: 'string'
-      nulls: ['NA']
-    detection_technology_type_sub:
-      col: 31
-      type: 'string'
-      nulls: ['NA']
-    detection_technology:
-      col: 32
-      type: 'string'
-      nulls: ['NA']
-    signal_direction_type:
-      col: 33
-      type: 'string'
-      nulls: ['NA']
-    key_assay_reagent_type:
-      col: 34
-      type: 'string'
-      nulls: ['NA']
-    key_assay_reagent:
-      col: 35
-      type: 'string'
-      nulls: ['NA']
-    technological_target_type:
-      col: 36
-      type: 'string'
-      nulls: ['NA']
-    technological_target_type_sub:
-      col: 37
-      type: 'string'
-      nulls: ['NA']
-    assay_component_endpoint_name:
-      col: 38
-      type: 'string'
-    # export_ready ommited (always 1)
-    # internal_ready ommited (always 1)
-    assay_component_endpoint_desc:
-      col: 41
-      type: 'string'
-      nulls: ['NA']
-    assay_function_type:
-      col: 42
-      type: 'string'
-      nulls: ['NA']
-    normalized_data_type:
-      col: 43
-      type: 'string'
-    analysis_direction:
-      col: 44
-      type: 'string'
-      nulls: ['NA']
-    burst_assay:
-      col: 45
-      type: 'integer'
-    key_positive_control:
-      col: 46
-      type: 'string'
-      nulls: ['NA']
-    signal_direction:
-      col: 47
-      type: 'string'
-      nulls: ['NA']
-    intended_target_type:
-      col: 48
-      type: 'string'
-      nulls: ['NA']
-    intended_target_type_sub:
-      col: 49
-      type: 'string'
-      nulls: ['NA']
-    intended_target_family:
-      col: 50
-      type: 'string'
-      nulls: ['NA']
-    intended_target_family_sub:
-      col: 51
-      type: 'string'
-      nulls: ['NA']
-    # fit_all ommited (always 0)
-    intended_target_gene_id:
-      col: 53
-      type: 'string' # not an int because lists are possible
-      nulls: ['NA']
-    intended_target_entrez_gene_id:
-      col: 54
-      type: 'string'
-      nulls: ['NA']
-    intended_target_official_full_name:
-      col: 55
-      type: 'string'
-      nulls: ['NA']
-    intended_target_gene_name:
-      col: 56
-      type: 'string'
-      nulls: ['NA']
-    intended_target_official_symbol:
-      col: 57
-      type: 'string'
-      nulls: ['NA']
-    intended_target_gene_symbol:
-      col: 58
-      type: 'string'
-      nulls: ['NA']
-    intended_target_description:
-      col: 59
-      type: 'string'
-      nulls: ['NA', 'NA|NA', 'NA|NA|NA', 'NA|NA|NA|NA']
-    intended_target_uniprot_accession_number:
-      col: 60
-      type: 'string'
-      nulls: ['NA']
-    intended_target_organism_id:
-      col: 61
-      type: 'string'
-      nulls: ['NA']
-    intended_target_track_status:
-      col: 62
-      type: 'string'
-      nulls: ['NA']
-    technological_target_gene_id:
-      col: 63
-      type: 'string'
-      nulls: ['NA']
-    technological_target_entrez_gene_id:
-      col: 64
-      type: 'string'
-      nulls: ['NA']
-    technological_target_official_full_name:
-      col: 65
-      type: 'string'
-      nulls: ['NA']
-    technological_target_gene_name:
-      col: 66
-      type: 'string'
-      nulls: ['NA']
-    technological_target_official_symbol:
-      col: 67
-      type: 'string'
-      nulls: ['NA']
-    technological_target_gene_symbol:
-      col: 68
-      type: 'string'
-      nulls: ['NA']
-    technological_target_description:
-      col: 69
-      type: 'string'
-      nulls: ['NA', 'NA|NA', 'NA|NA|NA', 'NA|NA|NA|NA']
-    technological_target_uniprot_accession_number:
-      col: 70
-      type: 'string'
-      nulls: ['NA']
-    technological_target_organism_id:
-      col: 71
-      type: 'string'
-      nulls: ['NA']
-    technological_target_track_status:
-      col: 72
-      type: 'string'
-      nulls: ['NA']
-    citations_citation_id:
-      col: 73
-      type: 'string'
-      nulls: ['NA']
-    citations_pmid:
-      col: 74
-      type: 'string'
-      nulls: ['NA']
-    citations_doi:
-      col: 75
-      type: 'string'
-      nulls: ['NA']
-    citations_other_source:
-      col: 76
-      type: 'string'
-      nulls: ['NA']
-    citations_other_id:
-      col: 77
-      type: 'string'
-      nulls: ['NA']
-    citations_citation:
-      col: 78
-      type: 'string'
-      nulls: ['NA']
-    citations_title:
-      col: 79
-      type: 'string'
-      nulls: ['NA']
-    citations_author:
-      col: 80
-      type: 'string'
-      nulls: ['NA']
-    citations_url:
-      col: 81
-      type: 'string'
-      nulls: ['NA']
-    reagent_arid:
-      col: 82
-      type: 'string'
-      nulls: ['NA']
-    reagent_reagent_name_value:
-      col: 83
-      type: 'string'
-      nulls: ['NA']
-    reagent_reagent_name_value_type:
-      col: 84
-      type: 'string'
-      nulls: ['NA']
-    reagent_culture_or_assay:
-      col: 85
-      type: 'string'
-      nulls: ['NA']
-
 compounds:
-  file: 'Chemical_Summary_151020.csv'
+  file: INVITRODB_V2_SUMMARY/Chemical_Summary_151020.csv
   startAtRow: 1
   properties:
     chid:
       col: 0
-      type: 'integer'
+      type: integer
     chnm:
       col: 1
-      type: 'string'
+      type: string
     casn:
       col: 2
-      type: 'string'
+      type: string
     code:
       col: 3
-      type: 'string'
+      type: string
     clib:
       col: 4
-      type: 'string'
+      type: string
+      nulls: ["NA"]
+
+
+compoundIdentifiers:
+  # ftp://newftp.epa.gov/comptox/High_Throughput_Screening_Data/DSSTox_Oct_2015/DSSTox_ToxCastRelease_20151019.zip
+  file: DSSTox_ToxCastRelease_20151019/DSSTox_ToxCastRelease_20151019.xlsx
+  startAtRow: 1
+  properties:
+    chid:
+      col: 0
+      type: integer
+    dssToxSubstanceId:
+      col: 1
+      type: string
+    dssToxStructureId:
+      col: 2
+      type: string
+    dssToxQCLevel:
+      col: 3
+      type: string
+    substanceType:
+      col: 6
+      type: string
+    substanceNote:
+      col: 7
+      type: string
+    structureSMILES:
+      col: 8
+      type: string
+    structureInChI:
+      col: 9
+      type: string
+    structureInChIKey:
+      col: 10
+      type: string
+    structureFormula:
+      col: 11
+      type: string
+    structureMolWt:
+      col: 12
+      type: float
+      nulls: [""]
+
+assays:
+  file: INVITRODB_V2_SUMMARY/Assay_Summary_151020.csv
+  encoding: cp1252
+  startAtRow: 1
+  properties:
+    aid:
+      col: 0
+      type: integer
+    acid:
+      col: 1
+      type: integer
+    aeid:
+      col: 2
+      type: integer
+    asid:
+      col: 3
+      type: integer
+    assaySourceName:
+      col: 4
+      type: string
+    assaySourceLongName:
+      col: 5
+      type: string
+    assaySourceDesc:
+      col: 6
+      type: string
+    assayName:
+      col: 7
+      type: string
+    assayDesc:
+      col: 8
+      type: string
+      nulls: ["NA"]
+    timepointHr:
+      col: 9
+      type: float
+      nulls: ["NA"]
+    organismId:
+      col: 10
+      type: integer
+      nulls: ["NA"]
+    organism:
+      col: 11
+      type: string
+      nulls: ["NA"]
+    tissue:
+      col: 12
+      type: string
+      nulls: ["NA"]
+    cellFormat:
+      col: 13
+      type: string
+      nulls: ["NA"]
+    cellFreeComponentSource:
+      col: 14
+      type: string
+      nulls: ["NA"]
+    cellShortName:
+      col: 15
+      type: string
+      nulls: ["NA"]
+    cellGrowthMode:
+      col: 16
+      type: string
+      nulls: ["NA"]
+    assayFootprint:
+      col: 17
+      type: string
+      nulls: ["NA"]
+    assayFormatType:
+      col: 18
+      type: string
+      nulls: ["NA"]
+    assayFormatTypeSub:
+      col: 19
+      type: string
+      nulls: ["NA"]
+    contentReadoutType:
+      col: 20
+      type: string
+      nulls: ["NA"]
+    dilutionSolvent:
+      col: 21
+      type: string
+      nulls: ["NA"]
+    dilutionSolventPercentMax:
+      col: 22
+      type: float
+      nulls: ["NA"]
+    assayComponentName:
+      col: 23
+      type: string
+      nulls: ["NA"]
+    assayComponentDesc:
+      col: 24
+      type: string
+      nulls: ["NA"]
+    assayComponentTargetDesc:
+      col: 25
+      type: string
+      nulls: ["NA"]
+    parameterReadoutType:
+      col: 26
+      type: string
+    assayDesignType:
+      col: 27
+      type: string
+      nulls: ["NA"]
+    assayDesignTypeSub:
+      col: 28
+      type: string
+      nulls: ["NA"]
+    biologicalProcessTarget:
+      col: 29
+      type: string
+      nulls: ["NA"]
+    detectionTechnologyType:
+      col: 30
+      type: string
+      nulls: ["NA"]
+    detectionTechnologyTypeSub:
+      col: 31
+      type: string
+      nulls: ["NA"]
+    detectionTechnology:
+      col: 32
+      type: string
+      nulls: ["NA"]
+    signalDirectionType:
+      col: 33
+      type: string
+      nulls: ["NA"]
+    keyAssayReagentType:
+      col: 34
+      type: string
+      nulls: ["NA"]
+    keyAssayReagent:
+      col: 35
+      type: string
+      nulls: ["NA"]
+    technologicalTargetType:
+      col: 36
+      type: string
+      nulls: ["NA"]
+    technologicalTargetTypeSub:
+      col: 37
+      type: string
+      nulls: ["NA"]
+    assayComponentEndpointName:
+      col: 38
+      type: string
+    # exportReady ommited (always 1)
+    # internalReady ommited (always 1)
+    assayComponentEndpointDesc:
+      col: 41
+      type: string
+      nulls: ["NA"]
+    assayFunctionType:
+      col: 42
+      type: string
+      nulls: ["NA"]
+    normalizedDataType:
+      col: 43
+      type: string
+    analysisDirection:
+      col: 44
+      type: string
+      nulls: ["NA"]
+    burstAssay:
+      col: 45
+      type: integer
+    keyPositiveControl:
+      col: 46
+      type: string
+      nulls: ["NA"]
+    signalDirection:
+      col: 47
+      type: string
+      nulls: ["NA"]
+    intendedTargetType:
+      col: 48
+      type: string
+      nulls: ["NA"]
+    intendedTargetTypeSub:
+      col: 49
+      type: string
+      nulls: ["NA"]
+    intendedTargetFamily:
+      col: 50
+      type: string
+      nulls: ["NA"]
+    intendedTargetFamilySub:
+      col: 51
+      type: string
+      nulls: ["NA"]
+    # fitAll ommited (always 0)
+    intendedTargetGeneId:
+      col: 53
+      type: string # not an int because lists are possible
+      nulls: ["NA"]
+    intendedTargetEntrezGeneId:
+      col: 54
+      type: string
+      nulls: ["NA"]
+    intendedTargetOfficialFullName:
+      col: 55
+      type: string
+      nulls: ["NA"]
+    intendedTargetGeneName:
+      col: 56
+      type: string
+      nulls: ["NA"]
+    intendedTargetOfficialSymbol:
+      col: 57
+      type: string
+      nulls: ["NA"]
+    intendedTargetGeneSymbol:
+      col: 58
+      type: string
+      nulls: ["NA"]
+    intendedTargetDescription:
+      col: 59
+      type: string
+      nulls: ["NA", "NA|NA", "NA|NA|NA", "NA|NA|NA|NA"]
+    intendedTargetUniprotAccessionNumber:
+      col: 60
+      type: string
+      nulls: ["NA"]
+    intendedTargetOrganismId:
+      col: 61
+      type: string
+      nulls: ["NA"]
+    intendedTargetTrackStatus:
+      col: 62
+      type: string
+      nulls: ["NA"]
+    technologicalTargetGeneId:
+      col: 63
+      type: string
+      nulls: ["NA"]
+    technologicalTargetEntrezGeneId:
+      col: 64
+      type: string
+      nulls: ["NA"]
+    technologicalTargetOfficialFullName:
+      col: 65
+      type: string
+      nulls: ["NA"]
+    technologicalTargetGeneName:
+      col: 66
+      type: string
+      nulls: ["NA"]
+    technologicalTargetOfficialSymbol:
+      col: 67
+      type: string
+      nulls: ["NA"]
+    technologicalTargetGeneSymbol:
+      col: 68
+      type: string
+      nulls: ["NA"]
+    technologicalTargetDescription:
+      col: 69
+      type: string
+      nulls: ["NA", "NA|NA", "NA|NA|NA", "NA|NA|NA|NA"]
+    technologicalTargetUniprotAccessionNumber:
+      col: 70
+      type: string
+      nulls: ["NA"]
+    technologicalTargetOrganismId:
+      col: 71
+      type: string
+      nulls: ["NA"]
+    technologicalTargetTrackStatus:
+      col: 72
+      type: string
+      nulls: ["NA"]
+    citationsCitationId:
+      col: 73
+      type: string
+      nulls: ["NA"]
+    citationsPmid:
+      col: 74
+      type: string
+      nulls: ["NA"]
+    citationsDoi:
+      col: 75
+      type: string
+      nulls: ["NA"]
+    citationsOtherSource:
+      col: 76
+      type: string
+      nulls: ["NA"]
+    citationsOtherId:
+      col: 77
+      type: string
+      nulls: ["NA"]
+    citationsCitation:
+      col: 78
+      type: string
+      nulls: ["NA"]
+    citationsTitle:
+      col: 79
+      type: string
+      nulls: ["NA"]
+    citationsAuthor:
+      col: 80
+      type: string
+      nulls: ["NA"]
+    citationsUrl:
+      col: 81
+      type: string
+      nulls: ["NA"]
+    reagentArid:
+      col: 82
+      type: string
+      nulls: ["NA"]
+    reagentReagentNameValue:
+      col: 83
+      type: string
+      nulls: ["NA"]
+    reagentReagentNameValueType:
+      col: 84
+      type: string
+      nulls: ["NA"]
+    reagentCultureOrAssay:
+      col: 85
+      type: string
+      nulls: ["NA"]
 
 results:
   # TODO this one is different from all the others
-  # - file: 'cyto_dist_Matrix_151020.csv'
+  # - file: cyto_dist_Matrix_151020.csv
   #   startAtRow: 1
-  #   type: 'string'
-  #   nulls: ['NA']
-  - file: 'fitc_Matrix_151020.csv'
+  #   type: string
+  #   nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/fitc_Matrix_151020.csv
     startAtRow: 1
-    name: 'fitc'
-    type: 'integer'
-    nulls: ['NA']
-  - file: 'hitc_Matrix_151020.csv'
+    name: fitc
+    type: integer
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/hitc_Matrix_151020.csv
     startAtRow: 1
-    name: 'hitc'
-    type: 'integer'
-    nulls: ['NA']
-  - file: 'logc_max_Matrix_151020.csv'
+    name: hitc
+    type: integer
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/logc_max_Matrix_151020.csv
     startAtRow: 1
-    name: 'logc_max'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'logc_min_Matrix_151020.csv'
+    name: logcMax
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/logc_min_Matrix_151020.csv
     startAtRow: 1
-    name: 'logc_min'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'm4id_Matrix_151020.csv'
+    name: logcMin
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/m4id_Matrix_151020.csv
     startAtRow: 1
-    name: 'm4id'
-    type: 'integer'
-    nulls: ['NA']
-  - file: 'max_mean_Matrix_151020.csv'
+    name: m4id
+    type: integer
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/max_mean_Matrix_151020.csv
     startAtRow: 1
-    name: 'max_mean'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'max_med_Matrix_151020.csv'
+    name: maxMean
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/max_med_Matrix_151020.csv
     startAtRow: 1
-    name: 'max_med'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'modl_Matrix_151020.csv'
+    name: maxMed
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/modl_Matrix_151020.csv
     startAtRow: 1
-    name: 'modl'
-    type: 'string'
-    nulls: ['NA']
-  - file: 'modl_ac10_Matrix_151020.csv'
+    name: modl
+    type: string
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/modl_ac10_Matrix_151020.csv
     startAtRow: 1
-    name: 'modl_ac10'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'modl_acb_Matrix_151020.csv'
+    name: modlAc10
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/modl_acb_Matrix_151020.csv
     startAtRow: 1
-    name: 'modl_acb'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'modl_acc_Matrix_151020.csv'
+    name: modlAcb
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/modl_acc_Matrix_151020.csv
     startAtRow: 1
-    name: 'modl_acc'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'modl_ga_Matrix_151020.csv'
+    name: modlAcc
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/modl_ga_Matrix_151020.csv
     startAtRow: 1
-    name: 'modl_ga'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'modl_gw_Matrix_151020.csv'
+    name: modlGa
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/modl_gw_Matrix_151020.csv
     startAtRow: 1
-    name: 'modl_gw'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'modl_la_Matrix_151020.csv'
+    name: modlGw
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/modl_la_Matrix_151020.csv
     startAtRow: 1
-    name: 'modl_la'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'modl_lw_Matrix_151020.csv'
+    name: modlLa
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/modl_lw_Matrix_151020.csv
     startAtRow: 1
-    name: 'modl_lw'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'modl_rmse_Matrix_151020.csv'
+    name: modlLw
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/modl_rmse_Matrix_151020.csv
     startAtRow: 1
-    name: 'modl_rmse'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'modl_tp_Matrix_151020.csv'
+    name: modlRmse
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/modl_tp_Matrix_151020.csv
     startAtRow: 1
-    name: 'modl_tp'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'oldstyle_ac50_Matrix_151020.csv'
+    name: modlTp
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/oldstyle_ac50_Matrix_151020.csv
     startAtRow: 1
-    name: 'oldstyle_ac50'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'oldstyle_neg_log_ac50_Matrix_151020.csv'
+    name: oldstyleAc50
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/oldstyle_neg_log_ac50_Matrix_151020.csv
     startAtRow: 1
-    name: 'oldstyle_neg_log_ac50'
-    type: 'float'
-    nulls: ['NA']
-  - file: 'spid_Matrix_151020.csv'
+    name: oldstyleNegLogAc50
+    type: float
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/spid_Matrix_151020.csv
     startAtRow: 1
-    name: 'spid'
-    type: 'string'
-    nulls: ['NA']
-  - file: 'tested_Matrix_151020.csv'
+    name: spid
+    type: string
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/tested_Matrix_151020.csv
     startAtRow: 1
-    name: 'tested'
-    type: 'boolean'
-    nulls: ['NA']
-  - file: 'zscore_Matrix_151020.csv'
+    name: tested
+    type: boolean
+    nulls: ["NA"]
+  - file: INVITRODB_V2_SUMMARY/zscore_Matrix_151020.csv
     startAtRow: 1
-    name: 'zscore'
-    type: 'float'
-    nulls: ['NA']
+    name: zscore
+    type: float
+    nulls: ["NA"]

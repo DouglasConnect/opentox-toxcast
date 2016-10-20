@@ -1,43 +1,75 @@
 settings:
+  # Index settings
   # https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules.html
 
 mappings:
+  # Mappings
   # https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html
 
   assay: &assay
     properties:
       aid:
-        type: "integer"
-        index: "not_analyzed"
+        type: integer
       assayName:
-        type: "string"
+        type: string
       assayDesc:
-        type: "string"
+        type: string
       organism:
-        # facet candidate
-        type: "string"
+        type: string
         fields:
           raw:
-            type: "string"
-            index: "not_analyzed"
+            type: string
+            index: not_analyzed
       tissue:
-        # facet candidate
-        type: "string"
+        type: string
         fields:
           raw:
-            type: "string"
-            index: "not_analyzed"
+            type: string
+            index: not_analyzed
 
   compound: &compound
     properties:
       chid:
-        type: "integer"
-        index: "not_analyzed"
+        type: integer
       chnm:
-        type: "string"
+        type: string
       casn:
-        type: "string"
-        index: "not_analyzed"
+        type: string
+        index: not_analyzed
+      code:
+        type: string
+        index: not_analyzed
+      clib:
+        type: string
+        index: not_analyzed
+      dssToxSubstanceId:
+        type: string
+        index: not_analyzed
+      dssToxStructureId:
+        type: string
+        index: not_analyzed
+      dssToxQCLevel:
+        type: string
+        index: not_analyzed
+      substanceType:
+        type: string
+        index: not_analyzed
+      substanceNote:
+        type: string
+      structureSMILES:
+        type: string
+        index: not_analyzed
+      structureInChI:
+        type: string
+        index: not_analyzed
+      structureInChIKey:
+        type: string
+        index: not_analyzed
+      structureFormula:
+        type: string
+        index: not_analyzed
+      structureMolWt:
+        type: float
 
   result:
     properties:
@@ -46,68 +78,49 @@ mappings:
       result:
         properties:
           fitc:
-            type: 'integer'
-            index: 'not_analyzed'
+            type: integer
           hitc:
-            type: 'integer'
-            index: 'not_analyzed'
-          logc_max:
-            type: 'float'
-            index: 'not_analyzed'
-          logc_min:
-            type: 'float'
-            index: 'not_analyzed'
+            type: integer
+          logcMax:
+            type: float
+          logcMin:
+            type: float
           m4id:
-            type: 'integer'
-            index: 'not_analyzed'
-          max_mean:
-            type: 'float'
-            index: 'not_analyzed'
-          max_med:
-            type: 'float'
-            index: 'not_analyzed'
+            type: integer
+          maxMean:
+            type: float
+          maxMed:
+            type: float
           modl:
-            type: 'string'
-            index: 'not_analyzed'
-          modl_ac10:
-            type: 'float'
-            index: 'not_analyzed'
-          modl_acb:
-            type: 'float'
-            index: 'not_analyzed'
-          modl_acc:
-            type: 'float'
-            index: 'not_analyzed'
-          modl_ga:
-            type: 'float'
-            index: 'not_analyzed'
-          modl_gw:
-            type: 'float'
-            index: 'not_analyzed'
-          modl_la:
-            type: 'float'
-            index: 'not_analyzed'
-          modl_lw:
-            type: 'float'
-            index: 'not_analyzed'
-          modl_rmse:
-            type: 'float'
-            index: 'not_analyzed'
-          modl_tp:
-            type: 'float'
-            index: 'not_analyzed'
-          oldstyle_ac50:
-            type: 'float'
-            index: 'not_analyzed'
-          oldstyle_neg_log_ac50:
-            type: 'float'
-            index: 'not_analyzed'
+            type: string
+            index: not_analyzed
+          modlAc10:
+            type: float
+          modlAcb:
+            type: float
+          modlAcc:
+            type: float
+          modlGa:
+            type: float
+          modlGw:
+            type: float
+          modlLa:
+            type: float
+          modlLw:
+            type: float
+          modlRmse:
+            type: float
+          modlTp:
+            type: float
+          oldstyleAc50:
+            type: float
+          oldstyleNegLogAc50:
+            type: float
           spid:
-            type: 'string'
-            index: 'not_analyzed'
+            type: string
+            index: not_analyzed
           tested:
-            type: 'boolean'
-            index: 'not_analyzed'
+            type: boolean
+            index: not_analyzed
           zscore:
-            type: 'float'
-            index: 'not_analyzed'
+            type: float

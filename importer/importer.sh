@@ -36,7 +36,7 @@ sleep 10
 
 if python /code/importer.py elastic index exists toxcast --elasticsearch-host $ELASTICSEARCHHOSTNAME
 then
-  echo "Elasticsearch already contains a document called toxcast, aborting data loading"#
+  echo "Elasticsearch already contains an toxcast index, aborting data import"#
   exit 1
 fi
 

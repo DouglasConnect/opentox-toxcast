@@ -2,28 +2,26 @@
 
 '''
 Usage:
-    importer.py elastic index create <index> <index.yaml> [--elasticsearch-host=<hostname>]
+    importer.py elastic index create <index> <index.yaml> [--elasticsearch-host=<hostname>] [--force]
     importer.py elastic index drop <index> [--elasticsearch-host=<hostname>]
     importer.py elastic index exists <index> [--elasticsearch-host=<hostname>]
-    importer.py import <index> <dirname> <parser-schema.yaml> [--elasticsearch-host=<hostname>] [--chemid-conversion-host=<hostname>] [--without-chemid-conversion]
+    importer.py import <index> <dirname> <parser-schema.yaml> [--elasticsearch-host=<hostname>] [--chemid-conversion-host=<hostname>] [--perform-chemid-conversion]
 
 Options:
   -h --help  Show this help.
   -e <hostname> --elasticsearch-host=<hostname>      Hostname of the elastic search host. Default is localhost.
   -i <hostname> --chemid-conversion-host=<hostname>  Hostname of the chemical identifier conversion tool (chemIdConvert). Default is localhost.
-  --without-chemid-conversion                        Do not perform chemical identifier conversion. Default is to perform the conversion.
+  --perform-chemid-conversion                        Perform chemical identifier conversion.
+  --force                                            Force elasticsearch index creation even if index already exists.
 '''
 
 import os
 import sys
-import re
 import csv
 import yaml
-import math
 import codecs
-import logging
-import requests
 
+import logging
 logging.basicConfig(format='%(levelname)s %(message)s')
 logging.getLogger('__main__').setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
@@ -31,6 +29,9 @@ logger = logging.getLogger(__name__)
 from docopt import docopt
 from elasticsearch.helpers import bulk
 from elasticsearch import Elasticsearch, ElasticsearchException
+
+from lib.parser import CSVParser, XLSParser
+from lib.chemid import chemical_identifiers_from_casnr
 
 
 # -----------------------------------------------------------------------------
@@ -48,8 +49,9 @@ def elastic_index_create(es, index, definition):
     es.indices.create(index=index, body=definition)
 
 
-def elastic_index_delete(es, index):
-    es.indices.delete(index=index)
+def elastic_index_delete(es, index, ignore=None):
+    ignore = [] if ignore is None else ignore
+    es.indices.delete(index=index, ignore=ignore)
 
 
 def elastic_index_exists(es, index):
@@ -57,58 +59,9 @@ def elastic_index_exists(es, index):
 
 
 # -----------------------------------------------------------------------------
-# Query chemical identifiers
-
-class ChemIdConversionError(Exception):
-    pass
-
-
-def query_additional_chemical_identifiers(identifierconverter, casnr):
-    if not re.match('^\d+-\d+-\d+$', casnr):
-        logger.warn('Not a valid cas number: %s' % casnr)
-        return None
-
-    try:
-        r = requests.get('http://%s/v1/cas/to/inchi' % identifierconverter, params={'cas': casnr})
-        if r.status_code != 200 or r.json()['inchi'] is None:
-            logger.warn('Could not convert cas number: %s' % casnr)
-            return None
-        inchi = r.json()['inchi']
-
-        r = requests.get('http://%s/v1/inchi/to/inchikey' % identifierconverter, params={'inchi': inchi})
-        if r.status_code != 200 or r.json()['inchikey'] is None:
-            logger.warn('Could not convert to inchikey: %s' % inchi)
-            return None
-        inchikey = r.json()['inchikey']
-
-        r = requests.get('http://%s/v1/inchi/to/smiles' % identifierconverter, params={'inchi': inchi})
-        if r.status_code != 200 or r.json()['smiles'] is None:
-            logger.warn('Could not convert to smiles: %s' % inchi)
-            return None
-        smiles = r.json()['smiles']
-
-        result = {
-            'casn': casnr,
-            'inchi': inchi,
-            'inchikey': inchikey,
-            'smiles': smiles
-        }
-
-        logger.debug('Converted %(casn)s to inchi %(inchi)s, inchikey %(inchikey)s and smiles %(smiles)s' % result)
-        return result
-
-    except requests.exceptions.ConnectionError as e:
-        raise ChemIdConversionError(e)
-
-
-# -----------------------------------------------------------------------------
 # Data parsing and importing into Elastic
 
-class ParseError(Exception):
-    pass
-
-
-class Parser(object):
+class ToxCastParser(object):
 
     def __init__(self, dirname, schema):
         self.dirname = dirname
@@ -117,6 +70,25 @@ class Parser(object):
     def abspath(self, filename):
         return os.path.abspath(os.path.join(self.dirname, filename))
 
+    def parse_compound_identifiers(self):
+        return XLSParser(
+            schema=self.schema['compoundIdentifiers']['properties'],
+            encoding=self.schema['compoundIdentifiers'].get('encoding'),
+            start_at_row=self.schema['compoundIdentifiers'].get('startAtRow')
+        ).parse(self.abspath(self.schema['compoundIdentifiers']['file']))
+
+    def parse_compounds(self):
+        parser = CSVParser(
+            schema=self.schema['compounds']['properties'],
+            encoding=self.schema['compounds'].get('encoding'),
+            start_at_row=self.schema['compounds'].get('startAtRow')
+        )
+        for compound in parser.parse(self.abspath(self.schema['compounds']['file'])):
+            if compound is not None:
+                if compound.get('clib') is not None:
+                    compound['clib'] = compound['clib'].split('|')
+            yield compound
+
     def parse_assays(self):
         return CSVParser(
             schema=self.schema['assays']['properties'],
@@ -124,15 +96,7 @@ class Parser(object):
             start_at_row=self.schema['assays'].get('startAtRow'),
         ).parse(self.abspath(self.schema['assays']['file']))
 
-    def parse_compounds(self):
-        return CSVParser(
-            schema=self.schema['compounds']['properties'],
-            encoding=self.schema['compounds'].get('encoding'),
-            start_at_row=self.schema['compounds'].get('startAtRow')
-        ).parse(self.abspath(self.schema['compounds']['file']))
-
     def parse_results(self):
-
         # get assays from the first results file (columns = assays)
         with codecs.open(self.abspath(self.schema['results'][0]['file']), 'rb', encoding=self.schema['results'][0].get('encoding', 'utf8')) as fi:
             for line in csv.reader(fi):
@@ -169,70 +133,8 @@ class Parser(object):
             pass
 
 
-class CSVParser(object):
-
-    def __init__(self, schema, encoding=None, start_at_row=None):
-        self.schema = schema
-        self.encoding = encoding if encoding is not None else 'utf8'
-        self.start_at_row = start_at_row if start_at_row is not None else 0
-
-    def parse(self, filename):
-        with codecs.open(filename, 'r', encoding=self.encoding) as fi:
-            for i, line in enumerate(csv.reader(fi)):
-                if i >= self.start_at_row:
-                    yield(self.parse_line(filename, i, line))
-
-    def parse_line(self, filename, i, line):
-        try:
-            return dict([(key, self.parse_value(schema, line)) for key, schema in self.schema.items()])
-        except Exception as e:
-            logger.warn('Error parsing file %s at line %s: %s' % (filename, i, e))
-            return None
-
-    def parse_value(self, schema, line):
-        value = line[schema['col']]
-        nulls = schema.get('nulls')
-
-        if nulls is not None and value in nulls:
-            return None
-
-        if schema['type'] == 'string':
-            return self.parse_string(value)
-        elif schema['type'] == 'boolean':
-            return self.parse_boolean(value)
-        elif schema['type'] == 'integer':
-            return self.parse_integer(value)
-        elif schema['type'] == 'float':
-            return self.parse_float(value)
-        else:
-            raise ParseError('unknown property type: \'%s\'' % schema['type'])
-
-    def parse_string(self, value):
-        return value.strip()
-
-    def parse_boolean(self, value):
-        if int(value.strip()) in [0, 1]:
-            return bool(int(value.strip()))
-        else:
-            raise ParseError('invalid value for bool: %s' % value)
-
-    def parse_integer(self, value):
-        try:
-            return int(value.strip())
-        except ValueError:
-            # try parsing integers represented in scientific notation
-            frac, whole = math.modf(float(value.strip()))
-            if frac == 0:
-                return whole
-            else:
-                raise ParseError('invalid value for integer: %s' % value)
-
-    def parse_float(self, value):
-        return float(value.strip())
-
-
 def annotate_with_aditional_chemical_identifiers(identifierconverter, compound):
-    additional_identifiers = query_additional_chemical_identifiers(identifierconverter, compound['casn'])
+    additional_identifiers = chemical_identifiers_from_casnr(identifierconverter, compound['casn'])
     if additional_identifiers is None:
         return compound
     else:
@@ -241,12 +143,23 @@ def annotate_with_aditional_chemical_identifiers(identifierconverter, compound):
 
 
 def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host, perform_chemid_conversion):
-    parser = Parser(dirname, parser_schema)
+    parser = ToxCastParser(dirname, parser_schema)
+
+    # Compound identifiers
+    compound_identifier_cache = {}
+    logger.info('Parsing compound identifiers from %s' % parser_schema['compoundIdentifiers']['file'])
+    for compound in (compound for compound in parser.parse_compound_identifiers() if compound is not None):
+        compound_identifier_cache[compound['chid']] = compound
 
     # Compounds
     compound_cache = {}
     logger.info('Parsing compounds from %s' % parser_schema['compounds']['file'])
     for compound in (compound for compound in parser.parse_compounds() if compound is not None):
+        if compound.get('chid') in compound_identifier_cache:
+            compound.update(compound_identifier_cache[compound.get('chid')])
+        else:
+            # explicitly set chemid values to null for API consistency
+            compound.update(dict([(k, None) for k in ('dssToxSubstanceId', 'dssToxStructureId', 'dssToxQCLevel', 'substanceType', 'substanceNote', 'structureSMILES', 'structureInChI', 'structureInChIKey', 'structureFormula', 'structureMolWt')]))
         compound_cache[compound['code']] = compound
     logger.info('Indexing compounds in elasticsearch')
     bulk(es, ({
@@ -260,7 +173,7 @@ def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host,
     assay_cache = {}
     logger.info('Parsing assays from %s' % parser_schema['assays']['file'])
     for assay in (assay for assay in parser.parse_assays() if assay is not None):
-        assay_cache[assay['assay_component_endpoint_name']] = assay
+        assay_cache[assay['assayComponentEndpointName']] = assay
     logger.info('Indexing assays in elasticsearch')
     bulk(es, ({
         '_index': index,
@@ -292,15 +205,17 @@ def main(argv=None):
 
     elasticsearch_host = args.get('--elasticsearch-host', 'localhost')
     chemid_conversion_host = args.get('--chemid-conversion-host', 'localhost')
-    perform_chemid_conversion = not args.get('--without-chemid-conversion', False)
+    perform_chemid_conversion = args.get('--perform-chemid-conversion', False)
 
     try:
         es = Elasticsearch(elasticsearch_host, timeout=90)
     except ElasticsearchException as e:
-        print(e)
+        logger.error(e)
         sys.exit(2)
 
     if args['elastic'] and args['index'] and args['create']:
+        if args['--force']:
+            elastic_index_delete(es, args['<index>'], ignore=[400, 404])
         elastic_index_create(es, args['<index>'], load_yaml_file(args['<index.yaml>']))
 
     elif args['elastic'] and args['index'] and args['drop']:
