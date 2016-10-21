@@ -6,27 +6,6 @@ mappings:
   # Mappings
   # https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html
 
-  assay: &assay
-    properties:
-      aid:
-        type: integer
-      assayName:
-        type: string
-      assayDesc:
-        type: string
-      organism:
-        type: string
-        fields:
-          raw:
-            type: string
-            index: not_analyzed
-      tissue:
-        type: string
-        fields:
-          raw:
-            type: string
-            index: not_analyzed
-
   compound: &compound
     properties:
       chid:
@@ -70,6 +49,177 @@ mappings:
         index: not_analyzed
       structureMolWt:
         type: float
+
+  assay: &assay
+    properties:
+      aid:
+        type: integer
+      acid:
+        type: integer
+      aeid:
+        type: integer
+      asid:
+        type: integer
+      assaySourceName:
+        type: string
+      assaySourceLongName:
+        type: string
+      assaySourceDesc:
+        type: string
+      assayName:
+        type: string
+      assayDesc:
+        type: string
+      timepointHr:
+        type: float
+      organismId:
+        type: integer
+      organism:
+        type: string
+      tissue:
+        type: string
+      cellFormat:
+        type: string
+      cellFreeComponentSource:
+        type: string
+      cellShortName:
+        type: string
+      cellGrowthMode:
+        type: string
+      assayFootprint:
+        type: string
+      assayFormatType:
+        type: string
+      assayFormatTypeSub:
+        type: string
+      contentReadoutType:
+        type: string
+      dilutionSolvent:
+        type: string
+      dilutionSolventPercentMax:
+        type: float
+      assayComponentName:
+        type: string
+      assayComponentDesc:
+        type: string
+      assayComponentTargetDesc:
+        type: string
+      parameterReadoutType:
+        type: string
+      assayDesignType:
+        type: string
+      assayDesignTypeSub:
+        type: string
+      biologicalProcessTarget:
+        type: string
+      detectionTechnologyType:
+        type: string
+      detectionTechnologyTypeSub:
+        type: string
+      detectionTechnology:
+        type: string
+      signalDirectionType:
+        type: string
+      keyAssayReagentType:
+        type: string
+      keyAssayReagent:
+        type: string
+      technologicalTargetType:
+        type: string
+      technologicalTargetTypeSub:
+        type: string
+      assayComponentEndpointName:
+        type: string
+      assayComponentEndpointDesc:
+        type: string
+      assayFunctionType:
+        type: string
+      normalizedDataType:
+        type: string
+      analysisDirection:
+        type: string
+      burstAssay:
+        type: boolean
+      keyPositiveControl:
+        type: string
+      signalDirection:
+        type: string
+      intendedTargetType:
+        type: string
+      intendedTargetTypeSub:
+        type: string
+      intendedTargetFamily:
+        type: string
+      intendedTargetFamilySub:
+        type: string
+      intendedTargetGeneId:
+        type: integer
+      intendedTargetEntrezGeneId:
+        type: integer
+      intendedTargetOfficialFullName:
+        type: string
+      intendedTargetGeneName:
+        type: string
+      intendedTargetOfficialSymbol:
+        type: string
+      intendedTargetGeneSymbol:
+        type: string
+      intendedTargetDescription:
+        type: string
+      intendedTargetUniprotAccessionNumber:
+        type: string
+      intendedTargetOrganismId:
+        type: integer
+      intendedTargetTrackStatus:
+        type: string
+      technologicalTargetGeneId:
+        type: integer
+      technologicalTargetEntrezGeneId:
+        type: integer
+      technologicalTargetOfficialFullName:
+        type: string
+      technologicalTargetGeneName:
+        type: string
+      technologicalTargetOfficialSymbol:
+        type: string
+      technologicalTargetGeneSymbol:
+        type: string
+      technologicalTargetDescription:
+        type: string
+      technologicalTargetUniprotAccessionNumber:
+        type: string
+      technologicalTargetOrganismId:
+        type: integer
+      technologicalTargetTrackStatus:
+        type: string
+      citationsCitationId:
+        type: integer
+      citationsPmid:
+        type: integer
+      citationsDoi:
+        type: string
+      citationsOtherSource:
+        type: string
+      citationsOtherId:
+        type: string
+      citationsCitation:
+        type: string
+      citationsTitle:
+        type: string
+      citationsAuthor:
+        type: string
+      citationsUrl:
+        type: string
+      reagent:
+        properties:
+          arid:
+            type: integer
+          reagentNameValue:
+            type: string
+          reagentNameValueType:
+            type: string
+          cultureOrAssay:
+            type: string
 
   result:
     properties:

@@ -70,6 +70,14 @@ class ToxCastParser(object):
     def abspath(self, filename):
         return os.path.abspath(os.path.join(self.dirname, filename))
 
+    def zip_fields(self, assay, fields, to_field, subfields):
+        # zip list values from multiple fields and remove ones that have all resulting values None
+        lists = [assay[f] for f in fields]
+        values = [value for value in zip(*lists) if not all(v is None for v in value)]
+        assay[to_field] = [dict(zip(subfields, v)) for v in values]
+        for f in fields:
+            del assay[f]
+
     def parse_compound_identifiers(self):
         return XLSParser(
             schema=self.schema['compoundIdentifiers']['properties'],
@@ -78,23 +86,26 @@ class ToxCastParser(object):
         ).parse(self.abspath(self.schema['compoundIdentifiers']['file']))
 
     def parse_compounds(self):
-        parser = CSVParser(
+        return CSVParser(
             schema=self.schema['compounds']['properties'],
             encoding=self.schema['compounds'].get('encoding'),
             start_at_row=self.schema['compounds'].get('startAtRow')
-        )
-        for compound in parser.parse(self.abspath(self.schema['compounds']['file'])):
-            if compound is not None:
-                if compound.get('clib') is not None:
-                    compound['clib'] = compound['clib'].split('|')
-            yield compound
+        ).parse(self.abspath(self.schema['compounds']['file']))
 
     def parse_assays(self):
-        return CSVParser(
+        parser = CSVParser(
             schema=self.schema['assays']['properties'],
             encoding=self.schema['assays'].get('encoding'),
             start_at_row=self.schema['assays'].get('startAtRow'),
-        ).parse(self.abspath(self.schema['assays']['file']))
+        )
+        for assay in parser.parse(self.abspath(self.schema['assays']['file'])):
+            self.zip_fields(
+                assay,
+                fields=('reagentArid', 'reagentReagentNameValue', 'reagentReagentNameValueType', 'reagentCultureOrAssay'),
+                to_field='reagent',
+                subfields=('arid', 'reagentNameValue', 'reagentNameValueType', 'cultureOrAssay'),
+            )
+            yield assay
 
     def parse_results(self):
         # get assays from the first results file (columns = assays)

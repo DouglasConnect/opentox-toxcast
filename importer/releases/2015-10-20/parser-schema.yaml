@@ -16,9 +16,8 @@ compounds:
       type: string
     clib:
       col: 4
-      type: string
+      type: list string
       nulls: ["NA"]
-
 
 compoundIdentifiers:
   # ftp://newftp.epa.gov/comptox/High_Throughput_Screening_Data/DSSTox_Oct_2015/DSSTox_ToxCastRelease_20151019.zip
@@ -152,7 +151,6 @@ assays:
     assayComponentName:
       col: 23
       type: string
-      nulls: ["NA"]
     assayComponentDesc:
       col: 24
       type: string
@@ -211,8 +209,6 @@ assays:
     assayComponentEndpointName:
       col: 38
       type: string
-    # exportReady ommited (always 1)
-    # internalReady ommited (always 1)
     assayComponentEndpointDesc:
       col: 41
       type: string
@@ -230,7 +226,7 @@ assays:
       nulls: ["NA"]
     burstAssay:
       col: 45
-      type: integer
+      type: boolean
     keyPositiveControl:
       col: 46
       type: string
@@ -255,138 +251,137 @@ assays:
       col: 51
       type: string
       nulls: ["NA"]
-    # fitAll ommited (always 0)
     intendedTargetGeneId:
       col: 53
-      type: string # not an int because lists are possible
+      type: list integer
       nulls: ["NA"]
     intendedTargetEntrezGeneId:
       col: 54
-      type: string
+      type: list integer
       nulls: ["NA"]
     intendedTargetOfficialFullName:
       col: 55
-      type: string
+      type: list string
       nulls: ["NA"]
     intendedTargetGeneName:
       col: 56
-      type: string
+      type: list string
       nulls: ["NA"]
     intendedTargetOfficialSymbol:
       col: 57
-      type: string
+      type: list string
       nulls: ["NA"]
     intendedTargetGeneSymbol:
       col: 58
-      type: string
+      type: list string
       nulls: ["NA"]
     intendedTargetDescription:
       col: 59
-      type: string
-      nulls: ["NA", "NA|NA", "NA|NA|NA", "NA|NA|NA|NA"]
+      type: list string
+      nulls: ["NA"]
     intendedTargetUniprotAccessionNumber:
       col: 60
-      type: string
+      type: list string
       nulls: ["NA"]
     intendedTargetOrganismId:
       col: 61
-      type: string
+      type: list integer
       nulls: ["NA"]
     intendedTargetTrackStatus:
       col: 62
-      type: string
+      type: list string
       nulls: ["NA"]
     technologicalTargetGeneId:
       col: 63
-      type: string
+      type: list integer
       nulls: ["NA"]
     technologicalTargetEntrezGeneId:
       col: 64
-      type: string
+      type: list integer
       nulls: ["NA"]
     technologicalTargetOfficialFullName:
       col: 65
-      type: string
+      type: list string
       nulls: ["NA"]
     technologicalTargetGeneName:
       col: 66
-      type: string
+      type: list string
       nulls: ["NA"]
     technologicalTargetOfficialSymbol:
       col: 67
-      type: string
+      type: list string
       nulls: ["NA"]
     technologicalTargetGeneSymbol:
       col: 68
-      type: string
+      type: list string
       nulls: ["NA"]
     technologicalTargetDescription:
       col: 69
-      type: string
-      nulls: ["NA", "NA|NA", "NA|NA|NA", "NA|NA|NA|NA"]
+      type: list string
+      nulls: ["NA"]
     technologicalTargetUniprotAccessionNumber:
       col: 70
-      type: string
+      type: list string
       nulls: ["NA"]
     technologicalTargetOrganismId:
       col: 71
-      type: string
+      type: list integer
       nulls: ["NA"]
     technologicalTargetTrackStatus:
       col: 72
-      type: string
+      type: list string
       nulls: ["NA"]
     citationsCitationId:
       col: 73
-      type: string
+      type: list integer
       nulls: ["NA"]
     citationsPmid:
       col: 74
-      type: string
+      type: list integer
       nulls: ["NA"]
     citationsDoi:
       col: 75
-      type: string
+      type: list string
       nulls: ["NA"]
     citationsOtherSource:
       col: 76
-      type: string
+      type: list string
       nulls: ["NA"]
     citationsOtherId:
       col: 77
-      type: string
+      type: list string
       nulls: ["NA"]
     citationsCitation:
       col: 78
-      type: string
+      type: list string
       nulls: ["NA"]
     citationsTitle:
       col: 79
-      type: string
+      type: list string
       nulls: ["NA"]
     citationsAuthor:
       col: 80
-      type: string
+      type: list string
       nulls: ["NA"]
     citationsUrl:
       col: 81
-      type: string
+      type: list string
       nulls: ["NA"]
     reagentArid:
       col: 82
-      type: string
+      type: list integer
       nulls: ["NA"]
     reagentReagentNameValue:
       col: 83
-      type: string
+      type: list string
       nulls: ["NA"]
     reagentReagentNameValueType:
       col: 84
-      type: string
+      type: list string
       nulls: ["NA"]
     reagentCultureOrAssay:
       col: 85
-      type: string
+      type: list string
       nulls: ["NA"]
 
 results:

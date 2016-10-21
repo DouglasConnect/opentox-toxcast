@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: ToxcastDB interface (Assay information, Compound information and assay values for tested compounts)
+  title: ToxCast databse API - assay, compound and assay results values for tested compounts.
   description: |
     This Api exposes the EPA's ToxCast summary dataset (October 2015 release).
 
@@ -17,395 +17,373 @@ basePath: /v1
 produces:
   - application/json
 paths:
-  /assays:
-    get:
-      summary: "Returns all assay endpoints known to toxcast including metadata about each assay"
-      description: "For each assay (endpoint), returns metadata like assay description, assay source, organism, tissue, cell format, ..."
-      tags:
-        - assays, assay endpoints
-      parameters:
-        - name: assayIds
-          description: "Assay ids to filter on a subset of assay endpoints"
-          in: query
-          type: array
-          collectionFormat: csv
-          required: false
-          items:
-            type: string
-        - $ref: '#/parameters/OffsetParameter'
-        - $ref: '#/parameters/LimitParameter'
-        - name: facetOrganism
-          description: "Faceting terms for the organism field"
-          in: query
-          type: array
-          collectionFormat: csv
-          required: false
-          items:
-            type: string
-        - name: facetAssayName
-          description: "Faceting terms for the assay name field"
-          in: query
-          type: array
-          collectionFormat: csv
-          required: false
-          items:
-            type: string
-        - name: facetTissue
-          description: "Faceting terms for the tissue field"
-          in: query
-          type: array
-          collectionFormat: csv
-          required: false
-          items:
-            type: string
-        - name: facetCellFormat
-          description: "Faceting terms for the cell format field"
-          in: query
-          type: array
-          collectionFormat: csv
-          required: false
-          items:
-            type: string
-        - name: facetAssayDesignType
-          description: "Faceting terms for the assay design type field"
-          in: query
-          type: array
-          collectionFormat: csv
-          required: false
-          items:
-            type: string
-        - name: facetFunction
-          description: "Faceting terms for the assay function field"
-          in: query
-          type: array
-          collectionFormat: csv
-          required: false
-          items:
-            type: string
-        - name: facetIntendedTarget
-          description: "Faceting terms for the intended Target field"
-          in: query
-          type: array
-          collectionFormat: csv
-          required: false
-          items:
-            type: string
-      responses:
-        200:
-          description: "An array of assay endpoints including metadata about the assay endpoints"
-          schema:
-            $ref: '#/definitions/AssayEndpoints'
-        default:
-          description: "Unexpected error"
-          schema:
-            $ref: '#/definitions/Error'
-  /assays/{assayId}:
-    get:
-      summary: "Returns all assay endpoints known to toxcast including metadata about each assay"
-      description: "For each assay, returns metadata like assay description, assay source, organism, tissue, cell format, ..."
-      tags:
-        - assays, assay endpoints
-      parameters:
-        - name: assayId
-          description: "Assay endpoint id to get metadata for"
-          in: path
-          type: string
-          required: true
-      responses:
-        200:
-          description: "An array of assay endpoints including metadata about the assay endpoints"
-          schema:
-            $ref: '#/definitions/AssayEndpoint'
-        default:
-          description: "Unexpected error"
-          schema:
-            $ref: '#/definitions/Error'
   /compounds:
     get:
-      summary: "Get data on compounds and a list of assay endpoint names that tested this compound"
-      description: "Returns, for a given compound, a list of assay endpoint names that tested this compound"
+      summary: "Get compound data"
+      description: "Returns a list of compounds"
       tags:
         - compound
       parameters:
         - name: compoundIds
-          description: "Optional list of toxcast compound Ids to get data for"
+          description: "Filter by compound IDs"
           in: query
           type: array
           collectionFormat: csv
           required: false
           items:
             type: string
-        - $ref: '#/parameters/OffsetParameter'
-        - $ref: '#/parameters/LimitParameter'
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/Limit'
+        - $ref: '#/parameters/CompoundIds'
+        - $ref: '#/parameters/DssToxQCLevelFilter'
+        - $ref: '#/parameters/SubstanceTypeFilter'
       responses:
         200:
-          description: "An array of items containing identifiers for the compound and the assay values (hitcall etc)"
+          description: "A list of compounds and aggregations"
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/CompoundWithAssays'
+            type: object
+            properties:
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Compound'
+              aggragations:
+                type: object
+                properties:
+                  $ref: '#/definitions/DssToxQCLevelAggregation':
+                  $ref: '#/definitions/SubstanceTypeAggregation':
         default:
-          description: "Unexpected error"
-          schema:
-            $ref: '#/definitions/Error'
-  /compounds/{compoundId}:
+          $ref: '#/definitions/DefaultResponse'
+  /assays:
     get:
-      summary: "Get data on one specific compound and a list of assay endpoint names that tested this compound"
-      description: "Returns, for a given compound, a list of assay endpoint names that tested this compound"
+      summary: "Get assay data"
+      description: "Returns a list of assays (assay endpoints)"
       tags:
-        - compound
+        - assays, assay endpoints
       parameters:
-        - name: compoundId
-          description: "Toxcast Compound Id to query"
-          in: path
-          type: string
-          required: true
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/Limit'
+        - $ref: '#/parameters/AssayIds'
+        - $ref: '#/parameters/AssayEndpointIds'
+        - $ref: '#/parameters/StudyIds'
+        - $ref: '#/parameters/OrganismFilter'
+        - $ref: '#/parameters/TissueFilter'
+        - $ref: '#/parameters/CellFormatFilter'
+        - $ref: '#/parameters/AssayDesignTypeFilter'
+        - $ref: '#/parameters/FunctionFilter'
+        - $ref: '#/parameters/IntendedTargetFilter'
       responses:
         200:
-          description: "An array of items containing identifiers for the compound and the assay values (hitcall etc)"
+          description: "A list of assay endpoints and aggregations"
           schema:
-            $ref: '#/definitions/CompoundWithAssays'
+            type: object
+            properties:
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Assay'
+              aggragations:
+                type: object
+                properties:
+                  $ref: '#/definitions/DssToxQCLevelAggregation':
+                  $ref: '#/definitions/SubstanceTypeAggregation':
         default:
-          description: "Unexpected error"
-          schema:
-            $ref: '#/definitions/Error'
+          $ref: '#/definitions/DefaultResponse'
   /results:
     get:
-      summary: "Assay endpoint result values for all successfully tested compounds"
-      description: "Returns a list of rows containing the assayId, compound identifiers and the measured/derived assay endpoint values"
+      summary: "Get assau results"
+      description: "Returns a list of results with associated compound and assay data"
       tags:
         - assay
       parameters:
-        - name: assayIds
-          description: "Assay endpoint ids to query"
-          in: query
-          type: array
-          collectionFormat: csv
-          required: true
-          items:
-            type: string
-        - name: compounds
-          description: "list of compounds to include in the result. Uses toxcast internal identifier for compounds (toxcastCompoundId)"
-          in: query
-          required: false
-          type: array
-          collectionFormat: csv
-          items:
-            type: string
-        - $ref: '#/parameters/OffsetParameter'
-        - $ref: '#/parameters/LimitParameter'
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/Limit'
+
+        - $ref: '#/parameters/CompoundIds'
+        - $ref: '#/parameters/DssToxQCLevelFilter'
+        - $ref: '#/parameters/SubstanceTypeFilter'
+
+        - $ref: '#/parameters/AssayIds'
+        - $ref: '#/parameters/AssayEndpointIds'
+        - $ref: '#/parameters/StudyIds'
+        - $ref: '#/parameters/OrganismFilter'
+        - $ref: '#/parameters/TissueFilter'
+        - $ref: '#/parameters/CellFormatFilter'
+        - $ref: '#/parameters/AssayDesignTypeFilter'
+        - $ref: '#/parameters/FunctionFilter'
+        - $ref: '#/parameters/IntendedTargetFilter'
       responses:
         200:
-          description: "An array of items containing the assay values (hitcall etc), compound ids and assay ids"
+          description: "A list of results with associated compound and assay data. Aggregations for faceted navigation."
           schema:
-            $ref: '#/definitions/AssayResults'
+            type: object:
+            properties:
+              aggregations:
+                type: object
+                properties:
+
+              results:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    compound:
+                      $ref: '#/definitions/Compound'
+                    assay:
+                      $ref: '#/definitions/Assay'
+                    result:
+                      $ref: '#/definitions/Result'
         default:
-          description: "Unexpected error"
-          schema:
-            $ref: '#/definitions/Error'
+          $ref: '#/definitions/DefaultResponse'
+
 parameters:
-  OffsetParameter:
+  # Slicing
+  Offset:
     name: offset
     description: "Number of assay endpoints to skip (for paging)"
     in: query
     required: false
     type: integer
-  LimitParameter:
+  Limit:
     name: limit
     description: "Maximum count of assay endpoints to return (for paging)"
     in: query
     required: false
     type: integer
+
+  # Compound
+  CompoundIds:
+    name: compoundIds
+    description: "Filter by compound IDs"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  DssToxQCLevelFilter:
+    name: dssToxQCLevelFilter
+    description: "Filter by the quality level filter field"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  SubstanceTypeFilter:
+    name: substanceTypeFilter
+    description: "Filter by the substance type field"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+
+  DssToxQCLevelAggregation:
+    $ref: '#/definitions/Aggregation'
+  SubstanceTypeAggregation:
+    $ref: '#/definitions/Aggregation'
+
+  # Assay
+  AssayIds:
+    name: assayIds
+    description: "Filter by assay IDs"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  AssayEndpointIds:
+    name: assayEndpointIds
+    description: "Filter by assay IDs"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  StudyIds:
+    name: studyIds
+    description: "Filter by study IDs"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  OrganismFilter:
+    name: organismFilter
+    description: "Filter by the organism field"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  TissueFilter:
+    name: tissueFilter
+    description: "Filter by the tissue field"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  CellFormatFilter:
+    name: cellFormatFilter
+    description: "Filter by the cell format field"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  AssayDesignTypeFilter:
+    name: assayDesignTypeFilter
+    description: "Filter by the assay design type field"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  FunctionFilter:
+    name: functionFilter
+    description: "Filter by the assay function field"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  IntendedTargetFilter:
+    name: intendedTargetFilter
+    description: "Filter by the intended Target field"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+
+  OrganismAggregation:
+    $ref: '#/definitions/Aggregation'
+  TissueAggregation:
+    $ref: '#/definitions/Aggregation'
+  CellFormatAggregation:
+    $ref: '#/definitions/Aggregation'
+  AssayDesignTypeAggregation:
+    $ref: '#/definitions/Aggregation'
+  FunctionAggregation:
+    $ref: '#/definitions/Aggregation'
+  IntendedTargetAggregation:
+    $ref: '#/definitions/Aggregation'
+
 definitions:
-  CompoundWithAssays:
-    type: object
-    properties:
-      compound:
-        $ref: '#/definitions/Compound'
-      assaysTested:
-        type: array
-        items:
-          type: object
-          description: "A list of assayIds that tested this compound."
-          properties:
-            assayId:
-              description: "Assay endoint id"
-              type: string
-            assayEndpointName:
-              description: "Assay endpoint name"
-              type: string
-            assayEndpointDesc:
-              description: "Verbose assay endpoint description"
-              type: string
   Compound:
     type: object
     properties:
-      compoundId:
+      chid:
         type: integer
         description: "Internal identifier of compounds within Toxcast"
-      chemicalName:
+      chnm:
         type: string
-        description: "Chemical name (as stored in ToxCast)          "
-      casNumber:
+        description: "Chemical name (as stored in ToxCast)"
+      casn:
         type: string
         description: "CAS Number as stored in Toxcast. Can be empty string if no valid CAS number is stored in ToxCast."
         x-ontology: http://edamontology.org/data_3102
-      inchi:
+      code:
         type: string
-        description: |
-          Compound structure converted to InChI notation. This string can be empty if a conversion from the
-          internal id to an inchi string was not successful.
-        x-ontology: http://edamontology.org/format_1197
-      inchiKey:
+        description: ""
+      clib:
         type: string
-        description: |
-          Compound structure converted to InChIKey. This string can be empty if a conversion from the
-          internal id to an inchiKey string was not successful.
-        x-ontology: http://edamontology.org/format_1199
-      smiles:
+        description: ""
+      dssToxSubstanceId:
         type: string
-        description: |
-          Compound structure converted to SMILES notation. This string can be empty if a conversion from the
-          internal id to a SMILES string was not successful.
+        description: ""
+      dssToxStructureId:
+        type: string
+        description: ""
+      dssToxQCLevel:
+        type: string
+        description: ""
+      substanceType:
+        type: string
+        description: ""
+      substanceNote:
+        type: string
+        description: ""
+      structureSMILES:
+        type: string
+        description: ""
         x-ontology: http://edamontology.org/format_1196
-  AssayResults:
-    type: array
-    items:
-      type: object
-      properties:
-        assay:
-          $ref: '#/definitions/AssayEndpoint'
-        compound:
-          $ref: '#/definitions/Compound'
-        result:
-          $ref: '#/definitions/AssayResultValues'
-  AssayResultValues:
-    type: object
-    properties:
-      fitCategory:
-        type: integer
-        description: "Fit Category (numeric category id - See https://cran.rstudio.com/web/packages/tcpl/vignettes/tcpl_Overview.pdf)"
-      hitcall:
-        type: integer
-        description: "ToxcastDB Assay HitCall value. Inactive = 0, Active = 1, Inconclusive = -1"
-      level4Id:
-        type: integer
-        description: "level 4 id inside the full toxcast database"
-      log10ConcentrationMax:
-        type: number
-        description: "log base 10 of the maximum concentration tested"
-      log10ConcentrationMin:
-        type: number
-        description: "log base 10 of the minimum concentration tested"
-      maxMean:
-        type: number
-        description: "the maximum of the means at each concentration"
-      maxMedian:
-        type: number
-        description: "the maximum of the medians at each concentration"
-      ac10:
-        type: number
-        description: "AC10 (activity concentration at 10%) for the winning model"
-      acBaseline:
-        type: number
-        description: "Activity concentration at baseline for the winning model"
-      acCutoff:
-        type: number
-        description: "Activity concentration at cutoff for the winning model"
-      gainAc50:
-        type: number
-        description: "Gain AC50 (activity concentration at 50%) for the winning model"
-      gainHillCoefficient:
-        type: number
-        description: "Gain Hill coefficient for the winning model"
-      lossAc50:
-        type: number
-        description: "Loss AC50 (activity concentration at 50%) for the winning model"
-      lossHillCoefficient:
-        type: number
-        description: "Loss Hill coefficient for the winning model"
-      winningModel:
+      structureInChI:
         type: string
-        description: "Winning model. (Used values: cnst, hill, gnls)"
-      rmse:
-        type: number
-        description: "Root mean square error of the winnign model"
-      oldstyleAc50:
-        type: number
-        description: "gainAc50 in micromolar (not log10) units."
-      oldstyleNegLogAc50:
-        type: number
-        description: "The negative log10 transformation of the oldstyleAc5ß value anchored to zero"
-      sampleId:
+        description: ""
+        x-ontology: http://edamontology.org/format_1197
+      structureInChIKey:
         type: string
-        description: "The id of the selected sample"
-      zScore:
-        type: number
-        description: "the zscore of AC50 values based on the chemical-specific cytotoxicity distribution file"
-  AssayEndpoints:
+        description: ""
+        x-ontology: http://edamontology.org/format_1199
+      structureFormula:
+        type: string
+        description: ""
+      structureMolWt:
+        type: float
+        description: ""
+
+  Assay:
     type: object
     properties:
-      facets:
-        type: object
-        properties:
-          assayName:
-            $ref: '#/definitions/FacetGroup'
-          organism:
-            $ref: '#/definitions/FacetGroup'
-          tissue:
-            $ref: '#/definitions/FacetGroup'
-          cellFormat:
-            $ref: '#/definitions/FacetGroup'
-          assayDesignType:
-            $ref: '#/definitions/FacetGroup'
-          assayFunction:
-            $ref: '#/definitions/FacetGroup'
-          intendedTarget:
-            $ref: '#/definitions/FacetGroup'
-      assayEndpoints:
-        type: array
-        items:
-          $ref: '#/definitions/AssayEndpoint'
-  AssayEndpoint:
-    type: object
-    properties:
-      assayId:
+      aid:
+        type: integer
+        description: "Assay id"
+      acid:
+        type: integer
+        description: "Assay component id"
+      aeid:
         type: integer
         description: "Assay endpoint id"
+      asid:
+        type: integer
+        description: ""
       assaySourceName:
         type: string
-        description: "a short name for the entity that conducted the assay"
+        description: "Short name for the entity that conducted the assay"
       assaySourceLongName:
         type: string
-        description: "the long name for the entity that conducted the assay"
+        description: "Long name for the entity that conducted the assay"
       assaySourceDesc:
         type: string
         description: "Description of the organization that performed the assay"
       assayName:
         type: string
-        description: "a short name for the assay, e.g. BSK_3C"
+        description: "Short name for the assay, e.g. BSK_3C"
       assayDesc:
         type: string
         description: "Description of the assay"
       timepointHr:
-        type: number
-        description: "the duration length to conduct the test portion of the assay"
+        type: float
+        description: "Duration length to conduct the test portion of the assay"
       organismId:
         type: integer
-        description: "The NCBI Taxonomy id of the organism"
-        x-ontology: http://purl.obolibrary.org/obo/OGG_0000000015
+        description: "NCBI Taxonomy id of the organism"
+        x-ontology: "http://purl.obolibrary.org/obo/OGG_0000000015"
       organism:
         type: string
-        description: "The target organism"
+        description: "Target organism"
       tissue:
         type: string
-        description: "the organ-level, anatomical entity of the protein or cell used in the assay"
+        description: "Organ-level, anatomical entity of the protein or cell used in the assay"
       cellFormat:
         type: string
-        description: "The target cell format"
+        description: "Target cell format"
       cellFreeComponentSource:
         type: string
-        description: "the cellular or sample tissue source of the assayed gene protein"
+        description: "Cellular or sample tissue source of the assayed gene protein"
       cellShortName:
         type: string
         description: "Cell short name"
@@ -414,245 +392,360 @@ definitions:
         description: "Cell growth mode"
       assayFootprint:
         type: string
-        description: "the physical format, such as plate density, in which an assay is performed"
+        description: "Physical format, such as plate density, in which an assay is performed"
       assayFormatType:
         type: string
-        description: "the conceptual biological and/or chemical features of the assay system"
+        description: "The conceptual biological and/or chemical features of the assay system"
       assayFormatTypeSub:
         type: string
-        description: "assay format subtype"
+        description: "Assay format subtype"
       contentReadoutType:
         type: string
-        description: "the throughput and information content generated"
+        description: "Throughput and information content generated"
       dilutionSolvent:
         type: string
-        description: "the solvent used as the negative control and to solubilize the test chemical"
+        description: "The solvent used as the negative control and to solubilize the test chemical"
       dilutionSolventPercentMax:
-        type: number
-        description: "the maximal amount of the dilution solvent tolerable for a particular assay"
+        type: float
+        description: "Maximal amount of the dilution solvent tolerable for a particular assay"
       assayComponentName:
         type: string
-        description: "a short name containing the assay and a component readout, e.g. BSK_3C_IL8"
+        description: "Short name containing the assay and a component readout, e.g. BSK_3C_IL8"
       assayComponentDesc:
         type: string
-        description: "assay component description"
+        description: "Assay component description"
       assayComponentTargetDesc:
         type: string
-        description: "assay component target description"
+        description: "Assay component target description"
       parameterReadoutType:
         type: string
-        description: "parameter readout type"
+        description: "Parameter readout type"
       assayDesignType:
         type: string
-        description: "assay design type"
+        description: "Assay design type"
       assayDesignTypeSub:
         type: string
-        description: "assay design subtype"
+        description: "Assay design subtype"
       biologicalProcessTarget:
         type: string
-        description: "biological process target"
+        description: "Biological process target"
       detectionTechnologyType:
         type: string
-        description: "detection technology type"
+        description: "Detection technology type"
       detectionTechnologyTypeSub:
         type: string
-        description: "detection technology subtype"
+        description: "Detection technology subtype"
       detectionTechnology:
         type: string
-        description: "detection technology"
+        description: "Detection technology"
       signalDirectionType:
         type: string
-        description: "signal direction type"
+        description: "Signal direction type"
       keyAssayReagentType:
         type: string
-        description: "key assay reagent type"
+        description: "Key assay reagent type"
       keyAssayReagent:
         type: string
-        description: "key assay reagent"
+        description: "Key assay reagent"
       technologicalTargetType:
         type: string
-        description: "the measured chemical, molecular, cellular, or anatomical entity"
+        description: "Measured chemical, molecular, cellular, or anatomical entity"
       technologicalTargetTypeSub:
         type: string
-        description: "the measured chemical, molecular, cellular, or anatomical subtype"
-      assayEndpointName:
+        description: "Measured chemical, molecular, cellular, or anatomical subtype"
+      assayComponentEndpointName:
         type: string
-        description: "A short name containing the assay, the component readout, and an analysis applied, e.g. BSK_3C_IL8_up"
-      assayEndpointDesc:
+        description: "Short name containing the assay, the component readout, and an analysis applied, e.g. BSK_3C_IL8_up"
+      assayComponentEndpointDesc:
         type: string
         description: "Description of the assay endpoint"
       assayFunctionType:
         type: string
-        description: "assay function type"
+        description: "Assay function type"
       normalizedDataType:
         type: string
-        description: "normalized data type"
+        description: "Normalized data type"
       analysisDirection:
         type: string
-        description: "analysis direction (used values: positive/negative)"
+        description: "Analysis direction (used values: positive/negative)"
       burstAssay:
         type: boolean
-        description: "burst assay"
+        description: "Burst assay"
       keyPositiveControl:
         type: string
-        description: "key positive control"
+        description: "Key positive control"
       signalDirection:
         type: string
-        description: "signal direction (used values: loss/gain)"
+        description: "Signal direction (used values: loss/gain)"
       intendedTargetType:
         type: string
-        description: "the objective chemical, molecular, cellular, pathway or anatomical entity"
+        description: "Objective chemical, molecular, cellular, pathway or anatomical entity"
       intendedTargetTypeSub:
         type: string
-        description: "the objective chemical, molecular, cellular, pathway or anatomical entity"
+        description: "Objective chemical, molecular, cellular, pathway or anatomical entity"
       intendedTargetFamily:
         type: string
-        description: "the target family of the objective target for the assay"
+        description: "Target family of the objective target for the assay"
       intendedTargetFamilySub:
         type: string
-        description: "the target family of the objective target for the assay"
+        description: "Target family of the objective target for the assay"
       intendedTargetGeneId:
         type: array
+        description: "List of target gene ids that are the objective"
         items:
           type: integer
-        description: "List of target gene ids that are the objective "
       intendedTargetEntrezGeneId:
         type: array
+        description: List of target gene ids that are the objective (NCBI Entrez gene id)
         items:
           type: integer
-        description: "List of target gene ids that are the objective (NCBI Entrez gene id)"
       intendedTargetOfficialFullName:
         type: array
+        description: "List of objective target offical full names"
         items:
           type: string
-        description: "List of objective target offical full names"
       intendedTargetGeneName:
         type: array
+        description: "List of objective target gene names"
         items:
           type: string
-        description: "List of objective target gene names"
       intendedTargetOfficialSymbol:
         type: array
+        description: "List of objective target offical symbols"
         items:
           type: string
-        description: "List of objective target offical symbols"
       intendedTargetGeneSymbol:
         type: array
+        description: "List of objective target symbols"
         items:
           type: string
-        description: "List of objective target symbols"
       intendedTargetDescription:
-        type: string
-        description: "objective target description"
+        type: array
+        description: "Objective target description"
+        items:
+          type: string
       intendedTargetUniprotAccessionNumber:
-        type: string
-        description: "objective target uniprot accesscion number"
+        type: array
+        description: "Objective target uniprot accesscion number"
+        items:
+          type: string
       intendedTargetOrganismId:
-        type: integer
-        description: "intended target organism id"
+        type: array
+        description: "Intended target organism id"
+        items:
+          type: integer
       intendedTargetTrackStatus:
-        type: string
-        description: "objective target track status (used values: live)"
+        type: array
+        description: "Objective target track status (used values: live)"
+        items:
+          type: string
       technologicalTargetGeneId:
         type: array
+        description: "Measured molecular target gene id"
         items:
           type: integer
-        description: "measured molecular target gene id"
       technologicalTargetEntrezGeneId:
         type: array
+        description: "List of measured molecular target gene ids (NCBI Entrez gene id)"
         items:
           type: integer
-        description: "List of measured molecular target gene ids (NCBI Entrez gene id)"
       technologicalTargetOfficialFullName:
         type: array
+        description: "List of measured molecular target offical full names"
         items:
           type: string
-        description: "List of measured molecular target offical full names"
       technologicalTargetGeneName:
         type: array
+        description: "List of technolmeasured molecularogical target gene names"
         items:
           type: string
-        description: "List of technolmeasured molecularogical target gene names"
       technologicalTargetOfficialSymbol:
         type: array
+        description: "List of measured molecular target offical symbols"
         items:
           type: string
-        description: "List of measured molecular target offical symbols"
       technologicalTargetGeneSymbol:
         type: array
+        description: "List of measured molecular target symbols"
         items:
           type: string
-        description: "List of measured molecular target symbols"
       technologicalTargetDescription:
-        type: string
-        description: "measured molecular target description"
+        type: array
+        description: "Measured molecular target description"
+        items:
+          type: string
       technologicalTargetUniprotAccessionNumber:
-        type: string
-        description: "measured molecular target uniprot accesscion number"
+        type: array
+        description: "Measured molecular target uniprot accesscion number"
+        items:
+          type: string
       technologicalTargetOrganismId:
-        type: integer
-        description: "measured molecular target organism id"
+        type: array
+        description: "Measured molecular target organism id"
+        items:
+          type: integer
       technologicalTargetTrackStatus:
-        type: string
-        description: "measured molecular target track status (used values: live)"
+        type: array
+        description: "Measured molecular target track status (used values: live)"
+        items:
+          type: string
       citationsCitationId:
         type: array
-        items:
-          type: string
         description: "List of citation ids"
+        items:
+          type: integer
       citationsPmid:
         type: array
-        items:
-          type: string
         description: "List of PubMed citation ids"
+        items:
+          type: integer
       citationsDoi:
         type: array
+        description: "List of citation digital object identifiers"
         items:
           type: string
-        description: "List of citation digital object identifiers"
+      citationsOtherSource:
+        type: array
+        description: "List of other source citations"
+        items:
+          type: string
+      citationsOtherId:
+        type: array
+        description: "Listf of other source citations ids"
+        items:
+          type: string
       citationsCitation:
         type: array
+        description: "List of citation texts"
         items:
           type: string
-        description: "List of citation texts"
       citationsTitle:
         type: array
+        description: "List of citation titles"
         items:
           type: string
-        description: "List of citation titles"
       citationsAuthor:
         type: array
+        description: "List of citation authors"
         items:
           type: string
-        description: "List of citation authors"
       citationsUrl:
         type: array
+        description: "List of citation URLs"
         items:
-          type: string
-          format: url
-        description: "List of citation urls"
-  FacetGroup:
-    type: object
-    properties:
-      title:
-        type: string
-        description: "Display title for the group of faceting terms"
-      terms:
+          type: url
+      reagent:
         type: array
-        description: "Faceting terms for this group"
+        description: ""
         items:
           type: object
           properties:
-            term:
+            arid:
+              type: integer
+            reagentNameValue:
               type: string
-              description: "term to display to the user"
+            reagentNameValueType:
+              type: string
+            cultureOrAssay:
+              type: string
+
+  Result:
+    type: object
+    properties:
+      fitc:
+        type: integer
+        description: "fit category"
+      hitc:
+        type: integer
+        description: "Activity or hit call, 1 indicates active"
+      logcMax:
+        type: float
+        description: "Level 4 id (from database) for the selected sample"
+      logcMin:
+        type: float
+        description: "Log base 10 of the maximum concentration tested"
+      m4id:
+        type: integer
+        description: "Log base 10 of the minimum concentration tested"
+      maxMean:
+        type: float
+        description: "Maximum of the means at each concentration"
+      maxMed:
+        type: float
+        description: "Maximum of the medians at each concentration"
+      modl:
+        type: string
+        description: "Activity concentration at 10% of the modeled top value (AC10)"
+      modlAc10:
+        type: float
+        description: "Activity concentration at 10% of the modeled top value (AC10)"
+      modlAcb:
+        type: float
+        description: "Activity concentration at baseline"
+      modlAcc:
+        type: float
+        description: "Activity concentration at cutoff"
+      modlGa:
+        type: float
+        description: "Gain AC50"
+      modlGw:
+        type: float
+        description: "Gain hill coefficient"
+      modlLa:
+        type: float
+        description: "Loss AC50"
+      modlLw:
+        type: float
+        description: "Loss hill coefficient"
+      modlRmse:
+        type: float
+        description: "Root mean square error (RMSE)"
+      modlTp:
+        type: float
+        description: "Modeled top of the curve"
+      oldstyleAc50:
+        type: float
+        description: ""
+      oldstyleNegLogAc50:
+        type: float
+        description: ""
+      spid:
+        type: string
+        description: "Sample id for the selected sample"
+      tested:
+        type: boolean
+        description: "Whether the chemical was tested, 1 indicates tested"
+      zscore:
+        type: float
+        description: "Zscore of AC50 values based on the chemical specific cytotoxicity distribution file"
+
+  Aggregation:
+    type: object
+    properties:
+      name:
+        type: string
+        description: "Aggregation name"
+      filterTerm:
+        type: string
+        description: "Term used to filter the results"
+      terms:
+        type: array
+        description: "Aggregation values and their counts"
+        items:
+          type: object
+          properties:
+            value:
+              type: string
+              description: "Value to display to the user and use for filtering"
             count:
               type: integer
-              description: "number of items if the current view is filtered by exactly this additional term"
-            url:
-              type: string
-              format: url
-              description: "Preconfigured endpoint url with the same result set as the current one but also filtered to this term"
+              description: "Number of items if the current view is filtered by this additional value"
+
+  DefaultResponse:
+    description: "Unexpected error"
+    schema:
+      $ref: '#/definitions/Error'
+
   Error:
     type: object
     properties:
