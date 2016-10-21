@@ -21,22 +21,33 @@ class Parser(object):
         self.start_at_row = start_at_row if start_at_row is not None else 0
 
     def parse_value(self, schema, line):
-        value = line[schema['col']]
-        nulls = schema.get('nulls')
+        try:
+            return self.parse_value_aux(line[schema['col']], schema['type'], schema.get('nulls'), schema.get('separator', '|'))
+        except Exception as e:
+            raise ParseError('%s at col %s' % (e, schema['col']))
 
-        if nulls is not None and value in nulls:
+    def parse_value_aux(self, value, kind, nulls=None, separator=None):
+        if nulls is not None and not kind.startswith('list ') and value in nulls:
             return None
 
-        if schema['type'] == 'string':
+        if kind == 'string':
             return self.parse_string(value)
-        elif schema['type'] == 'boolean':
+        elif kind == 'list string':
+            return self.parse_list(value, 'string', nulls, separator)
+        elif kind == 'boolean':
             return self.parse_boolean(value)
-        elif schema['type'] == 'integer':
+        elif kind == 'list boolean':
+            return self.parse_list(value, 'boolean', nulls, separator)
+        elif kind == 'integer':
             return self.parse_integer(value)
-        elif schema['type'] == 'float':
+        elif kind == 'list integer':
+            return self.parse_list(value, 'integer', nulls, separator)
+        elif kind == 'float':
             return self.parse_float(value)
+        elif kind == 'list float':
+            return self.parse_list(value, 'float', nulls, separator)
         else:
-            raise ParseError('unknown property type: \'%s\'' % schema['type'])
+            raise ParseError('unknown property type: \'%s\'' % kind)
 
     def parse_string(self, value):
         return value.strip()
@@ -60,6 +71,9 @@ class Parser(object):
 
     def parse_float(self, value):
         return float(value.strip())
+
+    def parse_list(self, value, kind, nulls, separator):
+        return [self.parse_value_aux(v, kind, nulls, separator) for v in value.split(separator)]
 
 
 class CSVParser(Parser):
