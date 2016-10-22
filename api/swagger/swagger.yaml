@@ -66,7 +66,9 @@ paths:
           schema:
             $ref: "#/definitions/inline_response_200"
         default:
-          $ref: "#/definitions/DefaultResponse"
+          description: "Default"
+          schema:
+            $ref: "#/definitions/Error"
       x-tags:
       - tag: "assay, assay endpoint, study"
   /compounds:
@@ -79,14 +81,6 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "compoundIds"
-        in: "query"
-        description: "Filter by compound IDs"
-        required: false
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "csv"
       - name: "offset"
         in: "query"
         description: "Number of assay endpoints to skip (for paging)"
@@ -105,7 +99,7 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      - name: "dssToxQCLevelFilter"
+      - name: "clibFilter"
         in: "query"
         description: "Filter by clib"
         required: false
@@ -135,7 +129,9 @@ paths:
           schema:
             $ref: "#/definitions/inline_response_200_1"
         default:
-          $ref: "#/definitions/DefaultResponse"
+          description: "Default"
+          schema:
+            $ref: "#/definitions/Error"
       x-tags:
       - tag: "compound"
   /results:
@@ -166,7 +162,7 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      - name: "dssToxQCLevelFilter"
+      - name: "clibFilter"
         in: "query"
         description: "Filter by clib"
         required: false
@@ -221,7 +217,9 @@ paths:
           schema:
             $ref: "#/definitions/inline_response_200_2"
         default:
-          $ref: "#/definitions/DefaultResponse"
+          description: "Default"
+          schema:
+            $ref: "#/definitions/Error"
       x-tags:
       - tag: "compound, assay, assay endpoint, study, result"
 definitions:
@@ -693,18 +691,22 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Assay"
-      aggragations:
-        type: "object"
-        properties: {}
+  inline_response_200_1_aggregations:
+    properties:
+      clib:
+        $ref: "#/definitions/Aggregation"
+      dssToxQLevel:
+        $ref: "#/definitions/Aggregation"
+      substanceTypeAggregation:
+        $ref: "#/definitions/Aggregation"
   inline_response_200_1:
     properties:
       results:
         type: "array"
         items:
           $ref: "#/definitions/Compound"
-      aggragations:
-        type: "object"
-        properties: {}
+      aggregations:
+        $ref: "#/definitions/inline_response_200_1_aggregations"
   inline_response_200_2_results:
     properties:
       compound:
@@ -716,8 +718,7 @@ definitions:
   inline_response_200_2:
     properties:
       aggregations:
-        type: "object"
-        properties: {}
+        $ref: "#/definitions/inline_response_200_1_aggregations"
       results:
         type: "array"
         items:
@@ -764,7 +765,7 @@ parameters:
       type: "string"
     collectionFormat: "csv"
   ClibFilter:
-    name: "dssToxQCLevelFilter"
+    name: "clibFilter"
     in: "query"
     description: "Filter by clib"
     required: false
@@ -772,8 +773,6 @@ parameters:
     items:
       type: "string"
     collectionFormat: "csv"
-  ClibAggregation:
-    $ref: "#/definitions/Aggregation"
   DssToxQCLevelFilter:
     name: "dssToxQCLevelFilter"
     in: "query"
@@ -783,8 +782,6 @@ parameters:
     items:
       type: "string"
     collectionFormat: "csv"
-  DssToxQCLevelAggregation:
-    $ref: "#/definitions/Aggregation"
   SubstanceTypeFilter:
     name: "substanceTypeFilter"
     in: "query"
@@ -794,8 +791,6 @@ parameters:
     items:
       type: "string"
     collectionFormat: "csv"
-  SubstanceTypeAggregation:
-    $ref: "#/definitions/Aggregation"
   AssayIds:
     name: "assayIds"
     in: "query"
