@@ -7,12 +7,10 @@ info:
     ToxCast contains data for a single chemical endpoint pair for thousands of chemicals and 821 assay endpoints for 20 variables such
     as the activity or hit call, activity concentrations, whether the chemical was tested in a specific assay, etc.
   version: "1.0.0"
-# the domain of the service - in our use-case somewhat nonsensical but mandatory
+# service domain - in our use-case somewhat nonsensical but mandatory
 host: toxcastdb
-# array of all schemes that your API supports
 schemes:
   - http
-# will be prefixed to all paths
 basePath: /v1
 produces:
   - application/json
@@ -21,6 +19,8 @@ paths:
     get:
       summary: "Get compound data"
       description: "Returns a list of compounds"
+      operationId: "compoundsGet"
+      produces: ["application/json"]
       tags:
         - compound
       parameters:
@@ -35,6 +35,7 @@ paths:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
         - $ref: '#/parameters/CompoundIds'
+        - $ref: '#/parameters/ClibFilter'
         - $ref: '#/parameters/DssToxQCLevelFilter'
         - $ref: '#/parameters/SubstanceTypeFilter'
       responses:
@@ -50,28 +51,26 @@ paths:
               aggragations:
                 type: object
                 properties:
-                  $ref: '#/definitions/DssToxQCLevelAggregation':
-                  $ref: '#/definitions/SubstanceTypeAggregation':
+                  - $ref: '#/definitions/ClibAggregation'
+                  - $ref: '#/definitions/DssToxQCLevelAggregation'
+                  - $ref: '#/definitions/SubstanceTypeAggregation'
         default:
           $ref: '#/definitions/DefaultResponse'
   /assays:
     get:
       summary: "Get assay data"
       description: "Returns a list of assays (assay endpoints)"
+      operationId: "assaysGet"
+      produces: ["application/json"]
       tags:
-        - assays, assay endpoints
+        - assay, assay endpoint, study
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
         - $ref: '#/parameters/AssayIds'
         - $ref: '#/parameters/AssayEndpointIds'
         - $ref: '#/parameters/StudyIds'
-        - $ref: '#/parameters/OrganismFilter'
-        - $ref: '#/parameters/TissueFilter'
-        - $ref: '#/parameters/CellFormatFilter'
-        - $ref: '#/parameters/AssayDesignTypeFilter'
-        - $ref: '#/parameters/FunctionFilter'
-        - $ref: '#/parameters/IntendedTargetFilter'
+        # TODO assay aggregation filters
       responses:
         200:
           description: "A list of assay endpoints and aggregations"
@@ -85,43 +84,49 @@ paths:
               aggragations:
                 type: object
                 properties:
-                  $ref: '#/definitions/DssToxQCLevelAggregation':
-                  $ref: '#/definitions/SubstanceTypeAggregation':
+                  # TODO assay aggregations
         default:
           $ref: '#/definitions/DefaultResponse'
   /results:
     get:
-      summary: "Get assau results"
+      summary: "Get results of compounds beeing tested on assays"
       description: "Returns a list of results with associated compound and assay data"
+      operationId: "resultsGet"
+      produces: ["application/json"]
       tags:
-        - assay
+        - compound, assay, assay endpoint, study, result
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
 
         - $ref: '#/parameters/CompoundIds'
+        - $ref: '#/parameters/ClibFilter'
         - $ref: '#/parameters/DssToxQCLevelFilter'
         - $ref: '#/parameters/SubstanceTypeFilter'
 
         - $ref: '#/parameters/AssayIds'
         - $ref: '#/parameters/AssayEndpointIds'
         - $ref: '#/parameters/StudyIds'
-        - $ref: '#/parameters/OrganismFilter'
-        - $ref: '#/parameters/TissueFilter'
-        - $ref: '#/parameters/CellFormatFilter'
-        - $ref: '#/parameters/AssayDesignTypeFilter'
-        - $ref: '#/parameters/FunctionFilter'
-        - $ref: '#/parameters/IntendedTargetFilter'
+        # TODO assay aggregation filters
+
+        # TODO results filters
+        # TODO results aggregation filters
       responses:
         200:
           description: "A list of results with associated compound and assay data. Aggregations for faceted navigation."
           schema:
-            type: object:
+            type: object
             properties:
               aggregations:
                 type: object
                 properties:
+                  - $ref: '#/definitions/ClibAggregation'
+                  - $ref: '#/definitions/DssToxQCLevelAggregation'
+                  - $ref: '#/definitions/SubstanceTypeAggregation'
 
+                  # TODO assay aggregations
+
+                  # TODO results aggregations
               results:
                 type: array
                 items:
@@ -161,6 +166,19 @@ parameters:
     required: false
     items:
       type: string
+
+  ClibFilter:
+    name: dssToxQCLevelFilter
+    description: "Filter by clib"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  ClibAggregation:
+    $ref: '#/definitions/Aggregation'
+
   DssToxQCLevelFilter:
     name: dssToxQCLevelFilter
     description: "Filter by the quality level filter field"
@@ -170,6 +188,9 @@ parameters:
     required: false
     items:
       type: string
+  DssToxQCLevelAggregation:
+    $ref: '#/definitions/Aggregation'
+
   SubstanceTypeFilter:
     name: substanceTypeFilter
     description: "Filter by the substance type field"
@@ -179,9 +200,6 @@ parameters:
     required: false
     items:
       type: string
-
-  DssToxQCLevelAggregation:
-    $ref: '#/definitions/Aggregation'
   SubstanceTypeAggregation:
     $ref: '#/definitions/Aggregation'
 
@@ -195,6 +213,7 @@ parameters:
     required: false
     items:
       type: string
+
   AssayEndpointIds:
     name: assayEndpointIds
     description: "Filter by assay IDs"
@@ -204,6 +223,7 @@ parameters:
     required: false
     items:
       type: string
+
   StudyIds:
     name: studyIds
     description: "Filter by study IDs"
@@ -213,73 +233,13 @@ parameters:
     required: false
     items:
       type: string
-  OrganismFilter:
-    name: organismFilter
-    description: "Filter by the organism field"
-    in: query
-    type: array
-    collectionFormat: csv
-    required: false
-    items:
-      type: string
-  TissueFilter:
-    name: tissueFilter
-    description: "Filter by the tissue field"
-    in: query
-    type: array
-    collectionFormat: csv
-    required: false
-    items:
-      type: string
-  CellFormatFilter:
-    name: cellFormatFilter
-    description: "Filter by the cell format field"
-    in: query
-    type: array
-    collectionFormat: csv
-    required: false
-    items:
-      type: string
-  AssayDesignTypeFilter:
-    name: assayDesignTypeFilter
-    description: "Filter by the assay design type field"
-    in: query
-    type: array
-    collectionFormat: csv
-    required: false
-    items:
-      type: string
-  FunctionFilter:
-    name: functionFilter
-    description: "Filter by the assay function field"
-    in: query
-    type: array
-    collectionFormat: csv
-    required: false
-    items:
-      type: string
-  IntendedTargetFilter:
-    name: intendedTargetFilter
-    description: "Filter by the intended Target field"
-    in: query
-    type: array
-    collectionFormat: csv
-    required: false
-    items:
-      type: string
 
-  OrganismAggregation:
-    $ref: '#/definitions/Aggregation'
-  TissueAggregation:
-    $ref: '#/definitions/Aggregation'
-  CellFormatAggregation:
-    $ref: '#/definitions/Aggregation'
-  AssayDesignTypeAggregation:
-    $ref: '#/definitions/Aggregation'
-  FunctionAggregation:
-    $ref: '#/definitions/Aggregation'
-  IntendedTargetAggregation:
-    $ref: '#/definitions/Aggregation'
+  # TODO assay aggregation filters and aggregations
+
+  # Results
+  # TODO result filters
+  # TODO results aggregation filters and aggregations
+
 
 definitions:
   Compound:
@@ -332,7 +292,7 @@ definitions:
         type: string
         description: ""
       structureMolWt:
-        type: float
+        type: number
         description: ""
 
   Assay:
@@ -366,7 +326,7 @@ definitions:
         type: string
         description: "Description of the assay"
       timepointHr:
-        type: float
+        type: number
         description: "Duration length to conduct the test portion of the assay"
       organismId:
         type: integer
@@ -406,7 +366,7 @@ definitions:
         type: string
         description: "The solvent used as the negative control and to solubilize the test chemical"
       dilutionSolventPercentMax:
-        type: float
+        type: number
         description: "Maximal amount of the dilution solvent tolerable for a particular assay"
       assayComponentName:
         type: string
@@ -633,7 +593,7 @@ definitions:
         type: array
         description: "List of citation URLs"
         items:
-          type: url
+          type: string
       reagent:
         type: array
         description: ""
@@ -659,55 +619,55 @@ definitions:
         type: integer
         description: "Activity or hit call, 1 indicates active"
       logcMax:
-        type: float
+        type: number
         description: "Level 4 id (from database) for the selected sample"
       logcMin:
-        type: float
+        type: number
         description: "Log base 10 of the maximum concentration tested"
       m4id:
         type: integer
         description: "Log base 10 of the minimum concentration tested"
       maxMean:
-        type: float
+        type: number
         description: "Maximum of the means at each concentration"
       maxMed:
-        type: float
+        type: number
         description: "Maximum of the medians at each concentration"
       modl:
         type: string
         description: "Activity concentration at 10% of the modeled top value (AC10)"
       modlAc10:
-        type: float
+        type: number
         description: "Activity concentration at 10% of the modeled top value (AC10)"
       modlAcb:
-        type: float
+        type: number
         description: "Activity concentration at baseline"
       modlAcc:
-        type: float
+        type: number
         description: "Activity concentration at cutoff"
       modlGa:
-        type: float
+        type: number
         description: "Gain AC50"
       modlGw:
-        type: float
+        type: number
         description: "Gain hill coefficient"
       modlLa:
-        type: float
+        type: number
         description: "Loss AC50"
       modlLw:
-        type: float
+        type: number
         description: "Loss hill coefficient"
       modlRmse:
-        type: float
+        type: number
         description: "Root mean square error (RMSE)"
       modlTp:
-        type: float
+        type: number
         description: "Modeled top of the curve"
       oldstyleAc50:
-        type: float
+        type: number
         description: ""
       oldstyleNegLogAc50:
-        type: float
+        type: number
         description: ""
       spid:
         type: string
@@ -716,7 +676,7 @@ definitions:
         type: boolean
         description: "Whether the chemical was tested, 1 indicates tested"
       zscore:
-        type: float
+        type: number
         description: "Zscore of AC50 values based on the chemical specific cytotoxicity distribution file"
 
   Aggregation:
