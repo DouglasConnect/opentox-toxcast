@@ -58,7 +58,7 @@ paths:
       description: "Returns a list of assays (assay endpoints)"
       produces: ["application/json"]
       tags:
-        - assay, assay endpoint, study
+        - assay
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
@@ -90,7 +90,7 @@ paths:
       description: "Returns a list of results with associated compound and assay data"
       produces: ["application/json"]
       tags:
-        - compound, assay, assay endpoint, study, result
+        - result
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'

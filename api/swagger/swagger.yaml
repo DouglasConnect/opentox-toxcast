@@ -19,7 +19,7 @@ paths:
   /assays:
     get:
       tags:
-      - "assay, assay endpoint, study"
+      - "assay"
       summary: "Get assay data"
       description: "Returns a list of assays (assay endpoints)"
       operationId: "controllers.default_controller.assays_get"
@@ -137,7 +137,7 @@ paths:
   /results:
     get:
       tags:
-      - "compound, assay, assay endpoint, study, result"
+      - "result"
       summary: "Get results of compounds beeing tested on assays"
       description: "Returns a list of results with associated compound and assay data"
       operationId: "controllers.default_controller.results_get"
