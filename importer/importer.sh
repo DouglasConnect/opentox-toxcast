@@ -10,6 +10,7 @@ IDENTIFIERCONVERTERPORT="${IDENTIFIERCONVERTERPORT:-8080}"
 # ftp://newftp.epa.gov/comptox/High_Throughput_Screening_Data/Summary_Files/INVITRODB_V2_SUMMARY.zip
 # We use a mirror in europe for faster downloading:
 TOXCASTDATAURL="${TOXCASTDATAURL:-https://storage.googleapis.com/douglasconnect-public/data/toxcast/INVITRODB_V2_SUMMARY.zip}"
+TOXCASTCOMPOUNDSURL="${TOXCASTCOMPOUNDSURL:-https://storage.googleapis.com/douglasconnect-public/data/toxcast/DSSTox_ToxCastRelease_20151019.zip}"
 
 echo "starting toxcast data import"
 echo "importing into elasticsearch at $ELASTICSEARCHHOSTNAME"
@@ -49,6 +50,7 @@ then
     if [ ! -d /data ]
     then
       mkdir /data
+      mkdir /data/DSSTox_ToxCastRelease_20151019
     fi
 
     curl -o /data/INVITRODB_V2_SUMMARY.zip $TOXCASTDATAURL
@@ -57,11 +59,23 @@ then
     echo "toxcast download already existed"
   fi
 
+  if [ ! -e /data/DSSTox_ToxCastRelease_20151019.zip ]
+  then
+    curl -o /data/DSSTox_ToxCastRelease_20151019/DSSTox_ToxCastRelease_20151019.zip $TOXCASTCOMPOUNDSURL
+    echo "toxcast compounds downloaded, unzipping"
+  else
+    echo "toxcast compounds already existed"
+  fi
+
   echo "/data/INVITRODB_V2_SUMMARY did not exist, extracting data now"
   cd /data
   unzip /data/INVITRODB_V2_SUMMARY.zip
   echo "toxcast data unzipped"
+  cd /data/DSSTox_ToxCastRelease_20151019
+  unzip /data/DSSTox_ToxCastRelease_20151019/DSSTox_ToxCastRelease_20151019.zip
+  echo "toxcast compounds unzipped"
   rm /data/INVITRODB_V2_SUMMARY.zip
+  rm /data/DSSTox_ToxCastRelease_20151019/DSSTox_ToxCastRelease_20151019.zip
 else
   echo "toxcast was already unzipped"
 fi
@@ -69,6 +83,6 @@ fi
 echo "Creating elasticsearch index"
 python /code/importer.py elastic index create toxcast /code/releases/2015-10-20/elastic-mapping.yaml --elasticsearch-host $ELASTICSEARCHHOSTNAME
 echo "ingesting toxcast data now"
-python /code/importer.py import toxcast /data/INVITRODB_V2_SUMMARY /code/releases/2015-10-20/parser-schema.yaml --elasticsearch-host $ELASTICSEARCHHOSTNAME --chemid-conversion-host "$IDENTIFIERCONVERTERHOSTNAME:$IDENTIFIERCONVERTERPORT"
+python /code/importer.py import toxcast /data /code/releases/2015-10-20/parser-schema.yaml --elasticsearch-host $ELASTICSEARCHHOSTNAME --chemid-conversion-host "$IDENTIFIERCONVERTERHOSTNAME:$IDENTIFIERCONVERTERPORT"
 
 echo "Finished importing toxcast data!"
