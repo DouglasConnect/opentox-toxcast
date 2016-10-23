@@ -2,6 +2,8 @@ import os
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, A
 
+INDEX = 'toxcast'
+client = Elasticsearch(os.getenv('ELASTICSEARCHHOSTNAME', 'localhost'))
 
 def assays_get(offset = None, limit = None, assayIds = None, assayEndpointIds = None, studyIds = None) -> str:
     filters = (
