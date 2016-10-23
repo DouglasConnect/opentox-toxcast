@@ -9,7 +9,7 @@ info:
   version: "1.0.0"
   title: "ToxCast databse API - assay, compound and assay results values for tested\
     \ compounts."
-host: "toxcastdb"
+host: "toxcast-api.cloud.douglasconnect.com"
 basePath: "/v1"
 schemes:
 - "http"

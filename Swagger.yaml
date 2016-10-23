@@ -8,7 +8,7 @@ info:
     as the activity or hit call, activity concentrations, whether the chemical was tested in a specific assay, etc.
   version: "1.0.0"
 # service domain - in our use-case somewhat nonsensical but mandatory
-host: toxcastdb
+host: toxcast-api.cloud.douglasconnect.com
 schemes:
   - http
 basePath: /v1
