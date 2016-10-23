@@ -24,14 +24,6 @@ paths:
       tags:
         - compound
       parameters:
-        - name: compoundIds
-          description: "Filter by compound IDs"
-          in: query
-          type: array
-          collectionFormat: csv
-          required: false
-          items:
-            type: string
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
         - $ref: '#/parameters/CompoundIds'
@@ -48,14 +40,20 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Compound'
-              aggragations:
+              aggregations:
                 type: object
                 properties:
-                  - $ref: '#/definitions/ClibAggregation'
-                  - $ref: '#/definitions/DssToxQCLevelAggregation'
-                  - $ref: '#/definitions/SubstanceTypeAggregation'
+                  clib:
+                    $ref: '#/definitions/Aggregation'
+                  dssToxQLevel:
+                    $ref: '#/definitions/Aggregation'
+                  substanceType:
+                    $ref: '#/definitions/Aggregation'
         default:
-          $ref: '#/definitions/DefaultResponse'
+          description: "Unexpected error"
+          schema:
+            $ref: '#/definitions/Error'
+
   /assays:
     get:
       summary: "Get assay data"
@@ -63,7 +61,7 @@ paths:
       operationId: "assaysGet"
       produces: ["application/json"]
       tags:
-        - assay, assay endpoint, study
+        - assay
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
@@ -81,12 +79,15 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Assay'
-              aggragations:
+              aggregations:
                 type: object
                 properties:
                   # TODO assay aggregations
         default:
-          $ref: '#/definitions/DefaultResponse'
+          description: "Unexpected error"
+          schema:
+            $ref: '#/definitions/Error'
+
   /results:
     get:
       summary: "Get results of compounds beeing tested on assays"
@@ -94,7 +95,7 @@ paths:
       operationId: "resultsGet"
       produces: ["application/json"]
       tags:
-        - compound, assay, assay endpoint, study, result
+        - result
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
@@ -120,9 +121,12 @@ paths:
               aggregations:
                 type: object
                 properties:
-                  - $ref: '#/definitions/ClibAggregation'
-                  - $ref: '#/definitions/DssToxQCLevelAggregation'
-                  - $ref: '#/definitions/SubstanceTypeAggregation'
+                  clib:
+                    $ref: '#/definitions/Aggregation'
+                  dssToxQLevel:
+                    $ref: '#/definitions/Aggregation'
+                  substanceType:
+                    $ref: '#/definitions/Aggregation'
 
                   # TODO assay aggregations
 
@@ -139,7 +143,9 @@ paths:
                     result:
                       $ref: '#/definitions/Result'
         default:
-          $ref: '#/definitions/DefaultResponse'
+          description: "Unexpected error"
+          schema:
+            $ref: '#/definitions/Error'
 
 parameters:
   # Slicing
@@ -166,9 +172,8 @@ parameters:
     required: false
     items:
       type: string
-
   ClibFilter:
-    name: dssToxQCLevelFilter
+    name: clibFilter
     description: "Filter by clib"
     in: query
     type: array
@@ -176,9 +181,6 @@ parameters:
     required: false
     items:
       type: string
-  ClibAggregation:
-    $ref: '#/definitions/Aggregation'
-
   DssToxQCLevelFilter:
     name: dssToxQCLevelFilter
     description: "Filter by the quality level filter field"
@@ -188,9 +190,6 @@ parameters:
     required: false
     items:
       type: string
-  DssToxQCLevelAggregation:
-    $ref: '#/definitions/Aggregation'
-
   SubstanceTypeFilter:
     name: substanceTypeFilter
     description: "Filter by the substance type field"
@@ -200,8 +199,6 @@ parameters:
     required: false
     items:
       type: string
-  SubstanceTypeAggregation:
-    $ref: '#/definitions/Aggregation'
 
   # Assay
   AssayIds:
@@ -213,7 +210,6 @@ parameters:
     required: false
     items:
       type: string
-
   AssayEndpointIds:
     name: assayEndpointIds
     description: "Filter by assay IDs"
@@ -223,7 +219,6 @@ parameters:
     required: false
     items:
       type: string
-
   StudyIds:
     name: studyIds
     description: "Filter by study IDs"
@@ -234,12 +229,11 @@ parameters:
     items:
       type: string
 
-  # TODO assay aggregation filters and aggregations
+  # TODO assay aggregation filters
 
   # Results
   # TODO result filters
-  # TODO results aggregation filters and aggregations
-
+  # TODO results aggregation filters
 
 definitions:
   Compound:
@@ -688,23 +682,18 @@ definitions:
       filterTerm:
         type: string
         description: "Term used to filter the results"
-      terms:
+      buckets:
         type: array
-        description: "Aggregation values and their counts"
+        description: "Aggregation values (buckets) and correspondig item counts"
         items:
           type: object
           properties:
-            value:
+            key:
               type: string
               description: "Value to display to the user and use for filtering"
-            count:
+            doc_count:
               type: integer
               description: "Number of items if the current view is filtered by this additional value"
-
-  DefaultResponse:
-    description: "Unexpected error"
-    schema:
-      $ref: '#/definitions/Error'
 
   Error:
     type: object

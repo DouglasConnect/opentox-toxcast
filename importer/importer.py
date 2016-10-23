@@ -169,7 +169,7 @@ def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host,
         if compound.get('chid') in compound_identifier_cache:
             compound.update(compound_identifier_cache[compound.get('chid')])
         else:
-            # explicitly set chemid values to null for API consistency
+            # explicitly set identifier values to null for API consistency
             compound.update(dict([(k, None) for k in ('dssToxSubstanceId', 'dssToxStructureId', 'dssToxQCLevel', 'substanceType', 'substanceNote', 'structureSMILES', 'structureInChI', 'structureInChIKey', 'structureFormula', 'structureMolWt')]))
         compound_cache[compound['code']] = compound
     logger.info('Indexing compounds in elasticsearch')

@@ -62,10 +62,10 @@ class Parser(object):
         try:
             return int(value.strip())
         except ValueError:
-            # try parsing integers represented in scientific notation
+            # try parsing integers represented in scientific notation or float.0
             frac, whole = math.modf(float(value.strip()))
             if frac == 0:
-                return whole
+                return int(whole)
             else:
                 raise ParseError('invalid value for integer: %s' % value)
 

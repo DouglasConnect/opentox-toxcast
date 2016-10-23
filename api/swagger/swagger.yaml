@@ -19,7 +19,7 @@ paths:
   /assays:
     get:
       tags:
-      - "assay, assay endpoint, study"
+      - "assay"
       summary: "Get assay data"
       description: "Returns a list of assays (assay endpoints)"
       operationId: "controllers.default_controller.assays_get"
@@ -66,9 +66,11 @@ paths:
           schema:
             $ref: "#/definitions/inline_response_200"
         default:
-          $ref: "#/definitions/DefaultResponse"
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
       x-tags:
-      - tag: "assay, assay endpoint, study"
+      - tag: "assay"
   /compounds:
     get:
       tags:
@@ -79,14 +81,6 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "compoundIds"
-        in: "query"
-        description: "Filter by compound IDs"
-        required: false
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "csv"
       - name: "offset"
         in: "query"
         description: "Number of assay endpoints to skip (for paging)"
@@ -105,7 +99,7 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      - name: "dssToxQCLevelFilter"
+      - name: "clibFilter"
         in: "query"
         description: "Filter by clib"
         required: false
@@ -135,13 +129,15 @@ paths:
           schema:
             $ref: "#/definitions/inline_response_200_1"
         default:
-          $ref: "#/definitions/DefaultResponse"
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
       x-tags:
       - tag: "compound"
   /results:
     get:
       tags:
-      - "compound, assay, assay endpoint, study, result"
+      - "result"
       summary: "Get results of compounds beeing tested on assays"
       description: "Returns a list of results with associated compound and assay data"
       operationId: "controllers.default_controller.results_get"
@@ -166,7 +162,7 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      - name: "dssToxQCLevelFilter"
+      - name: "clibFilter"
         in: "query"
         description: "Filter by clib"
         required: false
@@ -221,9 +217,11 @@ paths:
           schema:
             $ref: "#/definitions/inline_response_200_2"
         default:
-          $ref: "#/definitions/DefaultResponse"
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
       x-tags:
-      - tag: "compound, assay, assay endpoint, study, result"
+      - tag: "result"
 definitions:
   Compound:
     type: "object"
@@ -672,11 +670,11 @@ definitions:
       filterTerm:
         type: "string"
         description: "Term used to filter the results"
-      terms:
+      buckets:
         type: "array"
-        description: "Aggregation values and their counts"
+        description: "Aggregation values (buckets) and correspondig item counts"
         items:
-          $ref: "#/definitions/Aggregation_terms"
+          $ref: "#/definitions/Aggregation_buckets"
   Error:
     type: "object"
     properties:
@@ -693,18 +691,25 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Assay"
-      aggragations:
+      aggregations:
         type: "object"
         properties: {}
+  inline_response_200_1_aggregations:
+    properties:
+      clib:
+        $ref: "#/definitions/Aggregation"
+      dssToxQLevel:
+        $ref: "#/definitions/Aggregation"
+      substanceType:
+        $ref: "#/definitions/Aggregation"
   inline_response_200_1:
     properties:
       results:
         type: "array"
         items:
           $ref: "#/definitions/Compound"
-      aggragations:
-        type: "object"
-        properties: {}
+      aggregations:
+        $ref: "#/definitions/inline_response_200_1_aggregations"
   inline_response_200_2_results:
     properties:
       compound:
@@ -716,8 +721,7 @@ definitions:
   inline_response_200_2:
     properties:
       aggregations:
-        type: "object"
-        properties: {}
+        $ref: "#/definitions/inline_response_200_1_aggregations"
       results:
         type: "array"
         items:
@@ -732,12 +736,12 @@ definitions:
         type: "string"
       cultureOrAssay:
         type: "string"
-  Aggregation_terms:
+  Aggregation_buckets:
     properties:
-      value:
+      key:
         type: "string"
         description: "Value to display to the user and use for filtering"
-      count:
+      doc_count:
         type: "integer"
         description: "Number of items if the current view is filtered by this additional\
           \ value"
@@ -764,7 +768,7 @@ parameters:
       type: "string"
     collectionFormat: "csv"
   ClibFilter:
-    name: "dssToxQCLevelFilter"
+    name: "clibFilter"
     in: "query"
     description: "Filter by clib"
     required: false
@@ -772,8 +776,6 @@ parameters:
     items:
       type: "string"
     collectionFormat: "csv"
-  ClibAggregation:
-    $ref: "#/definitions/Aggregation"
   DssToxQCLevelFilter:
     name: "dssToxQCLevelFilter"
     in: "query"
@@ -783,8 +785,6 @@ parameters:
     items:
       type: "string"
     collectionFormat: "csv"
-  DssToxQCLevelAggregation:
-    $ref: "#/definitions/Aggregation"
   SubstanceTypeFilter:
     name: "substanceTypeFilter"
     in: "query"
@@ -794,8 +794,6 @@ parameters:
     items:
       type: "string"
     collectionFormat: "csv"
-  SubstanceTypeAggregation:
-    $ref: "#/definitions/Aggregation"
   AssayIds:
     name: "assayIds"
     in: "query"
