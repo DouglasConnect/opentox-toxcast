@@ -64,7 +64,7 @@ paths:
         200:
           description: "A list of assay endpoints and aggregations"
           schema:
-            $ref: "#/definitions/inline_response_200"
+            $ref: "#/definitions/Assays"
         default:
           description: "Unexpected error"
           schema:
@@ -128,7 +128,7 @@ paths:
         200:
           description: "A list of compounds and aggregations"
           schema:
-            $ref: "#/definitions/inline_response_200_1"
+            $ref: "#/definitions/Compounds"
         default:
           description: "Unexpected error"
           schema:
@@ -217,7 +217,7 @@ paths:
           description: "A list of results with associated compound and assay data.\
             \ Aggregations for faceted navigation."
           schema:
-            $ref: "#/definitions/inline_response_200_2"
+            $ref: "#/definitions/Results"
         default:
           description: "Unexpected error"
           schema:
@@ -226,6 +226,18 @@ paths:
       x-tags:
       - tag: "result"
 definitions:
+  Compounds:
+    type: "object"
+    properties:
+      total:
+        type: "integer"
+        description: "Total count of results with current filtering"
+      compounds:
+        type: "array"
+        items:
+          $ref: "#/definitions/Compound"
+      aggregations:
+        $ref: "#/definitions/CompoundAggregations"
   Compound:
     type: "object"
     properties:
@@ -248,37 +260,52 @@ definitions:
         description: ""
       dssToxSubstanceId:
         type: "string"
-        description: ""
+        description: "DSSTox Substance ID"
       dssToxStructureId:
         type: "string"
-        description: ""
+        description: "DSSTox Structure ID"
       dssToxQCLevel:
         type: "string"
-        description: ""
+        description: "DSSTox Quality Control level"
       substanceType:
         type: "string"
-        description: ""
+        description: "Substance type (e.g. single compound, mixture, ...)"
       substanceNote:
         type: "string"
         description: ""
       structureSMILES:
         type: "string"
-        description: ""
+        description: "Smiles of the compound (source is the offical DSSTox translation\
+          \ file)"
         x-ontology: "http://edamontology.org/format_1196"
       structureInChI:
         type: "string"
-        description: ""
+        description: "InChI of the compound (source is the offical DSSTox translation\
+          \ file)"
         x-ontology: "http://edamontology.org/format_1197"
       structureInChIKey:
         type: "string"
-        description: ""
+        description: "InChIKey of the compound (source is the offical DSSTox translation\
+          \ file)"
         x-ontology: "http://edamontology.org/format_1199"
       structureFormula:
         type: "string"
-        description: ""
+        description: "Chemical structure formula"
       structureMolWt:
         type: "number"
-        description: ""
+        description: "Molecular weight"
+  Assays:
+    type: "object"
+    properties:
+      assays:
+        type: "array"
+        items:
+          $ref: "#/definitions/Assay"
+      aggregations:
+        $ref: "#/definitions/CompoundAggregations"
+      total:
+        type: "integer"
+        description: "Total count of results with current filtering"
   Assay:
     type: "object"
     properties:
@@ -594,6 +621,19 @@ definitions:
         description: ""
         items:
           $ref: "#/definitions/Assay_reagent"
+  Results:
+    type: "object"
+    properties:
+      results:
+        type: "array"
+        description: "Array of Result objects"
+        items:
+          $ref: "#/definitions/Result"
+      aggregations:
+        $ref: "#/definitions/CompoundAggregations"
+      total:
+        type: "integer"
+        description: "Total count of results with current filtering"
   Result:
     type: "object"
     properties:
@@ -664,6 +704,15 @@ definitions:
         type: "number"
         description: "Zscore of AC50 values based on the chemical specific cytotoxicity\
           \ distribution file"
+  CompoundAggregations:
+    type: "object"
+    properties:
+      clib:
+        $ref: "#/definitions/Aggregation"
+      dssToxQLevel:
+        $ref: "#/definitions/Aggregation"
+      substanceType:
+        $ref: "#/definitions/Aggregation"
   Aggregation:
     type: "object"
     properties:
@@ -688,47 +737,6 @@ definitions:
         type: "string"
       fields:
         type: "string"
-  inline_response_200:
-    properties:
-      results:
-        type: "array"
-        items:
-          $ref: "#/definitions/Assay"
-      aggregations:
-        type: "object"
-        properties: {}
-  inline_response_200_1_aggregations:
-    properties:
-      clib:
-        $ref: "#/definitions/Aggregation"
-      dssToxQLevel:
-        $ref: "#/definitions/Aggregation"
-      substanceType:
-        $ref: "#/definitions/Aggregation"
-  inline_response_200_1:
-    properties:
-      results:
-        type: "array"
-        items:
-          $ref: "#/definitions/Compound"
-      aggregations:
-        $ref: "#/definitions/inline_response_200_1_aggregations"
-  inline_response_200_2_results:
-    properties:
-      compound:
-        $ref: "#/definitions/Compound"
-      assay:
-        $ref: "#/definitions/Assay"
-      result:
-        $ref: "#/definitions/Result"
-  inline_response_200_2:
-    properties:
-      aggregations:
-        $ref: "#/definitions/inline_response_200_1_aggregations"
-      results:
-        type: "array"
-        items:
-          $ref: "#/definitions/inline_response_200_2_results"
   Assay_reagent:
     properties:
       arid:
