@@ -22,7 +22,7 @@ paths:
       - "assay"
       summary: "Get assay data"
       description: "Returns a list of assays (assay endpoints)"
-      operationId: "controllers.default_controller.assays_get"
+      operationId: "assays_get"
       produces:
       - "application/json"
       parameters:
@@ -78,7 +78,7 @@ paths:
       - "compound"
       summary: "Get compound data"
       description: "Returns a list of compounds"
-      operationId: "controllers.default_controller.compounds_get"
+      operationId: "compounds_get"
       produces:
       - "application/json"
       parameters:
@@ -142,7 +142,7 @@ paths:
       - "result"
       summary: "Get results of compounds beeing tested on assays"
       description: "Returns a list of results with associated compound and assay data"
-      operationId: "controllers.default_controller.results_get"
+      operationId: "results_get"
       produces:
       - "application/json"
       parameters:
