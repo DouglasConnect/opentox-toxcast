@@ -17,12 +17,12 @@ python3 app.py
 and open your browser to here:
 
 ```
-http://localhost:8080/v1/ui/
+http://localhost:8080/beta/ui/
 ```
 
 Your Swagger definition lives here:
 
 ```
-http://localhost:8080/v1/swagger.json
+http://localhost:8080/beta/swagger.json
 ```
 

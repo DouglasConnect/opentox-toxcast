@@ -69,6 +69,7 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/Error"
+      x-swagger-router-controller: "controllers.default_controller"
       x-tags:
       - tag: "assay"
   /compounds:
@@ -132,6 +133,7 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/Error"
+      x-swagger-router-controller: "controllers.default_controller"
       x-tags:
       - tag: "compound"
   /results:
@@ -220,6 +222,7 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/Error"
+      x-swagger-router-controller: "controllers.default_controller"
       x-tags:
       - tag: "result"
 definitions:
