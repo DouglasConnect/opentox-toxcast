@@ -48,7 +48,7 @@ def compounds_get(offset=None, limit=None, compoundIds=None, clibFilter=None, ds
     search = offset_and_limit(search, offset, limit)
     search.aggs.bucket('global', build_global_aggs(aggregations))
 
-    return render(search.execute(), aggregations)
+    return render(search.execute(), aggregations, 'compounds')
 
 
 def assays_get(offset=None, limit=None, assayEndpointIds=None, assayIds=None, studyIds=None) -> str:
@@ -66,7 +66,7 @@ def assays_get(offset=None, limit=None, assayEndpointIds=None, assayIds=None, st
     search = offset_and_limit(search, offset, limit)
     search.aggs.bucket('global', build_global_aggs(aggregations))
 
-    return render(search.execute(), aggregations)
+    return render(search.execute(), aggregations, 'compounds')
 
 
 def results_get(offset=None, limit=None, compoundIds=None, clibFilter=None, dssToxQCLevelFilter=None, substanceTypeFilter=None, assayIds=None, assayEndpointIds=None, studyIds=None) -> str:
@@ -117,12 +117,12 @@ def results_get(offset=None, limit=None, compoundIds=None, clibFilter=None, dssT
 # -----------------------------------------------------------------------------
 # Helpers
 
-def render(response, aggregations):
+def render(response, aggregations, result_field_name = 'results'):
     if not response.success():
         return 'Query was not successful', 500
     res = {
         'total': response.hits.total,
-        'results': [hit.to_dict() for hit in response]
+        result_field_name: [hit.to_dict() for hit in response]
     }
     if hasattr(response, 'aggregations'):
         values = response.aggregations.to_dict()['global']
