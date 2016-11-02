@@ -66,7 +66,7 @@ def assays_get(offset=None, limit=None, assayEndpointIds=None, assayIds=None, st
     search = offset_and_limit(search, offset, limit)
     search.aggs.bucket('global', build_global_aggs(aggregations))
 
-    return render(search.execute(), aggregations, 'compounds')
+    return render(search.execute(), aggregations, 'assays')
 
 
 def results_get(offset=None, limit=None, compoundIds=None, clibFilter=None, dssToxQCLevelFilter=None, substanceTypeFilter=None, assayIds=None, assayEndpointIds=None, studyIds=None) -> str:
@@ -164,7 +164,7 @@ def term_filter(field, terms):
 def offset_and_limit(query, offset=None, limit=None):
     offset = 0 if offset is None else offset
     limit = LIMIT if limit is None else limit
-    return query[offset:limit]
+    return query[offset:limit+offset]
 
 
 def filtered_aggregation(flter, aggregation):
