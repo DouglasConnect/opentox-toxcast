@@ -220,8 +220,10 @@ definitions:
         type: string
         description: ""
       clib:
-        type: string
-        description: ""
+        type: array
+        items:
+          type: string
+          description: ""
       dssToxSubstanceId:
         type: string
         description: "DSSTox Substance ID"
