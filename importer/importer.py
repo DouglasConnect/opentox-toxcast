@@ -2,7 +2,7 @@
 
 '''
 Usage:
-    importer.py elastic index create <index> <index.yaml> [--elasticsearch-host=<hostname>] [--force]
+    importer.py elastic index create <index> <mapping.yaml> [--elasticsearch-host=<hostname>] [--force]
     importer.py elastic index drop <index> [--elasticsearch-host=<hostname>]
     importer.py elastic index exists <index> [--elasticsearch-host=<hostname>]
     importer.py import <index> <dirname> <parser-schema.yaml> [--elasticsearch-host=<hostname>] [--chemid-conversion-host=<hostname>] [--perform-chemid-conversion]
@@ -166,8 +166,8 @@ def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host,
     compound_cache = {}
     logger.info('Parsing compounds from %s' % parser_schema['compounds']['file'])
     for compound in (compound for compound in parser.parse_compounds() if compound is not None):
-        if compound.get('chid') in compound_identifier_cache:
-            compound.update(compound_identifier_cache[compound.get('chid')])
+        if compound['chid'] in compound_identifier_cache:
+            compound.update(compound_identifier_cache[compound['chid']])
         else:
             # explicitly set identifier values to null for API consistency
             compound.update(dict([(k, None) for k in ('dssToxSubstanceId', 'dssToxStructureId', 'dssToxQCLevel', 'substanceType', 'substanceNote', 'structureSMILES', 'structureInChI', 'structureInChIKey', 'structureFormula', 'structureMolWt')]))
@@ -227,7 +227,7 @@ def main(argv=None):
     if args['elastic'] and args['index'] and args['create']:
         if args['--force']:
             elastic_index_delete(es, args['<index>'], ignore=[400, 404])
-        elastic_index_create(es, args['<index>'], load_yaml_file(args['<index.yaml>']))
+        elastic_index_create(es, args['<index>'], load_yaml_file(args['<mapping.yaml>']))
 
     elif args['elastic'] and args['index'] and args['drop']:
         elastic_index_delete(es, args['<index>'])
