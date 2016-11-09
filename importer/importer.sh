@@ -38,12 +38,12 @@ sleep 10
 if python /code/importer.py elastic index exists toxcast --elasticsearch-host $ELASTICSEARCHHOSTNAME
 then
   if [ -z "$DROPEXISTINGINDEX" ]; then
+    echo "Elasticsearch already contains an toxcast index, aborting data import"#
+    exit 1
+  else
     echo "Deleting existing index toxcast"
     python /code/importer.py elastic index drop toxcast --elasticsearch-host $ELASTICSEARCHHOSTNAME
     echo "Index deleted"
-  else
-    echo "Elasticsearch already contains an toxcast index, aborting data import"#
-    exit 1
   fi
 fi
 
