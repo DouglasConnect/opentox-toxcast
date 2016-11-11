@@ -73,7 +73,8 @@ class Parser(object):
         return float(value.strip())
 
     def parse_list(self, value, kind, nulls, separator):
-        return [self.parse_value_aux(v, kind, nulls, separator) for v in value.split(separator)]
+        # remove nulls from the list - please be careful with with fields that are zipped together
+        return [v for v in [self.parse_value_aux(v, kind, nulls, separator) for v in value.split(separator)] if v is not None]
 
 
 class CSVParser(Parser):
