@@ -740,6 +740,7 @@ definitions:
       fields:
         type: "string"
   Assay_reagent:
+    type: "object"
     properties:
       arid:
         type: "integer"
@@ -750,6 +751,7 @@ definitions:
       cultureOrAssay:
         type: "string"
   Aggregation_buckets:
+    type: "object"
     properties:
       key:
         type: "string"

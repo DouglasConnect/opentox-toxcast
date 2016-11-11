@@ -572,16 +572,18 @@ definitions:
         type: array
         description: ""
         items:
-          type: object
-          properties:
-            arid:
-              type: integer
-            reagentNameValue:
-              type: string
-            reagentNameValueType:
-              type: string
-            cultureOrAssay:
-              type: string
+          $ref: '#/definitions/AssayReagent'
+  AssayReagent:
+    type: object
+    properties:
+      arid:
+        type: integer
+      reagentNameValue:
+        type: string
+      reagentNameValueType:
+        type: string
+      cultureOrAssay:
+        type: string
   Results:
     type: object
     properties:
@@ -686,14 +688,16 @@ definitions:
         type: array
         description: "Aggregation values (buckets) and correspondig item counts"
         items:
-          type: object
-          properties:
-            key:
-              type: string
-              description: "Value to display to the user and use for filtering"
-            doc_count:
-              type: integer
-              description: "Number of items if the current view is filtered by this additional value"
+          $ref: '#/definitions/AggregationBucket'
+  AggregationBucket:
+    type: object
+    properties:
+      key:
+        type: string
+        description: "Value to display to the user and use for filtering"
+      doc_count:
+        type: integer
+        description: "Number of items if the current view is filtered by this additional value"
 
   Error:
     type: object
