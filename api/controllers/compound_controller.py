@@ -37,7 +37,7 @@ def compounds_get(offset = None, limit = None, chidFilter = None, clibFilter = N
     }
 
     search = Search(using=client, index=INDEX, doc_type='compound')
-    search = search.query(build_query(id_filter(compoundIds), term_filters(filters)))
+    search = search.query(build_query(id_filter(chidFilter), term_filters(filters)))
     search = offset_and_limit(search, offset, limit)
     search.aggs.bucket('global', build_global_aggs(aggregations))
 
