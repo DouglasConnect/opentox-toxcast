@@ -3,7 +3,7 @@ from elasticsearch_dsl.aggs import Filter
 from controllers.helpers import *
 from controllers.shared import *
 
-def assays_get(offset = None, limit = None, aidFilter = None, aeidFilter = None, asidFilter = None) -> str:
+def assays_get(offset = None, limit = None, aidFilter = None, aeidFilter = None, asidFilter = None, cellFormatFilter = None, detectionTechnologyTypeFilter = None, intendedTargetFamilyFilter = None, intendedTargetTypeFilter = None, organismFilter = None, technolgicalTargetTypeFilter = None, timepointHrFilter = None, tissueFilter = None) -> str:
 
     filters = (
         ('aid', aidFilter),

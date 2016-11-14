@@ -3,7 +3,7 @@ from elasticsearch_dsl.aggs import Filter
 from controllers.helpers import *
 from controllers.shared import *
 
-def results_get(offset = None, limit = None, chidFilter = None, clibFilter = None, dssToxQCLevelFilter = None, substanceTypeFilter = None, aidFilter = None, aeidFilter = None, asidFilter = None, hitcFilter = None) -> str:
+def results_get(offset = None, limit = None, chidFilter = None, clibFilter = None, dssToxQCLevelFilter = None, substanceTypeFilter = None, aidFilter = None, aeidFilter = None, asidFilter = None, cellFormatFilter = None, detectionTechnologyTypeFilter = None, intendedTargetFamilyFilter = None, intendedTargetTypeFilter = None, organismFilter = None, technolgicalTargetTypeFilter = None, timepointHrFilter = None, tissueFilter = None, hitcFilter = None) -> str:
 
     filters = (
         ('compound.chid', chidFilter),
