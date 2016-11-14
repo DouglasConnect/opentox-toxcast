@@ -103,9 +103,9 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      - name: "technolgicalTargetTypeFilter"
+      - name: "technologicalTargetTypeFilter"
         in: "query"
-        description: "Filter by technolgical target type"
+        description: "Filter by technological target type"
         required: false
         type: "array"
         items:
@@ -321,9 +321,9 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      - name: "technolgicalTargetTypeFilter"
+      - name: "technologicalTargetTypeFilter"
         in: "query"
-        description: "Filter by technolgical target type"
+        description: "Filter by technological target type"
         required: false
         type: "array"
         items:
@@ -1010,9 +1010,9 @@ parameters:
       type: "string"
     collectionFormat: "csv"
   TechnologicalTargetTypeFilter:
-    name: "technolgicalTargetTypeFilter"
+    name: "technologicalTargetTypeFilter"
     in: "query"
-    description: "Filter by technolgical target type"
+    description: "Filter by technological target type"
     required: false
     type: "array"
     items:

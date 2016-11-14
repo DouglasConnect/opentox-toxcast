@@ -249,8 +249,8 @@ parameters:
     items:
       type: string
   TechnologicalTargetTypeFilter:
-    name: technolgicalTargetTypeFilter
-    description: "Filter by technolgical target type"
+    name: technologicalTargetTypeFilter
+    description: "Filter by technological target type"
     in: query
     type: array
     collectionFormat: csv

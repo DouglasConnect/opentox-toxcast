@@ -3,19 +3,19 @@ from elasticsearch_dsl.aggs import Filter
 from controllers.helpers import *
 from controllers.shared import *
 
-def assays_get(offset = None, limit = None, aidFilter = None, aeidFilter = None, asidFilter = None, cellFormatFilter = None, detectionTechnologyTypeFilter = None, intendedTargetFamilyFilter = None, intendedTargetTypeFilter = None, organismFilter = None, technolgicalTargetTypeFilter = None, timepointHrFilter = None, tissueFilter = None) -> str:
+def assays_get(offset = None, limit = None, aidFilter = None, aeidFilter = None, asidFilter = None, cellFormatFilter = None, detectionTechnologyTypeFilter = None, intendedTargetFamilyFilter = None, intendedTargetTypeFilter = None, organismFilter = None, technologicalTargetTypeFilter = None, timepointHrFilter = None, tissueFilter = None) -> str:
 
     filters = (
         ('aid', aidFilter),
         ('asid', asidFilter),
-        ('cellFormat', CellFormatFilter),
-        ('detectionTechnologyType', DetectionTechnologyTypeFilter),
-        ('intendedTargetFamily', IntendedTargetFamilyFilter),
-        ('intendedTargetType', IntendedTargetTypeFilter),
-        ('organism', OrganismFilter),
-        ('technologicalTargetTypeSub', TechnologicalTargetTypeFilter),
-        ('timepointHr', TimepointHrFilter),
-        ('tissue', Tissue),
+        ('cellFormat', cellFormatFilter),
+        ('detectionTechnologyType', detectionTechnologyTypeFilter),
+        ('intendedTargetFamily', intendedTargetFamilyFilter),
+        ('intendedTargetType', intendedTargetTypeFilter),
+        ('organism', organismFilter),
+        ('technologicalTargetType', technologicalTargetTypeFilter),
+        ('timepointHr', timepointHrFilter),
+        ('tissue', tissueFilter),
     )
 
     aggregations = {
@@ -54,12 +54,12 @@ def assays_get(offset = None, limit = None, aidFilter = None, aeidFilter = None,
                 Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='organism'))),
                 A('terms', field='organism', min_doc_count=0))
         },
-        'technologicalTargetTypeSub': {
+        'technologicalTargetType': {
             'name': 'technolgical target type',
             'filterTerm': 'TechnologicalTargetTypeFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='technologicalTargetTypeSub'))),
-                A('terms', field='technologicalTargetTypeSub', min_doc_count=0))
+                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='technologicalTargetType'))),
+                A('terms', field='technologicalTargetType', min_doc_count=0))
         },
         'timepointHr': {
             'name': 'Timepoint Hr',
@@ -73,7 +73,7 @@ def assays_get(offset = None, limit = None, aidFilter = None, aeidFilter = None,
             'filterTerm': 'TissueFilter',
             'aggregation': filtered_aggregation(
                 Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='tissue'))),
-                A('terms', field='tissue', min_doc_count=0))
+                A('terms', field='tissueFilter', min_doc_count=0))
         },
     }
 

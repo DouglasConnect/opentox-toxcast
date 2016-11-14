@@ -3,7 +3,7 @@ from elasticsearch_dsl.aggs import Filter
 from controllers.helpers import *
 from controllers.shared import *
 
-def results_get(offset = None, limit = None, chidFilter = None, clibFilter = None, dssToxQCLevelFilter = None, substanceTypeFilter = None, aidFilter = None, aeidFilter = None, asidFilter = None, cellFormatFilter = None, detectionTechnologyTypeFilter = None, intendedTargetFamilyFilter = None, intendedTargetTypeFilter = None, organismFilter = None, technolgicalTargetTypeFilter = None, timepointHrFilter = None, tissueFilter = None, hitcFilter = None) -> str:
+def results_get(offset = None, limit = None, chidFilter = None, clibFilter = None, dssToxQCLevelFilter = None, substanceTypeFilter = None, aidFilter = None, aeidFilter = None, asidFilter = None, cellFormatFilter = None, detectionTechnologyTypeFilter = None, intendedTargetFamilyFilter = None, intendedTargetTypeFilter = None, organismFilter = None, technologicalTargetTypeFilter = None, timepointHrFilter = None, tissueFilter = None, hitcFilter = None) -> str:
 
     filters = (
         ('compound.chid', chidFilter),
@@ -19,7 +19,7 @@ def results_get(offset = None, limit = None, chidFilter = None, clibFilter = Non
         ('assay.intendedTargetFamily', intendedTargetFamilyFilter),
         ('assay.intendedTargetType', intendedTargetTypeFilter),
         ('assay.organism', organismFilter),
-        ('assay.technologicalTargetTypeSub', technologicalTargetTypeFilter),
+        ('assay.technologicalTargetType', technologicalTargetTypeFilter),
         ('assay.timepointHr', timepointHrFilter),
         ('assay.tissue', tissueFilter),
 
@@ -83,12 +83,12 @@ def results_get(offset = None, limit = None, chidFilter = None, clibFilter = Non
                 Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='organism'))),
                 A('terms', field='assay.organism', min_doc_count=0))
         },
-        'assay.technologicalTargetTypeSub': {
+        'assay.technologicalTargetType': {
             'name': 'technolgical target type',
             'filterTerm': 'TechnologicalTargetTypeFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='technologicalTargetTypeSub'))),
-                A('terms', field='assay.technologicalTargetTypeSub', min_doc_count=0))
+                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='technologicalTargetType'))),
+                A('terms', field='assay.technologicalTargetType', min_doc_count=0))
         },
         'assay.timepointHr': {
             'name': 'Timepoint Hr',
