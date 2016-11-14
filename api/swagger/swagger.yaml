@@ -36,6 +36,7 @@ paths:
         description: "Maximum count of assay endpoints to return (for paging)"
         required: false
         type: "integer"
+        default: 10
       - name: "assayIds"
         in: "query"
         description: "Filter by assay IDs"
@@ -92,6 +93,7 @@ paths:
         description: "Maximum count of assay endpoints to return (for paging)"
         required: false
         type: "integer"
+        default: 10
       - name: "compoundIds"
         in: "query"
         description: "Filter by compound IDs"
@@ -156,6 +158,7 @@ paths:
         description: "Maximum count of assay endpoints to return (for paging)"
         required: false
         type: "integer"
+        default: 10
       - name: "compoundIds"
         in: "query"
         description: "Filter by compound IDs"
@@ -840,6 +843,7 @@ parameters:
     description: "Maximum count of assay endpoints to return (for paging)"
     required: false
     type: "integer"
+    default: 10
   StudyIds:
     name: "studyIds"
     in: "query"

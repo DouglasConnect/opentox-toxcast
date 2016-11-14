@@ -5,6 +5,7 @@ import itertools
 from elasticsearch_dsl import Q, A
 from elasticsearch_dsl.aggs import Filter
 
+LIMIT = 100
 
 # -----------------------------------------------------------------------------
 # Helpers

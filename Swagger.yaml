@@ -116,6 +116,7 @@ parameters:
     in: query
     required: false
     type: integer
+    default: 10
 
   # Compound
   CompoundIds:
