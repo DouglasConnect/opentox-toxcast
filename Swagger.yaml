@@ -58,7 +58,16 @@ paths:
         - $ref: '#/parameters/AidFilter'
         - $ref: '#/parameters/AeidFilter'
         - $ref: '#/parameters/AsidFilter'
-        # TODO assay aggregation filters
+        
+        - $ref: '#/parameters/CellFormatFilter'
+        - $ref: '#/parameters/DetectionTechnologyTypeFilter'
+        - $ref: '#/parameters/IntendedTargetFamilyFilter'
+        - $ref: '#/parameters/IntendedTargetTypeFilter'
+        - $ref: '#/parameters/OrganismFilter'
+        - $ref: '#/parameters/TechnologicalTargetTypeFilter'
+        - $ref: '#/parameters/TimepointHrFilter'
+        - $ref: '#/parameters/TissueFilter'
+        
       responses:
         200:
           description: "A list of assay endpoints and aggregations"
@@ -90,7 +99,15 @@ paths:
         - $ref: '#/parameters/AidFilter'
         - $ref: '#/parameters/AeidFilter'
         - $ref: '#/parameters/AsidFilter'
-        # TODO assay aggregation filters
+        
+        - $ref: '#/parameters/CellFormatFilter'
+        - $ref: '#/parameters/DetectionTechnologyTypeFilter'
+        - $ref: '#/parameters/IntendedTargetFamilyFilter'
+        - $ref: '#/parameters/IntendedTargetTypeFilter'
+        - $ref: '#/parameters/OrganismFilter'
+        - $ref: '#/parameters/TechnologicalTargetTypeFilter'
+        - $ref: '#/parameters/TimepointHrFilter'
+        - $ref: '#/parameters/TissueFilter'
 
         - $ref: '#/parameters/HitcFilter'
       responses:
@@ -185,6 +202,79 @@ parameters:
     required: false
     items:
       type: string
+      
+  CellFormatFilter:
+    name: cellFormatFilter
+    description: "Filter by Cell Format"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  DetectionTechnologyTypeFilter:
+    name: detectionTechnologyTypeFilter
+    description: "Filter by detection technology type filter"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  IntendedTargetFamilyFilter:
+    name: intendedTargetFamilyFilter
+    description: "Filter by intended target family type"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  IntendedTargetTypeFilter:
+    name: intendedTargetTypeFilter
+    description: "Filter by intended target type"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  OrganismFilter:
+    name: organismFilter
+    description: "Filter by Organism"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  TechnologicalTargetTypeFilter:
+    name: technolgicalTargetTypeFilter
+    description: "Filter by technolgical target type"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  TimepointHrFilter:
+    name: timepointHrFilter
+    description: "Filter by Timepoint Hr"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  TissueFilter:
+    name: TissueFilter
+    description: "Filter by Tissue"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
 
   HitcFilter:
     name: hitcFilter
@@ -268,10 +358,29 @@ definitions:
         items:
           $ref: '#/definitions/Assay'
       aggregations:
-        $ref: '#/definitions/CompoundAggregations'
+        $ref: '#/definitions/AssayAggregations'
       total:
         type: integer
         description: "Total count of results with current filtering"
+  AssayAggregations:
+    type: object
+    properties:
+      cellFormat:
+        $ref: '#/definitions/Aggregation'
+      detectionTechnologyType:
+        $ref: '#/definitions/Aggregation'
+      intendedTargetFamily:
+        $ref: '#/definitions/Aggregation'
+      intendedTargetType:
+        $ref: '#/definitions/Aggregation'
+      organism:
+        $ref: '#/definitions/Aggregation'
+      technologicalTargetTypeSub:
+        $ref: '#/definitions/Aggregation'
+      timepointHr:
+        $ref: '#/definitions/Aggregation'
+      tissue:
+        $ref: '#/definitions/Aggregation'
   Assay:
     type: object
     properties:
@@ -633,10 +742,37 @@ definitions:
         items:
           $ref: '#/definitions/Result'
       aggregations:
-        $ref: '#/definitions/CompoundAggregations'
+        $ref: '#/definitions/ResultAggregations'
       total:
         type: integer
         description: "Total count of results with current filtering"
+  ResultAggregations:
+    type: object
+    properties:
+      clib:
+        $ref: '#/definitions/Aggregation'
+      dssToxQLevel:
+        $ref: '#/definitions/Aggregation'
+      substanceType:
+        $ref: '#/definitions/Aggregation'
+      cellFormat:
+        $ref: '#/definitions/Aggregation'
+      detectionTechnologyType:
+        $ref: '#/definitions/Aggregation'
+      intendedTargetFamily:
+        $ref: '#/definitions/Aggregation'
+      intendedTargetType:
+        $ref: '#/definitions/Aggregation'
+      organism:
+        $ref: '#/definitions/Aggregation'
+      technologicalTargetTypeSub:
+        $ref: '#/definitions/Aggregation'
+      timepointHr:
+        $ref: '#/definitions/Aggregation'
+      tissue:
+        $ref: '#/definitions/Aggregation'
+      hitc:
+        $ref: '#/definitions/Aggregation'
   Result:
     type: object
     properties:
@@ -735,7 +871,7 @@ definitions:
       key:
         type: string
         description: "Value to display to the user and use for filtering"
-      doc_count:
+      count:
         type: integer
         description: "Number of items if the current view is filtered by this additional value"
 
