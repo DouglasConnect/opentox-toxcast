@@ -22,7 +22,7 @@ paths:
       - "assay"
       summary: "Get assay data"
       description: "Returns a list of assays (assay endpoints)"
-      operationId: "controllers.assay_controller.assays_get"
+      operationId: "assays_get"
       produces:
       - "application/json"
       parameters:
@@ -69,7 +69,7 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/Error"
-      x-swagger-router-controller: "controllers.default_controller"
+      x-swagger-router-controller: "controllers.assay_controller"
       x-tags:
       - tag: "assay"
   /compounds:
@@ -78,7 +78,7 @@ paths:
       - "compound"
       summary: "Get compound data"
       description: "Returns a list of compounds"
-      operationId: "controllers.compound_controller.compounds_get"
+      operationId: "compounds_get"
       produces:
       - "application/json"
       parameters:
@@ -133,7 +133,7 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/Error"
-      x-swagger-router-controller: "controllers.compounds_controller"
+      x-swagger-router-controller: "controllers.compound_controller"
       x-tags:
       - tag: "compound"
   /results:
@@ -142,7 +142,7 @@ paths:
       - "result"
       summary: "Get results of compounds beeing tested on assays"
       description: "Returns a list of results with associated compound and assay data"
-      operationId: "controllers.result_controller.results_get"
+      operationId: "results_get"
       produces:
       - "application/json"
       parameters:
@@ -222,7 +222,7 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/Error"
-      x-swagger-router-controller: "controllers.default_controller"
+      x-swagger-router-controller: "controllers.result_controller"
       x-tags:
       - tag: "result"
 definitions:
