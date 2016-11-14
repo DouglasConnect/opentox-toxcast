@@ -8,9 +8,8 @@ IDENTIFIERCONVERTERHOSTNAME="${IDENTIFIERCONVERTERHOSTNAME:-chemidconvert}"
 IDENTIFIERCONVERTERPORT="${IDENTIFIERCONVERTERPORT:-8080}"
 # The data we need from the offical Toxcast release the official summary data relase from
 # ftp://newftp.epa.gov/comptox/High_Throughput_Screening_Data/Summary_Files/INVITRODB_V2_SUMMARY.zip
-# We use a mirror in europe for faster downloading:
-TOXCASTDATAURL="${TOXCASTDATAURL:-https://storage.googleapis.com/douglasconnect-public/data/toxcast/INVITRODB_V2_SUMMARY.zip}"
-TOXCASTCOMPOUNDSURL="${TOXCASTCOMPOUNDSURL:-https://storage.googleapis.com/douglasconnect-public/data/toxcast/DSSTox_ToxCastRelease_20151019.zip}"
+TOXCASTDATAURL="${TOXCASTDATAURL:-ftp://newftp.epa.gov/comptox/High_Throughput_Screening_Data/Summary_Files/INVITRODB_V2_SUMMARY.zip}"
+TOXCASTCOMPOUNDSURL="${TOXCASTCOMPOUNDSURL:-ftp://newftp.epa.gov/comptox/High_Throughput_Screening_Data/DSSTox_Oct_2015/DSSTox_ToxCastRelease_20151019.zip}"
 
 echo "starting toxcast data import"
 echo "importing into elasticsearch at $ELASTICSEARCHHOSTNAME"
@@ -37,7 +36,7 @@ sleep 10
 
 if python /code/importer.py elastic index exists toxcast --elasticsearch-host $ELASTICSEARCHHOSTNAME
 then
-  if [ -z "$DROPEXISTINGINDEX" ]; then
+  if [[ -z $DROPEXISTINGINDEX ]]; then
     echo "Elasticsearch already contains an toxcast index, aborting data import"#
     exit 1
   else
