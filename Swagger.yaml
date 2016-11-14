@@ -58,16 +58,16 @@ paths:
         - $ref: '#/parameters/AidFilter'
         - $ref: '#/parameters/AeidFilter'
         - $ref: '#/parameters/AsidFilter'
-        
+
         - $ref: '#/parameters/CellFormatFilter'
         - $ref: '#/parameters/DetectionTechnologyTypeFilter'
         - $ref: '#/parameters/IntendedTargetFamilyFilter'
         - $ref: '#/parameters/IntendedTargetTypeFilter'
         - $ref: '#/parameters/OrganismFilter'
         - $ref: '#/parameters/TechnologicalTargetTypeFilter'
-#        - $ref: '#/parameters/TimepointHrFilter'
+        - $ref: '#/parameters/TimepointHrFilter'
         - $ref: '#/parameters/TissueFilter'
-        
+
       responses:
         200:
           description: "A list of assay endpoints and aggregations"
@@ -99,17 +99,17 @@ paths:
         - $ref: '#/parameters/AidFilter'
         - $ref: '#/parameters/AeidFilter'
         - $ref: '#/parameters/AsidFilter'
-        
+
         - $ref: '#/parameters/CellFormatFilter'
         - $ref: '#/parameters/DetectionTechnologyTypeFilter'
         - $ref: '#/parameters/IntendedTargetFamilyFilter'
         - $ref: '#/parameters/IntendedTargetTypeFilter'
         - $ref: '#/parameters/OrganismFilter'
         - $ref: '#/parameters/TechnologicalTargetTypeFilter'
-#        - $ref: '#/parameters/TimepointHrFilter'
+        - $ref: '#/parameters/TimepointHrFilter'
         - $ref: '#/parameters/TissueFilter'
 
-#        - $ref: '#/parameters/HitcFilter'
+        - $ref: '#/parameters/HitcFilter'
       responses:
         200:
           description: "A list of results with associated compound and assay data. Aggregations for faceted navigation."
@@ -202,7 +202,7 @@ parameters:
     required: false
     items:
       type: string
-      
+
   CellFormatFilter:
     name: cellFormatFilter
     description: "Filter by Cell Format"
@@ -377,8 +377,8 @@ definitions:
         $ref: '#/definitions/Aggregation'
       technologicalTargetTypeSub:
         $ref: '#/definitions/Aggregation'
-      #timepointHr:
-      #  $ref: '#/definitions/Aggregation'
+      timepointHr:
+       $ref: '#/definitions/Aggregation'
       tissue:
         $ref: '#/definitions/Aggregation'
   Assay:
@@ -767,12 +767,12 @@ definitions:
         $ref: '#/definitions/Aggregation'
       technologicalTargetTypeSub:
         $ref: '#/definitions/Aggregation'
-      #timepointHr:
-      #  $ref: '#/definitions/Aggregation'
+      timepointHr:
+       $ref: '#/definitions/Aggregation'
       tissue:
         $ref: '#/definitions/Aggregation'
-      #hitc:
-      #  $ref: '#/definitions/Aggregation'
+      hitc:
+       $ref: '#/definitions/Aggregation'
   Result:
     type: object
     properties:

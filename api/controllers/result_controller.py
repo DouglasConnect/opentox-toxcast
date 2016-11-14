@@ -1,116 +1,171 @@
-from elasticsearch_dsl import Search, A
+from elasticsearch_dsl import Search
 from elasticsearch_dsl.aggs import Filter
-from controllers.helpers import *
-from controllers.shared import *
+from controllers.client import client, INDEX
+from controllers.helpers import (render, build_query, term_filters,
+                                 term_aggregation, filtered_aggregation,
+                                 build_global_aggs, offset_and_limit)
 
-def results_get(offset = None, limit = None, chidFilter = None, clibFilter = None, dssToxQCLevelFilter = None, substanceTypeFilter = None, aidFilter = None, aeidFilter = None, asidFilter = None, cellFormatFilter = None, detectionTechnologyTypeFilter = None, intendedTargetFamilyFilter = None, intendedTargetTypeFilter = None, organismFilter = None, technologicalTargetTypeFilter = None, timepointHrFilter = None, tissueFilter = None, hitcFilter = None) -> str:
+
+def results_get(offset=None,
+                limit=None,
+                chidFilter=None,
+                clibFilter=None,
+                dssToxQCLevelFilter=None,
+                substanceTypeFilter=None,
+                aidFilter=None,
+                aeidFilter=None,
+                asidFilter=None,
+                cellFormatFilter=None,
+                detectionTechnologyTypeFilter=None,
+                intendedTargetFamilyFilter=None,
+                intendedTargetTypeFilter=None,
+                organismFilter=None,
+                technologicalTargetTypeFilter=None,
+                timepointHrFilter=None,
+                tissueFilter=None,
+                hitcFilter=None) -> str:
 
     filters = (
         ('compound.chid', chidFilter),
         ('compound.clib', clibFilter),
         ('compound.dssToxQCLevel', dssToxQCLevelFilter),
         ('compound.substanceType', substanceTypeFilter),
-
-        ('assay.aeid', aeidFilter),
         ('assay.aid', aidFilter),
         ('assay.asid', asidFilter),
-        ('assay.cellFormat', cellFormatFilter),
-        ('assay.detectionTechnologyType', detectionTechnologyTypeFilter),
-        ('assay.intendedTargetFamily', intendedTargetFamilyFilter),
-        ('assay.intendedTargetType', intendedTargetTypeFilter),
-        ('assay.organism', organismFilter),
-        ('assay.technologicalTargetType', technologicalTargetTypeFilter),
-        #('assay.timepointHr', timepointHrFilter),
-        ('assay.tissue', tissueFilter),
-
-        #('result.hitc', hitcFilter),
-    )
+        ('assay.aeid', aeidFilter),
+        ('assay.cellFormat.raw', cellFormatFilter),
+        ('assay.detectionTechnologyType.raw', detectionTechnologyTypeFilter),
+        ('assay.intendedTargetFamily.raw', intendedTargetFamilyFilter),
+        ('assay.intendedTargetType.raw', intendedTargetTypeFilter),
+        ('assay.organism.raw', organismFilter),
+        ('assay.technologicalTargetType.raw', technologicalTargetTypeFilter),
+        ('assay.timepointHr', timepointHrFilter),
+        ('assay.tissue.raw', tissueFilter),
+        ('result.hitc', hitcFilter), )
 
     aggregations = {
         'compound.clib': {
             'name': 'Clib',
             'filterTerm': 'clibFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(term_filters(filters, exclude='clib'))),
-                A('terms', field='compound.clib', min_doc_count=0))
+                Filter(
+                    build_query(
+                        term_filters(
+                            filters, exclude='compound.clib'))),
+                term_aggregation('compound.clib'))
         },
         'compound.dssToxQCLevel': {
             'name': 'DSS Tox QC level',
             'filterTerm': 'dssToxQCLevelFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(term_filters(filters, exclude='dssToxQCLevel'))),
-                A('terms', field='compound.dssToxQCLevel', min_doc_count=0))
+                Filter(
+                    build_query(
+                        term_filters(
+                            filters, exclude='compound.dssToxQCLevel'))),
+                term_aggregation('compound.dssToxQCLevel'))
         },
         'compound.substanceType': {
             'name': 'Substance type',
             'filterTerm': 'substanceTypeFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(term_filters(filters, exclude='substanceType'))),
-                A('terms', field='compound.substanceType', min_doc_count=0))
+                Filter(
+                    build_query(
+                        term_filters(
+                            filters, exclude='compound.substanceType'))),
+                term_aggregation('compound.substanceType'))
         },
         'assay.cellFormat': {
             'name': 'Cell Format',
-            'filterTerm': 'CellFormatFilter',
+            'filterTerm': 'cellFormatFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='cellFormat'))),
-                A('terms', field='assay.cellFormat', min_doc_count=0))
+                Filter(
+                    build_query(
+                        term_filters(
+                            filters, exclude='assay.cellFormat.raw'))),
+                term_aggregation('assay.cellFormat.raw'))
         },
         'assay.detectionTechnologyType': {
             'name': 'DSS Tox QC level',
-            'filterTerm': 'DetectionTechnologyTypeFilter',
+            'filterTerm': 'detectionTechnologyTypeFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='detectionTechnologyType'))),
-                A('terms', field='assay.detectionTechnologyType', min_doc_count=0))
+                Filter(
+                    build_query(
+                        term_filters(
+                            filters,
+                            exclude='assay.detectionTechnologyType.raw'))),
+                term_aggregation('assay.detectionTechnologyType.raw'))
         },
         'assay.intendedTargetFamily': {
-            'name': 'intended target family type',
-            'filterTerm': 'IntendedTargetFamilyFilter',
+            'name': 'intended target family',
+            'filterTerm': 'intendedTargetFamilyFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='intendedTargetFamily'))),
-                A('terms', field='assay.intendedTargetFamily', min_doc_count=0))
+                Filter(
+                    build_query(
+                        term_filters(
+                            filters,
+                            exclude='assay.intendedTargetFamily.raw'))),
+                term_aggregation('assay.intendedTargetFamily.raw'))
         },
         'assay.intendedTargetType': {
-            'name': 'intended target type"',
-            'filterTerm': 'IntendedTargetTypeFilter',
+            'name': 'intended target type',
+            'filterTerm': 'intendedTargetTypeFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='intendedTargetType'))),
-                A('terms', field='assay.intendedTargetType', min_doc_count=0))
+                Filter(
+                    build_query(
+                        term_filters(
+                            filters, exclude='assay.intendedTargetType.raw'))),
+                term_aggregation('assay.intendedTargetType.raw'))
         },
         'assay.organism': {
             'name': 'Organism',
-            'filterTerm': 'OrganismFilter',
+            'filterTerm': 'organismFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='organism'))),
-                A('terms', field='assay.organism', min_doc_count=0))
+                Filter(
+                    build_query(
+                        term_filters(
+                            filters, exclude='assay.organism.raw'))),
+                term_aggregation('assay.organism.raw'))
         },
         'assay.technologicalTargetType': {
             'name': 'technolgical target type',
-            'filterTerm': 'TechnologicalTargetTypeFilter',
+            'filterTerm': 'technologicalTargetTypeFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='technologicalTargetType'))),
-                A('terms', field='assay.technologicalTargetType', min_doc_count=0))
+                Filter(
+                    build_query(
+                        term_filters(
+                            filters,
+                            exclude='assay.technologicalTargetType.raw'))),
+                term_aggregation('assay.technologicalTargetType.raw'))
         },
-        # 'assay.timepointHr': {
-        #     'name': 'Timepoint Hr',
-        #     'filterTerm': 'TimepointHrFilter',
-        #     'aggregation': filtered_aggregation(
-        #         Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='timepointHr'))),
-        #         A('terms', field='assay.timepointHr', min_doc_count=0))
-        # },
+        'assay.timepointHr': {
+            'name': 'Timepoint Hr',
+            'filterTerm': 'timepointHrFilter',
+            'aggregation': filtered_aggregation(
+                Filter(
+                    build_query(
+                        term_filters(
+                            filters, exclude='assay.timepointHr'))),
+                term_aggregation('assay.timepointHr'))
+        },
         'assay.tissue': {
             'name': 'Tissue',
-            'filterTerm': 'TissueFilter',
+            'filterTerm': 'tissueFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='tissue'))),
-                A('terms', field='assay.tissue', min_doc_count=0))
+                Filter(
+                    build_query(
+                        term_filters(
+                            filters, exclude='assay.tissue.raw'))),
+                term_aggregation('assay.tissue.raw'))
         },
-        # 'result.hitc': {
-        #     'name': 'Hit call',
-        #     'filterTerm': 'hitcFilter',
-        #     'aggregation': filtered_aggregation(
-        #         Filter(build_query(term_filters(filters, exclude='hitc'))),
-        #         A('terms', field='result.hitc', min_doc_count=0))
-        # },
+        'result.hitc': {
+            'name': 'Hit call',
+            'filterTerm': 'hitcFilter',
+            'aggregation': filtered_aggregation(
+                Filter(
+                    build_query(term_filters(
+                        filters, exclude='result.hitc'))),
+                term_aggregation('result.hitc'))
+        },
     }
 
     search = Search(using=client, index=INDEX, doc_type='result')
