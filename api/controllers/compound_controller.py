@@ -17,21 +17,21 @@ def compounds_get(offset = None, limit = None, chidFilter = None, clibFilter = N
             'name': 'Clib',
             'filterTerm': 'clibFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(compoundIds), term_filters(filters, exclude='clib'))),
+                Filter(build_query(id_filter(chidFilter), term_filters(filters, exclude='clib'))),
                 A('terms', field='clib', min_doc_count=0))
         },
         'dssToxQCLevel': {
             'name': 'DSS Tox QC level',
             'filterTerm': 'dssToxQCLevelFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(compoundIds), term_filters(filters, exclude='dssToxQCLevel'))),
+                Filter(build_query(id_filter(chidFilter), term_filters(filters, exclude='dssToxQCLevel'))),
                 A('terms', field='dssToxQCLevel', min_doc_count=0))
         },
         'substanceType': {
             'name': 'Substance type',
             'filterTerm': 'substanceTypeFilter',
             'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(compoundIds), term_filters(filters, exclude='substanceType'))),
+                Filter(build_query(id_filter(chidFilter), term_filters(filters, exclude='substanceType'))),
                 A('terms', field='substanceType', min_doc_count=0))
         },
     }
