@@ -2,9 +2,11 @@ swagger: '2.0'
 info:
   title: ToxCast databse API - assay, compound and assay results values for tested compounts.
   description: |
-    This Api exposes the EPA's ToxCast summary dataset (October 2015 release).
+    This Api exposes the EPA's [ToxCast summary dataset](https://www.epa.gov/chemical-research/toxicity-forecaster-toxcasttm-data) (October 2015 release).
 
-    ToxCast contains data for a single chemical endpoint pair for thousands of chemicals and 821 assay endpoints for 20 variables such
+    To learn more about this api, check out the [githup repository](https://github.com/douglasconnect/opentox-toxcast).
+
+    The ToxCast database contains data for a single chemical endpoint pair for thousands of chemicals and 821 assay endpoints for 20 variables such
     as the activity or hit call, activity concentrations, whether the chemical was tested in a specific assay, etc.
   version: "1.0.0"
 # service domain - in our use-case somewhat nonsensical but mandatory
@@ -27,7 +29,7 @@ paths:
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
-        - $ref: '#/parameters/CompoundIds'
+        - $ref: '#/parameters/ChidFilter'
         - $ref: '#/parameters/ClibFilter'
         - $ref: '#/parameters/DssToxQCLevelFilter'
         - $ref: '#/parameters/SubstanceTypeFilter'
@@ -53,9 +55,9 @@ paths:
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
-        - $ref: '#/parameters/AssayIds'
-        - $ref: '#/parameters/AssayEndpointIds'
-        - $ref: '#/parameters/StudyIds'
+        - $ref: '#/parameters/AidFilter'
+        - $ref: '#/parameters/AeidFilter'
+        - $ref: '#/parameters/AsidFilter'
         # TODO assay aggregation filters
       responses:
         200:
@@ -80,18 +82,17 @@ paths:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
 
-        - $ref: '#/parameters/CompoundIds'
+        - $ref: '#/parameters/ChidFilter'
         - $ref: '#/parameters/ClibFilter'
         - $ref: '#/parameters/DssToxQCLevelFilter'
         - $ref: '#/parameters/SubstanceTypeFilter'
 
-        - $ref: '#/parameters/AssayIds'
-        - $ref: '#/parameters/AssayEndpointIds'
-        - $ref: '#/parameters/StudyIds'
+        - $ref: '#/parameters/AidFilter'
+        - $ref: '#/parameters/AeidFilter'
+        - $ref: '#/parameters/AsidFilter'
         # TODO assay aggregation filters
 
-        # TODO results filters
-        # TODO results aggregation filters
+        - $ref: '#/parameters/HitcFilter'
       responses:
         200:
           description: "A list of results with associated compound and assay data. Aggregations for faceted navigation."
@@ -119,9 +120,9 @@ parameters:
     default: 10
 
   # Compound
-  CompoundIds:
-    name: compoundIds
-    description: "Filter by compound IDs"
+  ChidFilter:
+    name: chidFilter
+    description: "Filter by chids (Compound ids)"
     in: query
     type: array
     collectionFormat: csv
@@ -157,8 +158,8 @@ parameters:
       type: string
 
   # Assay
-  AssayIds:
-    name: assayIds
+  AidFilter:
+    name: aidFilter
     description: "Filter by assay IDs"
     in: query
     type: array
@@ -166,17 +167,17 @@ parameters:
     required: false
     items:
       type: string
-  AssayEndpointIds:
-    name: assayEndpointIds
-    description: "Filter by assay IDs"
+  AeidFilter:
+    name: aeidFilter
+    description: "Filter by assay endpoint ID (most specific assay related ID)"
     in: query
     type: array
     collectionFormat: csv
     required: false
     items:
       type: string
-  StudyIds:
-    name: studyIds
+  AsidFilter:
+    name: asidFilter
     description: "Filter by study IDs"
     in: query
     type: array
@@ -185,11 +186,12 @@ parameters:
     items:
       type: string
 
-  # TODO assay aggregation filters
-
-  # Results
-  # TODO result filters
-  # TODO results aggregation filters
+  HitcFilter:
+    name: hitcFilter
+    description: "Filter by hitcall (1 = active, 0 = inactive, -1 = inconclusive)"
+    in: query
+    required: false
+    type: integer
 
 definitions:
   Compounds:

@@ -3,11 +3,12 @@ from elasticsearch_dsl.aggs import Filter
 from controllers.helpers import *
 from controllers.shared import *
 
-def assays_get(offset=None, limit=None, assayEndpointIds=None, assayIds=None, studyIds=None) -> str:
+def assays_get(offset = None, limit = None, aidFilter = None, aeidFilter = None, asidFilter = None) -> str:
 
     filters = (
-        ('aid', assayIds),
-        ('asid', studyIds),
+        ('aid', aidFilter),
+        ('asid', asidFilter),
+        ('aeid', aeidFilter),
     )
 
     aggregations = {

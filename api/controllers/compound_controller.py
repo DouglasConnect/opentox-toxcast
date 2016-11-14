@@ -4,7 +4,7 @@ from controllers.helpers import *
 from controllers.shared import *
 
 
-def compounds_get(offset=None, limit=None, compoundIds=None, clibFilter=None, dssToxQCLevelFilter=None, substanceTypeFilter=None) -> str:
+def compounds_get(offset = None, limit = None, chidFilter = None, clibFilter = None, dssToxQCLevelFilter = None, substanceTypeFilter = None) -> str:
 
     filters = (
         ('clib', clibFilter),
@@ -29,7 +29,7 @@ def compounds_get(offset=None, limit=None, compoundIds=None, clibFilter=None, ds
         },
         'substanceType': {
             'name': 'Substance type',
-            'filterTerm': 'SubstanceTypeFilter',
+            'filterTerm': 'substanceTypeFilter',
             'aggregation': filtered_aggregation(
                 Filter(build_query(id_filter(compoundIds), term_filters(filters, exclude='substanceType'))),
                 A('terms', field='substanceType', min_doc_count=0))

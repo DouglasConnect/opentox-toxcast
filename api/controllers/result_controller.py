@@ -3,17 +3,19 @@ from elasticsearch_dsl.aggs import Filter
 from controllers.helpers import *
 from controllers.shared import *
 
-def results_get(offset=None, limit=None, compoundIds=None, clibFilter=None, dssToxQCLevelFilter=None, substanceTypeFilter=None, assayIds=None, assayEndpointIds=None, studyIds=None) -> str:
+def results_get(offset = None, limit = None, chidFilter = None, clibFilter = None, dssToxQCLevelFilter = None, substanceTypeFilter = None, aidFilter = None, aeidFilter = None, asidFilter = None, hitcFilter = None) -> str:
 
     filters = (
-        ('compound.chid', compoundIds),
+        ('compound.chid', chidFilter),
         ('compound.clib', clibFilter),
         ('compound.dssToxQCLevel', dssToxQCLevelFilter),
         ('compound.substanceType', substanceTypeFilter),
 
-        ('assay.aeid', assayEndpointIds),
-        ('assay.aid', assayIds),
-        ('assay.asid', studyIds),
+        ('assay.aeid', aeidFilter),
+        ('assay.aid', aidFilter),
+        ('assay.asid', asidFilter),
+
+        ('result.hitc', hitcFilter),
     )
 
     aggregations = {
@@ -33,7 +35,7 @@ def results_get(offset=None, limit=None, compoundIds=None, clibFilter=None, dssT
         },
         'compound.substanceType': {
             'name': 'Substance type',
-            'filterTerm': 'SubstanceTypeFilter',
+            'filterTerm': 'substanceTypeFilter',
             'aggregation': filtered_aggregation(
                 Filter(build_query(term_filters(filters, exclude='substanceType'))),
                 A('terms', field='compound.substanceType', min_doc_count=0))
