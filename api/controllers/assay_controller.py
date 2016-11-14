@@ -1,7 +1,7 @@
 from elasticsearch_dsl import Search, A
 from elasticsearch_dsl.aggs import Filter
-from helpers import *
-from shared import *
+from controllers.helpers import *
+from controllers.shared import *
 
 def assays_get(offset=None, limit=None, assayEndpointIds=None, assayIds=None, studyIds=None) -> str:
 
