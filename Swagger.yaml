@@ -19,7 +19,7 @@ paths:
     get:
       summary: "Get compound data"
       description: "Returns a list of compounds"
-      x-swagger-router-controller: "controllers.default_controller"
+      x-swagger-router-controller: "controllers.compounds_controller"
       operationId: "compounds_get"
       produces: ["application/json"]
       tags:
@@ -45,7 +45,7 @@ paths:
     get:
       summary: "Get assay data"
       description: "Returns a list of assays (assay endpoints)"
-      x-swagger-router-controller: "controllers.default_controller"
+      x-swagger-router-controller: "controllers.assays_controller"
       operationId: "assays_get"
       produces: ["application/json"]
       tags:
@@ -71,7 +71,7 @@ paths:
     get:
       summary: "Get results of compounds beeing tested on assays"
       description: "Returns a list of results with associated compound and assay data"
-      x-swagger-router-controller: "controllers.default_controller"
+      x-swagger-router-controller: "controllers.results_controller"
       operationId: "results_get"
       produces: ["application/json"]
       tags:

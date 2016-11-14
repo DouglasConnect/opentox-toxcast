@@ -22,7 +22,7 @@ paths:
       - "assay"
       summary: "Get assay data"
       description: "Returns a list of assays (assay endpoints)"
-      operationId: "assays_get"
+      operationId: "controllers.assay_controller.assays_get"
       produces:
       - "application/json"
       parameters:
@@ -78,7 +78,7 @@ paths:
       - "compound"
       summary: "Get compound data"
       description: "Returns a list of compounds"
-      operationId: "compounds_get"
+      operationId: "controllers.compound_controller.compounds_get"
       produces:
       - "application/json"
       parameters:
@@ -133,7 +133,7 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/Error"
-      x-swagger-router-controller: "controllers.default_controller"
+      x-swagger-router-controller: "controllers.compounds_controller"
       x-tags:
       - tag: "compound"
   /results:
@@ -142,7 +142,7 @@ paths:
       - "result"
       summary: "Get results of compounds beeing tested on assays"
       description: "Returns a list of results with associated compound and assay data"
-      operationId: "results_get"
+      operationId: "controllers.result_controller.results_get"
       produces:
       - "application/json"
       parameters:
@@ -338,50 +338,64 @@ definitions:
       assayDesc:
         type: "string"
         description: "Description of the assay"
+        x-nullable: true
       timepointHr:
         type: "number"
         description: "Duration length to conduct the test portion of the assay"
+        x-nullable: true
       organismId:
         type: "integer"
         description: "NCBI Taxonomy id of the organism"
         x-ontology: "http://purl.obolibrary.org/obo/OGG_0000000015"
+        x-nullable: true
       organism:
         type: "string"
         description: "Target organism"
+        x-nullable: true
       tissue:
         type: "string"
         description: "Organ-level, anatomical entity of the protein or cell used in\
           \ the assay"
+        x-nullable: true
       cellFormat:
         type: "string"
         description: "Target cell format"
+        x-nullable: true
       cellFreeComponentSource:
         type: "string"
         description: "Cellular or sample tissue source of the assayed gene protein"
+        x-nullable: true
       cellShortName:
         type: "string"
         description: "Cell short name"
+        x-nullable: true
       cellGrowthMode:
         type: "string"
         description: "Cell growth mode"
+        x-nullable: true
       assayFootprint:
         type: "string"
         description: "Physical format, such as plate density, in which an assay is\
           \ performed"
+        x-nullable: true
       assayFormatType:
         type: "string"
         description: "The conceptual biological and/or chemical features of the assay\
           \ system"
+        x-nullable: true
       assayFormatTypeSub:
         type: "string"
         description: "Assay format subtype"
+        x-nullable: true
       contentReadoutType:
         type: "string"
         description: "Throughput and information content generated"
+        x-nullable: true
       dilutionSolvent:
         type: "string"
         description: "The solvent used as the negative control and to solubilize the\
           \ test chemical"
+        x-nullable: true
       dilutionSolventPercentMax:
         type: "number"
         description: "Maximal amount of the dilution solvent tolerable for a particular\
@@ -390,48 +404,62 @@ definitions:
         type: "string"
         description: "Short name containing the assay and a component readout, e.g.\
           \ BSK_3C_IL8"
+        x-nullable: true
       assayComponentDesc:
         type: "string"
         description: "Assay component description"
+        x-nullable: true
       assayComponentTargetDesc:
         type: "string"
         description: "Assay component target description"
+        x-nullable: true
       parameterReadoutType:
         type: "string"
         description: "Parameter readout type"
       assayDesignType:
         type: "string"
         description: "Assay design type"
+        x-nullable: true
       assayDesignTypeSub:
         type: "string"
         description: "Assay design subtype"
+        x-nullable: true
       biologicalProcessTarget:
         type: "string"
         description: "Biological process target"
+        x-nullable: true
       detectionTechnologyType:
         type: "string"
         description: "Detection technology type"
+        x-nullable: true
       detectionTechnologyTypeSub:
         type: "string"
         description: "Detection technology subtype"
+        x-nullable: true
       detectionTechnology:
         type: "string"
         description: "Detection technology"
+        x-nullable: true
       signalDirectionType:
         type: "string"
         description: "Signal direction type"
+        x-nullable: true
       keyAssayReagentType:
         type: "string"
         description: "Key assay reagent type"
+        x-nullable: true
       keyAssayReagent:
         type: "string"
         description: "Key assay reagent"
+        x-nullable: true
       technologicalTargetType:
         type: "string"
         description: "Measured chemical, molecular, cellular, or anatomical entity"
+        x-nullable: true
       technologicalTargetTypeSub:
         type: "string"
         description: "Measured chemical, molecular, cellular, or anatomical subtype"
+        x-nullable: true
       assayComponentEndpointName:
         type: "string"
         description: "Short name containing the assay, the component readout, and\
@@ -439,38 +467,47 @@ definitions:
       assayComponentEndpointDesc:
         type: "string"
         description: "Description of the assay endpoint"
+        x-nullable: true
       assayFunctionType:
         type: "string"
         description: "Assay function type"
+        x-nullable: true
       normalizedDataType:
         type: "string"
         description: "Normalized data type"
       analysisDirection:
         type: "string"
         description: "Analysis direction (used values: positive/negative)"
+        x-nullable: true
       burstAssay:
         type: "boolean"
         description: "Burst assay"
       keyPositiveControl:
         type: "string"
         description: "Key positive control"
+        x-nullable: true
       signalDirection:
         type: "string"
         description: "Signal direction (used values: loss/gain)"
+        x-nullable: true
       intendedTargetType:
         type: "string"
         description: "Objective chemical, molecular, cellular, pathway or anatomical\
           \ entity"
+        x-nullable: true
       intendedTargetTypeSub:
         type: "string"
         description: "Objective chemical, molecular, cellular, pathway or anatomical\
           \ entity"
+        x-nullable: true
       intendedTargetFamily:
         type: "string"
         description: "Target family of the objective target for the assay"
+        x-nullable: true
       intendedTargetFamilySub:
         type: "string"
         description: "Target family of the objective target for the assay"
+        x-nullable: true
       intendedTargetGeneId:
         type: "array"
         description: "List of target gene ids that are the objective"
@@ -622,7 +659,18 @@ definitions:
         type: "array"
         description: ""
         items:
-          $ref: "#/definitions/Assay_reagent"
+          $ref: "#/definitions/AssayReagent"
+  AssayReagent:
+    type: "object"
+    properties:
+      arid:
+        type: "integer"
+      reagentNameValue:
+        type: "string"
+      reagentNameValueType:
+        type: "string"
+      cultureOrAssay:
+        type: "string"
   Results:
     type: "object"
     properties:
@@ -728,7 +776,17 @@ definitions:
         type: "array"
         description: "Aggregation values (buckets) and correspondig item counts"
         items:
-          $ref: "#/definitions/Aggregation_buckets"
+          $ref: "#/definitions/AggregationBucket"
+  AggregationBucket:
+    type: "object"
+    properties:
+      key:
+        type: "string"
+        description: "Value to display to the user and use for filtering"
+      doc_count:
+        type: "integer"
+        description: "Number of items if the current view is filtered by this additional\
+          \ value"
   Error:
     type: "object"
     properties:
@@ -739,80 +797,11 @@ definitions:
         type: "string"
       fields:
         type: "string"
-  Assay_reagent:
-    type: "object"
-    properties:
-      arid:
-        type: "integer"
-      reagentNameValue:
-        type: "string"
-      reagentNameValueType:
-        type: "string"
-      cultureOrAssay:
-        type: "string"
-  Aggregation_buckets:
-    type: "object"
-    properties:
-      key:
-        type: "string"
-        description: "Value to display to the user and use for filtering"
-      doc_count:
-        type: "integer"
-        description: "Number of items if the current view is filtered by this additional\
-          \ value"
 parameters:
-  Offset:
-    name: "offset"
-    in: "query"
-    description: "Number of assay endpoints to skip (for paging)"
-    required: false
-    type: "integer"
-  Limit:
-    name: "limit"
-    in: "query"
-    description: "Maximum count of assay endpoints to return (for paging)"
-    required: false
-    type: "integer"
-  CompoundIds:
-    name: "compoundIds"
-    in: "query"
-    description: "Filter by compound IDs"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
-  ClibFilter:
-    name: "clibFilter"
-    in: "query"
-    description: "Filter by clib"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
   DssToxQCLevelFilter:
     name: "dssToxQCLevelFilter"
     in: "query"
     description: "Filter by the quality level filter field"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
-  SubstanceTypeFilter:
-    name: "substanceTypeFilter"
-    in: "query"
-    description: "Filter by the substance type field"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
-  AssayIds:
-    name: "assayIds"
-    in: "query"
-    description: "Filter by assay IDs"
     required: false
     type: "array"
     items:
@@ -827,6 +816,30 @@ parameters:
     items:
       type: "string"
     collectionFormat: "csv"
+  ClibFilter:
+    name: "clibFilter"
+    in: "query"
+    description: "Filter by clib"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  AssayIds:
+    name: "assayIds"
+    in: "query"
+    description: "Filter by assay IDs"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  Limit:
+    name: "limit"
+    in: "query"
+    description: "Maximum count of assay endpoints to return (for paging)"
+    required: false
+    type: "integer"
   StudyIds:
     name: "studyIds"
     in: "query"
@@ -836,3 +849,27 @@ parameters:
     items:
       type: "string"
     collectionFormat: "csv"
+  CompoundIds:
+    name: "compoundIds"
+    in: "query"
+    description: "Filter by compound IDs"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  SubstanceTypeFilter:
+    name: "substanceTypeFilter"
+    in: "query"
+    description: "Filter by the substance type field"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  Offset:
+    name: "offset"
+    in: "query"
+    description: "Number of assay endpoints to skip (for paging)"
+    required: false
+    type: "integer"
