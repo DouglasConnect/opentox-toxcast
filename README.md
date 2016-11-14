@@ -5,7 +5,7 @@ This repository contains the code for a REST Api to access the [EPA's ToxCast an
 Douglas Connect runs a public version of this database at this URL (currently in Beta, so please be aware that things might still change):
 http://toxcast-api.cloud.douglasconnect.com/ . At the root url you will find the Swagger UI interface that lets you explore the definitions of the endpoints, see the data schemata and try out the API.
 
-This repository contains the [authorative OpenAPI/Swagger definition](blob/master/Swagger.yaml) here at the root level, plus one subdirectory each for the [api implementation](tree/master/api), the [importer](tree/master/importer) that loads the csv files into Elasticsearch and the [tests](tree/master/tests) that check if the api responses adhere to the OpenAPI definition.
+This repository contains the [authorative OpenAPI/Swagger definition](Swagger.yaml) here at the root level, plus one subdirectory each for the [api implementation](api), the [importer](importer) that loads the csv files into Elasticsearch and the [tests](tests) that check if the api responses adhere to the OpenAPI definition.
 
 ## Why?
 
