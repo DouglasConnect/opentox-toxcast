@@ -14,7 +14,7 @@ def assays_get(offset = None, limit = None, aidFilter = None, aeidFilter = None,
         ('intendedTargetType', intendedTargetTypeFilter),
         ('organism', organismFilter),
         ('technologicalTargetType', technologicalTargetTypeFilter),
-        ('timepointHr', timepointHrFilter),
+        #('timepointHr', timepointHrFilter),
         ('tissue', tissueFilter),
     )
 
@@ -61,13 +61,13 @@ def assays_get(offset = None, limit = None, aidFilter = None, aeidFilter = None,
                 Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='technologicalTargetType'))),
                 A('terms', field='technologicalTargetType', min_doc_count=0))
         },
-        'timepointHr': {
-            'name': 'Timepoint Hr',
-            'filterTerm': 'TimepointHrFilter',
-            'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='timepointHr'))),
-                A('terms', field='timepointHr', min_doc_count=0))
-        },
+        # 'timepointHr': {
+        #     'name': 'Timepoint Hr',
+        #     'filterTerm': 'TimepointHrFilter',
+        #     'aggregation': filtered_aggregation(
+        #         Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='timepointHr'))),
+        #         A('terms', field='timepointHr', min_doc_count=0))
+        # },
         'tissue': {
             'name': 'Tissue',
             'filterTerm': 'TissueFilter',

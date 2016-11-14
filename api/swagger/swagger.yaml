@@ -111,14 +111,14 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      - name: "timepointHrFilter"
-        in: "query"
-        description: "Filter by Timepoint Hr"
-        required: false
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "csv"
+      # - name: "timepointHrFilter"
+      #   in: "query"
+      #   description: "Filter by Timepoint Hr"
+      #   required: false
+      #   type: "array"
+      #   items:
+      #     type: "string"
+      #   collectionFormat: "csv"
       - name: "TissueFilter"
         in: "query"
         description: "Filter by Tissue"
@@ -329,14 +329,14 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      - name: "timepointHrFilter"
-        in: "query"
-        description: "Filter by Timepoint Hr"
-        required: false
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "csv"
+      # - name: "timepointHrFilter"
+      #   in: "query"
+      #   description: "Filter by Timepoint Hr"
+      #   required: false
+      #   type: "array"
+      #   items:
+      #     type: "string"
+      #   collectionFormat: "csv"
       - name: "TissueFilter"
         in: "query"
         description: "Filter by Tissue"
@@ -345,11 +345,11 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      - name: "hitcFilter"
-        in: "query"
-        description: "Filter by hitcall (1 = active, 0 = inactive, -1 = inconclusive)"
-        required: false
-        type: "integer"
+      # - name: "hitcFilter"
+      #   in: "query"
+      #   description: "Filter by hitcall (1 = active, 0 = inactive, -1 = inconclusive)"
+      #   required: false
+      #   type: "integer"
       responses:
         200:
           description: "A list of results with associated compound and assay data.\
@@ -461,8 +461,8 @@ definitions:
         $ref: "#/definitions/Aggregation"
       technologicalTargetTypeSub:
         $ref: "#/definitions/Aggregation"
-      timepointHr:
-        $ref: "#/definitions/Aggregation"
+      #timepointHr:
+      #  $ref: "#/definitions/Aggregation"
       tissue:
         $ref: "#/definitions/Aggregation"
   Assay:
@@ -862,12 +862,12 @@ definitions:
         $ref: "#/definitions/Aggregation"
       technologicalTargetTypeSub:
         $ref: "#/definitions/Aggregation"
-      timepointHr:
-        $ref: "#/definitions/Aggregation"
+      #timepointHr:
+      #  $ref: "#/definitions/Aggregation"
       tissue:
         $ref: "#/definitions/Aggregation"
-      hitc:
-        $ref: "#/definitions/Aggregation"
+      #hitc:
+      #  $ref: "#/definitions/Aggregation"
   Result:
     type: "object"
     properties:

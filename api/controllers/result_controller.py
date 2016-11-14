@@ -20,10 +20,10 @@ def results_get(offset = None, limit = None, chidFilter = None, clibFilter = Non
         ('assay.intendedTargetType', intendedTargetTypeFilter),
         ('assay.organism', organismFilter),
         ('assay.technologicalTargetType', technologicalTargetTypeFilter),
-        ('assay.timepointHr', timepointHrFilter),
+        #('assay.timepointHr', timepointHrFilter),
         ('assay.tissue', tissueFilter),
 
-        ('result.hitc', hitcFilter),
+        #('result.hitc', hitcFilter),
     )
 
     aggregations = {
@@ -90,13 +90,13 @@ def results_get(offset = None, limit = None, chidFilter = None, clibFilter = Non
                 Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='technologicalTargetType'))),
                 A('terms', field='assay.technologicalTargetType', min_doc_count=0))
         },
-        'assay.timepointHr': {
-            'name': 'Timepoint Hr',
-            'filterTerm': 'TimepointHrFilter',
-            'aggregation': filtered_aggregation(
-                Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='timepointHr'))),
-                A('terms', field='assay.timepointHr', min_doc_count=0))
-        },
+        # 'assay.timepointHr': {
+        #     'name': 'Timepoint Hr',
+        #     'filterTerm': 'TimepointHrFilter',
+        #     'aggregation': filtered_aggregation(
+        #         Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='timepointHr'))),
+        #         A('terms', field='assay.timepointHr', min_doc_count=0))
+        # },
         'assay.tissue': {
             'name': 'Tissue',
             'filterTerm': 'TissueFilter',
@@ -104,13 +104,13 @@ def results_get(offset = None, limit = None, chidFilter = None, clibFilter = Non
                 Filter(build_query(id_filter(aeidFilter), term_filters(filters, exclude='tissue'))),
                 A('terms', field='assay.tissue', min_doc_count=0))
         },
-        'result.hitc': {
-            'name': 'Hit call',
-            'filterTerm': 'hitcFilter',
-            'aggregation': filtered_aggregation(
-                Filter(build_query(term_filters(filters, exclude='hitc'))),
-                A('terms', field='result.hitc', min_doc_count=0))
-        },
+        # 'result.hitc': {
+        #     'name': 'Hit call',
+        #     'filterTerm': 'hitcFilter',
+        #     'aggregation': filtered_aggregation(
+        #         Filter(build_query(term_filters(filters, exclude='hitc'))),
+        #         A('terms', field='result.hitc', min_doc_count=0))
+        # },
     }
 
     search = Search(using=client, index=INDEX, doc_type='result')
