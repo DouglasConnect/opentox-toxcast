@@ -4,7 +4,7 @@ info:
   description: |
     This Api exposes the EPA's [ToxCast summary dataset](https://www.epa.gov/chemical-research/toxicity-forecaster-toxcasttm-data) (October 2015 release).
 
-    To learn more about this api, check out the [githup repository](https://github.com/douglasconnect/opentox-toxcast).
+    To learn more about this api, check out the [github repository](https://github.com/douglasconnect/opentox-toxcast).
 
     The ToxCast database contains data for a single chemical endpoint pair for thousands of chemicals and 821 assay endpoints for 20 variables such
     as the activity or hit call, activity concentrations, whether the chemical was tested in a specific assay, etc.
