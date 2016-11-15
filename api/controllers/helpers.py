@@ -49,7 +49,11 @@ def term_filters(filters, exclude=None):
 
 def term_filter(field, terms):
     if terms is not None:
-        terms = [x for x in terms if x.strip() != '']
+        terms = [
+            x for x in terms
+            if not isinstance(x, str) or (isinstance(x, str) and x.strip() !=
+                                          '')
+        ]
         if len(terms):
             yield Q('terms', **{field: terms})
 

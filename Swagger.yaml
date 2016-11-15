@@ -265,7 +265,7 @@ parameters:
     collectionFormat: csv
     required: false
     items:
-      type: string
+      type: number
   TissueFilter:
     name: TissueFilter
     description: "Filter by Tissue"
@@ -280,8 +280,11 @@ parameters:
     name: hitcFilter
     description: "Filter by hitcall (1 = active, 0 = inactive, -1 = inconclusive)"
     in: query
+    type: array
+    collectionFormat: csv
     required: false
-    type: integer
+    items:
+      type: integer
 
 definitions:
   Compounds:

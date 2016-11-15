@@ -111,14 +111,14 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      # - name: "timepointHrFilter"
-      #   in: "query"
-      #   description: "Filter by Timepoint Hr"
-      #   required: false
-      #   type: "array"
-      #   items:
-      #     type: "string"
-      #   collectionFormat: "csv"
+      - name: "timepointHrFilter"
+        in: "query"
+        description: "Filter by Timepoint Hr"
+        required: false
+        type: "array"
+        items:
+          type: "number"
+        collectionFormat: "csv"
       - name: "TissueFilter"
         in: "query"
         description: "Filter by Tissue"
@@ -329,14 +329,14 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      # - name: "timepointHrFilter"
-      #   in: "query"
-      #   description: "Filter by Timepoint Hr"
-      #   required: false
-      #   type: "array"
-      #   items:
-      #     type: "string"
-      #   collectionFormat: "csv"
+      - name: "timepointHrFilter"
+        in: "query"
+        description: "Filter by Timepoint Hr"
+        required: false
+        type: "array"
+        items:
+          type: "number"
+        collectionFormat: "csv"
       - name: "TissueFilter"
         in: "query"
         description: "Filter by Tissue"
@@ -345,11 +345,14 @@ paths:
         items:
           type: "string"
         collectionFormat: "csv"
-      # - name: "hitcFilter"
-      #   in: "query"
-      #   description: "Filter by hitcall (1 = active, 0 = inactive, -1 = inconclusive)"
-      #   required: false
-      #   type: "integer"
+      - name: "hitcFilter"
+        in: "query"
+        description: "Filter by hitcall (1 = active, 0 = inactive, -1 = inconclusive)"
+        required: false
+        type: "array"
+        items:
+          type: "integer"
+        collectionFormat: "csv"
       responses:
         200:
           description: "A list of results with associated compound and assay data.\
@@ -461,8 +464,8 @@ definitions:
         $ref: "#/definitions/Aggregation"
       technologicalTargetTypeSub:
         $ref: "#/definitions/Aggregation"
-      #timepointHr:
-      #  $ref: "#/definitions/Aggregation"
+      timepointHr:
+        $ref: "#/definitions/Aggregation"
       tissue:
         $ref: "#/definitions/Aggregation"
   Assay:
@@ -862,12 +865,12 @@ definitions:
         $ref: "#/definitions/Aggregation"
       technologicalTargetTypeSub:
         $ref: "#/definitions/Aggregation"
-      #timepointHr:
-      #  $ref: "#/definitions/Aggregation"
+      timepointHr:
+        $ref: "#/definitions/Aggregation"
       tissue:
         $ref: "#/definitions/Aggregation"
-      #hitc:
-      #  $ref: "#/definitions/Aggregation"
+      hitc:
+        $ref: "#/definitions/Aggregation"
   Result:
     type: "object"
     properties:
@@ -982,103 +985,23 @@ definitions:
       fields:
         type: "string"
 parameters:
-  TissueFilter:
-    name: "TissueFilter"
-    in: "query"
-    description: "Filter by Tissue"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
-  DssToxQCLevelFilter:
-    name: "dssToxQCLevelFilter"
-    in: "query"
-    description: "Filter by the quality level filter field"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
-  ChidFilter:
-    name: "chidFilter"
-    in: "query"
-    description: "Filter by chids (Compound ids)"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
-  TechnologicalTargetTypeFilter:
-    name: "technologicalTargetTypeFilter"
-    in: "query"
-    description: "Filter by technological target type"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
-  AeidFilter:
-    name: "aeidFilter"
-    in: "query"
-    description: "Filter by assay endpoint ID (most specific assay related ID)"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
-  AidFilter:
-    name: "aidFilter"
-    in: "query"
-    description: "Filter by assay IDs"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
-  CellFormatFilter:
-    name: "cellFormatFilter"
-    in: "query"
-    description: "Filter by Cell Format"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
-  OrganismFilter:
-    name: "organismFilter"
-    in: "query"
-    description: "Filter by Organism"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
   Offset:
     name: "offset"
     in: "query"
     description: "Number of assay endpoints to skip (for paging)"
     required: false
     type: "integer"
-  HitcFilter:
-    name: "hitcFilter"
+  Limit:
+    name: "limit"
     in: "query"
-    description: "Filter by hitcall (1 = active, 0 = inactive, -1 = inconclusive)"
+    description: "Maximum count of assay endpoints to return (for paging)"
     required: false
     type: "integer"
-  IntendedTargetTypeFilter:
-    name: "intendedTargetTypeFilter"
+    default: 10
+  ChidFilter:
+    name: "chidFilter"
     in: "query"
-    description: "Filter by intended target type"
-    required: false
-    type: "array"
-    items:
-      type: "string"
-    collectionFormat: "csv"
-  DetectionTechnologyTypeFilter:
-    name: "detectionTechnologyTypeFilter"
-    in: "query"
-    description: "Filter by detection technology type filter"
+    description: "Filter by chids (Compound ids)"
     required: false
     type: "array"
     items:
@@ -1093,17 +1016,10 @@ parameters:
     items:
       type: "string"
     collectionFormat: "csv"
-  Limit:
-    name: "limit"
+  DssToxQCLevelFilter:
+    name: "dssToxQCLevelFilter"
     in: "query"
-    description: "Maximum count of assay endpoints to return (for paging)"
-    required: false
-    type: "integer"
-    default: 10
-  TimepointHrFilter:
-    name: "timepointHrFilter"
-    in: "query"
-    description: "Filter by Timepoint Hr"
+    description: "Filter by the quality level filter field"
     required: false
     type: "array"
     items:
@@ -1118,10 +1034,19 @@ parameters:
     items:
       type: "string"
     collectionFormat: "csv"
-  IntendedTargetFamilyFilter:
-    name: "intendedTargetFamilyFilter"
+  AidFilter:
+    name: "aidFilter"
     in: "query"
-    description: "Filter by intended target family type"
+    description: "Filter by assay IDs"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  AeidFilter:
+    name: "aeidFilter"
+    in: "query"
+    description: "Filter by assay endpoint ID (most specific assay related ID)"
     required: false
     type: "array"
     items:
@@ -1135,4 +1060,85 @@ parameters:
     type: "array"
     items:
       type: "string"
+    collectionFormat: "csv"
+  CellFormatFilter:
+    name: "cellFormatFilter"
+    in: "query"
+    description: "Filter by Cell Format"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  DetectionTechnologyTypeFilter:
+    name: "detectionTechnologyTypeFilter"
+    in: "query"
+    description: "Filter by detection technology type filter"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  IntendedTargetFamilyFilter:
+    name: "intendedTargetFamilyFilter"
+    in: "query"
+    description: "Filter by intended target family type"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  IntendedTargetTypeFilter:
+    name: "intendedTargetTypeFilter"
+    in: "query"
+    description: "Filter by intended target type"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  OrganismFilter:
+    name: "organismFilter"
+    in: "query"
+    description: "Filter by Organism"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  TechnologicalTargetTypeFilter:
+    name: "technologicalTargetTypeFilter"
+    in: "query"
+    description: "Filter by technological target type"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  TimepointHrFilter:
+    name: "timepointHrFilter"
+    in: "query"
+    description: "Filter by Timepoint Hr"
+    required: false
+    type: "array"
+    items:
+      type: "number"
+    collectionFormat: "csv"
+  TissueFilter:
+    name: "TissueFilter"
+    in: "query"
+    description: "Filter by Tissue"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "csv"
+  HitcFilter:
+    name: "hitcFilter"
+    in: "query"
+    description: "Filter by hitcall (1 = active, 0 = inactive, -1 = inconclusive)"
+    required: false
+    type: "array"
+    items:
+      type: "integer"
     collectionFormat: "csv"
