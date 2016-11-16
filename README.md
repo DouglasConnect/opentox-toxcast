@@ -1,4 +1,4 @@
-# OpenTox • ToxCast Api
+# OpenTox • ToxCast API
 
 This repository contains the code for a REST Api to access the [EPA's ToxCast and Tox21](https://www.epa.gov/chemical-research/toxicity-forecaster-toxcasttm-data) data (currently the summary data release from October 2015), plus a data loader to import the official summary release data csv files into a data store. This API was developed by [Douglas Connect GmbH](http://www.douglasconnect.com) as part of the [OpenTox initiative](http://opentox.net/).
 
