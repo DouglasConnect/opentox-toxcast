@@ -34,7 +34,7 @@ Results from all three endpoints have two parts: a list of data objects and a li
 
 Data objects at the `/results` endpoint are composed not only of the actual results of assays but also complete information about the assay and the compound. While this might look a bit unusual it relieves you of the burden of making multiple API calls and connect those calls with IDs: you simply filter on the desired fields be it from assay, compound or the result and get all the information back in one call. Simple as that!
 
-You can see how this comes together with using aggregations in this example [data explorer](http://opentox-data-explorer.cloud.douglasconnect.com/).
+You can see how this comes together with using aggregations in this [example data explorer](http://opentox-data-explorer.cloud.douglasconnect.com/).
 
 You can explore the API details here: http://toxcast-api.cloud.douglasconnect.com/beta/ui/
 
