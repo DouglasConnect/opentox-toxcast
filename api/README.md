@@ -22,5 +22,6 @@ Running the api server
 
 If you make major changes to the swagger definition (e.g. add a new endpoint, change parameters etc), rather than add these by hand you can run the swagger-codegen tool again. When you do so, the existing implementation will be overwritten, so make sure to have a clean working copy of this repo before you run the tool, so you can use `git checkout OVERWRITTEN-FILES` to undo the changes that deleted the existing implementation.
 
-    # At the root of this repository, run this:
-    java -jar swagger-codegen-cli.jar generate -l python-flask -i .\Swagger.yaml -o api
+At the root of this repository, run:
+
+    java -jar swagger-codegen-cli.jar generate -l python-flask -i Swagger.yaml -o api

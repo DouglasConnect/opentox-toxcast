@@ -1,16 +1,13 @@
-import os
 import functools
 import itertools
 
 from elasticsearch_dsl import Q, A
-from elasticsearch_dsl.aggs import Filter
 
-LIMIT = 100
+RESULTS_LIMIT = 100
+AGGREGATION_SIZE_LIMIT = 100
 
-# -----------------------------------------------------------------------------
-# Helpers
 
-def render(response, aggregations, result_field_name = 'results'):
+def render(response, aggregations, result_field_name='results'):
     if not response.success():
         return 'Query was not successful', 500
     res = {
@@ -25,13 +22,16 @@ def render(response, aggregations, result_field_name = 'results'):
                     'name': agg['name'],
                     'filterTerm': agg['filterTerm'],
                     'buckets': values[key]['filtered']['buckets']
-                } for key, agg in aggregations.items()}
+                }
+                for key, agg in aggregations.items()
+            }
         })
     return res
 
 
 def build_query(*query_iterators):
-    return functools.reduce(lambda a, b: a & b, itertools.chain(*query_iterators), Q())
+    return functools.reduce(lambda a, b: a & b,
+                            itertools.chain(*query_iterators), Q())
 
 
 def id_filter(ids):
@@ -49,15 +49,23 @@ def term_filters(filters, exclude=None):
 
 def term_filter(field, terms):
     if terms is not None:
-        terms = [x for x in terms if x.strip() != '']
+        terms = [
+            x for x in terms
+            if not isinstance(x, str) or (isinstance(x, str) and x.strip() !=
+                                          '')
+        ]
         if len(terms):
             yield Q('terms', **{field: terms})
 
 
 def offset_and_limit(query, offset=None, limit=None):
     offset = 0 if offset is None else offset
-    limit = LIMIT if limit is None else limit
-    return query[offset:limit+offset]
+    limit = RESULTS_LIMIT if limit is None else limit
+    return query[offset:limit + offset]
+
+
+def term_aggregation(field, min_doc_count=0, size=AGGREGATION_SIZE_LIMIT):
+    return A('terms', field=field, min_doc_count=min_doc_count, size=size)
 
 
 def filtered_aggregation(flter, aggregation):
