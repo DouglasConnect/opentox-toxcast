@@ -774,7 +774,7 @@ definitions:
        $ref: '#/definitions/Aggregation'
       assay.tissue:
         $ref: '#/definitions/Aggregation'
-      assay.hitc:
+      result.hitc:
        $ref: '#/definitions/Aggregation'
   Result:
     type: object
@@ -903,7 +903,7 @@ definitions:
       key:
         type: string
         description: "Value to display to the user and use for filtering"
-      count:
+      doc_count:
         type: integer
         description: "Number of items if the current view is filtered by this additional value"
 
