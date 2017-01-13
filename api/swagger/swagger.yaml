@@ -863,7 +863,7 @@ definitions:
         $ref: "#/definitions/Aggregation"
       assay.organism:
         $ref: "#/definitions/Aggregation"
-      assay.technologicalTargetTypeSub:
+      assay.technologicalTargetType:
         $ref: "#/definitions/Aggregation"
       assay.timepointHr:
         $ref: "#/definitions/Aggregation"
