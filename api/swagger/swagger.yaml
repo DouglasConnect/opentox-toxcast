@@ -462,7 +462,7 @@ definitions:
         $ref: "#/definitions/Aggregation"
       organism:
         $ref: "#/definitions/Aggregation"
-      technologicalTargetTypeSub:
+      technologicalTargetType:
         $ref: "#/definitions/Aggregation"
       timepointHr:
         $ref: "#/definitions/Aggregation"
