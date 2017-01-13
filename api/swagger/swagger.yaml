@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "This Api exposes the EPA's [ToxCast summary dataset](https://www.epa.gov/chemical-research/toxicity-forecaster-toxcasttm-data)\
-    \ (October 2015 release).\n\nTo learn more about this api, check out the [githup\
+    \ (October 2015 release).\n\nTo learn more about this api, check out the [github\
     \ repository](https://github.com/douglasconnect/opentox-toxcast).\n\nThe ToxCast\
     \ database contains data for a single chemical endpoint pair for thousands of\
     \ chemicals and 821 assay endpoints for 20 variables such\nas the activity or\
@@ -847,90 +847,118 @@ definitions:
   ResultAggregations:
     type: "object"
     properties:
-      clib:
+      compound.clib:
         $ref: "#/definitions/Aggregation"
-      dssToxQLevel:
+      compound.dssToxQCLevel:
         $ref: "#/definitions/Aggregation"
-      substanceType:
+      compound.substanceType:
         $ref: "#/definitions/Aggregation"
-      cellFormat:
+      assay.cellFormat:
         $ref: "#/definitions/Aggregation"
-      detectionTechnologyType:
+      assay.detectionTechnologyType:
         $ref: "#/definitions/Aggregation"
-      intendedTargetFamily:
+      assay.intendedTargetFamily:
         $ref: "#/definitions/Aggregation"
-      intendedTargetType:
+      assay.intendedTargetType:
         $ref: "#/definitions/Aggregation"
-      organism:
+      assay.organism:
         $ref: "#/definitions/Aggregation"
-      technologicalTargetTypeSub:
+      assay.technologicalTargetTypeSub:
         $ref: "#/definitions/Aggregation"
-      timepointHr:
+      assay.timepointHr:
         $ref: "#/definitions/Aggregation"
-      tissue:
+      assay.tissue:
         $ref: "#/definitions/Aggregation"
-      hitc:
+      assay.hitc:
         $ref: "#/definitions/Aggregation"
   Result:
+    type: "object"
+    properties:
+      assay:
+        $ref: "#/definitions/Assay"
+      compound:
+        $ref: "#/definitions/Compound"
+      result:
+        $ref: "#/definitions/InnerResult"
+  InnerResult:
     type: "object"
     properties:
       fitc:
         type: "integer"
         description: "fit category"
+        x-nullable: true
       hitc:
         type: "integer"
         description: "Activity or hit call, 1 indicates active"
+        x-nullable: true
       logcMax:
         type: "number"
         description: "Level 4 id (from database) for the selected sample"
+        x-nullable: true
       logcMin:
         type: "number"
         description: "Log base 10 of the maximum concentration tested"
+        x-nullable: true
       m4id:
         type: "integer"
         description: "Log base 10 of the minimum concentration tested"
+        x-nullable: true
       maxMean:
         type: "number"
         description: "Maximum of the means at each concentration"
+        x-nullable: true
       maxMed:
         type: "number"
         description: "Maximum of the medians at each concentration"
+        x-nullable: true
       modl:
         type: "string"
         description: "Activity concentration at 10% of the modeled top value (AC10)"
+        x-nullable: true
       modlAc10:
         type: "number"
         description: "Activity concentration at 10% of the modeled top value (AC10)"
+        x-nullable: true
       modlAcb:
         type: "number"
         description: "Activity concentration at baseline"
+        x-nullable: true
       modlAcc:
         type: "number"
         description: "Activity concentration at cutoff"
+        x-nullable: true
       modlGa:
         type: "number"
         description: "Gain AC50"
+        x-nullable: true
       modlGw:
         type: "number"
         description: "Gain hill coefficient"
+        x-nullable: true
       modlLa:
         type: "number"
         description: "Loss AC50"
+        x-nullable: true
       modlLw:
         type: "number"
         description: "Loss hill coefficient"
+        x-nullable: true
       modlRmse:
         type: "number"
         description: "Root mean square error (RMSE)"
+        x-nullable: true
       modlTp:
         type: "number"
         description: "Modeled top of the curve"
+        x-nullable: true
       oldstyleAc50:
         type: "number"
         description: ""
+        x-nullable: true
       oldstyleNegLogAc50:
         type: "number"
         description: ""
+        x-nullable: true
       spid:
         type: "string"
         description: "Sample id for the selected sample"
@@ -941,6 +969,7 @@ definitions:
         type: "number"
         description: "Zscore of AC50 values based on the chemical specific cytotoxicity\
           \ distribution file"
+        x-nullable: true
   CompoundAggregations:
     type: "object"
     properties:
