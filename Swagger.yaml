@@ -381,7 +381,7 @@ definitions:
       technologicalTargetType:
         $ref: '#/definitions/Aggregation'
       timepointHr:
-        $ref: '#/definitions/Aggregation'
+        $ref: '#/definitions/NumericAggregation'
       tissue:
         $ref: '#/definitions/Aggregation'
   Assay:
@@ -771,11 +771,11 @@ definitions:
       assay.technologicalTargetType:
         $ref: '#/definitions/Aggregation'
       assay.timepointHr:
-       $ref: '#/definitions/Aggregation'
+       $ref: '#/definitions/NumericAggregation'
       assay.tissue:
         $ref: '#/definitions/Aggregation'
       result.hitc:
-       $ref: '#/definitions/Aggregation'
+       $ref: '#/definitions/NumericAggregation'
   Result:
     type: object
     properties:
@@ -902,6 +902,29 @@ definitions:
     properties:
       key:
         type: string
+        description: "Value to display to the user and use for filtering"
+      doc_count:
+        type: integer
+        description: "Number of items if the current view is filtered by this additional value"
+  NumericAggregation:
+    type: object
+    properties:
+      name:
+        type: string
+        description: "Aggregation name"
+      filterTerm:
+        type: string
+        description: "Term used to filter the results"
+      buckets:
+        type: array
+        description: "Aggregation values (buckets) and correspondig item counts"
+        items:
+          $ref: '#/definitions/NumericAggregationBucket'
+  NumericAggregationBucket:
+    type: object
+    properties:
+      key:
+        type: number
         description: "Value to display to the user and use for filtering"
       doc_count:
         type: integer
