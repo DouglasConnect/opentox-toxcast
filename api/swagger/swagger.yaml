@@ -560,6 +560,7 @@ definitions:
         type: "number"
         description: "Maximal amount of the dilution solvent tolerable for a particular\
           \ assay"
+        x-nullable: true
       assayComponentName:
         type: "string"
         description: "Short name containing the assay and a component readout, e.g.\

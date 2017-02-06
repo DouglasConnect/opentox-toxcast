@@ -471,6 +471,7 @@ definitions:
       dilutionSolventPercentMax:
         type: number
         description: "Maximal amount of the dilution solvent tolerable for a particular assay"
+        x-nullable: true
       assayComponentName:
         x-nullable: true
         type: string
