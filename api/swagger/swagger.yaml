@@ -437,6 +437,7 @@ definitions:
       structureMolWt:
         type: "number"
         description: "Molecular weight"
+        x-nullable: true
   Assays:
     type: "object"
     properties:
