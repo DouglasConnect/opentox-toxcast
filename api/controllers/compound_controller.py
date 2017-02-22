@@ -14,9 +14,9 @@ def compounds_get(offset=None,
                   substanceTypeFilter=None) -> str:
 
     filters = (
-        ('clib', clibFilter),
-        ('dssToxQCLevel', dssToxQCLevelFilter),
-        ('substanceType', substanceTypeFilter),
+        ('clib.raw', clibFilter),
+        ('dssToxQCLevel.raw', dssToxQCLevelFilter),
+        ('substanceType.raw', substanceTypeFilter),
     )
 
     aggregations = {
