@@ -86,11 +86,14 @@ class ToxCastParser(object):
         ).parse(self.abspath(self.schema['compoundIdentifiers']['file']))
 
     def parse_compounds(self):
-        return CSVParser(
+        parser = CSVParser(
             schema=self.schema['compounds']['properties'],
             encoding=self.schema['compounds'].get('encoding'),
             start_at_row=self.schema['compounds'].get('startAtRow')
-        ).parse(self.abspath(self.schema['compounds']['file']))
+        )
+        for compound in parser.parse(self.abspath(self.schema['compounds']['file'])):
+            compound['__id__'] = compound['chid']
+            yield compound
 
     def parse_assays(self):
         parser = CSVParser(
@@ -105,6 +108,7 @@ class ToxCastParser(object):
                 to_field='reagent',
                 subfields=('arid', 'reagentNameValue', 'reagentNameValueType', 'cultureOrAssay'),
             )
+            assay['__id__'] = assay['aeid']
             yield assay
 
     def parse_results(self):
@@ -176,7 +180,7 @@ def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host,
     bulk(es, ({
         '_index': index,
         '_type': 'compound',
-        '_id': compound['chid'],
+        '_id': compound['__id__'],
         '_source': compound
     } for compound in compound_cache.values()))
 
@@ -189,22 +193,29 @@ def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host,
     bulk(es, ({
         '_index': index,
         '_type': 'assay',
-        '_id': assay['aeid'],
+        '_id': assay['__id__'],
         '_source': assay
     } for assay in assay_cache.values()))
 
-    # Results - use compoud ID chid-aeid
+    # Results
     logger.info('Parsing and indexing results')
-    bulk(es, ({
-        '_index': index,
-        '_type': 'result',
-        '_id': '%s-%s' % (compound_cache[result['compound']]['chid'], assay_cache[result['assay']]['aeid']),
-        '_source': {
-            'compound': compound_cache[result['compound']],
-            'assay': assay_cache[result['assay']],
-            'result': result['result']
+
+    def build_result(result, compound_cache, assay_cache):
+        result_id = '%s-%s' % (assay_cache[result['assay']]['__id__'], compound_cache[result['compound']]['__id__'])
+        result['result']['__id__'] = result_id
+        return {
+            '_index': index,
+            '_type': 'result',
+            '_id': result_id,
+            '_source': {
+                '__id__': result_id,
+                'compound': compound_cache[result['compound']],
+                'assay': assay_cache[result['assay']],
+                'result': result['result']
+            }
         }
-    } for result in parser.parse_results()))
+
+    bulk(es, (build_result(result, compound_cache, assay_cache) for result in parser.parse_results()))
 
 
 # -----------------------------------------------------------------------------

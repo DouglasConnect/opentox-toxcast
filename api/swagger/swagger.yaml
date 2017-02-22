@@ -39,6 +39,11 @@ paths:
         required: false
         type: "integer"
         default: 10
+      - name: "query"
+        in: "query"
+        description: "Query string for the full text search"
+        required: false
+        type: "string"
       - name: "aidFilter"
         in: "query"
         description: "Filter by assay IDs"
@@ -160,6 +165,11 @@ paths:
         required: false
         type: "integer"
         default: 10
+      - name: "query"
+        in: "query"
+        description: "Query string for the full text search"
+        required: false
+        type: "string"
       - name: "chidFilter"
         in: "query"
         description: "Filter by chids (Compound ids)"
@@ -225,6 +235,19 @@ paths:
         required: false
         type: "integer"
         default: 10
+      - name: "query"
+        in: "query"
+        description: "Query string for the full text search"
+        required: false
+        type: "string"
+      - name: "resultIdFilter"
+        in: "query"
+        description: "Filter results by result IDs"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "csv"
       - name: "chidFilter"
         in: "query"
         description: "Filter by chids (Compound ids)"
@@ -1053,6 +1076,12 @@ parameters:
     required: false
     type: "integer"
     default: 10
+  SearchQuery:
+    name: "query"
+    in: "query"
+    description: "Query string for the full text search"
+    required: false
+    type: "string"
   ChidFilter:
     name: "chidFilter"
     in: "query"
@@ -1196,4 +1225,13 @@ parameters:
     type: "array"
     items:
       type: "integer"
+    collectionFormat: "csv"
+  ResultIdFilter:
+    name: "resultIdFilter"
+    in: "query"
+    description: "Filter results by result IDs"
+    required: false
+    type: "array"
+    items:
+      type: "string"
     collectionFormat: "csv"

@@ -29,6 +29,7 @@ paths:
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
+        - $ref: '#/parameters/SearchQuery'
         - $ref: '#/parameters/ChidFilter'
         - $ref: '#/parameters/ClibFilter'
         - $ref: '#/parameters/DssToxQCLevelFilter'
@@ -55,6 +56,7 @@ paths:
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
+        - $ref: '#/parameters/SearchQuery'
         - $ref: '#/parameters/AidFilter'
         - $ref: '#/parameters/AeidFilter'
         - $ref: '#/parameters/AsidFilter'
@@ -90,6 +92,9 @@ paths:
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
+        - $ref: '#/parameters/SearchQuery'
+
+        - $ref: '#/parameters/ResultIdFilter'
 
         - $ref: '#/parameters/ChidFilter'
         - $ref: '#/parameters/ClibFilter'
@@ -135,6 +140,14 @@ parameters:
     required: false
     type: integer
     default: 10
+
+  # Searching
+  SearchQuery:
+    name: query
+    description: "Query string for the full text search"
+    in: query
+    required: false
+    type: string
 
   # Compound
   ChidFilter:
@@ -285,6 +298,17 @@ parameters:
     required: false
     items:
       type: integer
+
+  # Result
+  ResultIdFilter:
+    name: resultIdFilter
+    description: "Filter results by result IDs"
+    in: query
+    required: false
+    type: array
+    collectionFormat: csv
+    items:
+      type: string
 
 definitions:
   Compounds:
