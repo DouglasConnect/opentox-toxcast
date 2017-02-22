@@ -20,9 +20,9 @@ def compounds_get(offset=None,
     )
 
     aggregations = {
-        'clib': filtered_term_aggregation('Clib', 'clib', 'clibFilter', chidFilter, query, filters),
-        'dssToxQCLevel': filtered_term_aggregation('DSS Tox QC level', 'dssToxQCLevel', 'dssToxQCLevelFilter', chidFilter, query, filters),
-        'substanceType': filtered_term_aggregation('Substance type', 'substanceType', 'substanceTypeFilter', chidFilter, query, filters),
+        'clib': filtered_term_aggregation('Clib', 'clib.raw', 'clibFilter', chidFilter, query, filters),
+        'dssToxQCLevel': filtered_term_aggregation('DSS Tox QC level', 'dssToxQCLevel.raw', 'dssToxQCLevelFilter', chidFilter, query, filters),
+        'substanceType': filtered_term_aggregation('Substance type', 'substanceType.raw', 'substanceTypeFilter', chidFilter, query, filters),
     }
 
     search = Search(using=client, index=INDEX, doc_type='compound')

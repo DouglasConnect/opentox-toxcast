@@ -364,7 +364,7 @@ definitions:
         description: "DSSTox Structure ID"
       dssToxQCLevel:
         type: string
-        title: "DSSTox Quality Control level"
+        title: "DSSTox QC level"
         description: "DSSTox Quality Control level"
       substanceType:
         type: string
