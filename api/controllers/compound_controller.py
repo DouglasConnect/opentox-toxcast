@@ -1,13 +1,13 @@
 from elasticsearch_dsl import Search
-from elasticsearch_dsl.aggs import Filter
 from controllers.client import client, INDEX
-from controllers.helpers import (render, build_query, id_filter, term_filters,
-                                 term_aggregation, filtered_aggregation,
-                                 build_global_aggs, offset_and_limit)
+from controllers.helpers import (
+    render, build_query, id_filter, search_query, term_filters,
+    filtered_term_aggregation, build_global_aggs, offset_and_limit)
 
 
 def compounds_get(offset=None,
                   limit=None,
+                  query=None,
                   chidFilter=None,
                   clibFilter=None,
                   dssToxQCLevelFilter=None,
@@ -16,47 +16,17 @@ def compounds_get(offset=None,
     filters = (
         ('clib', clibFilter),
         ('dssToxQCLevel', dssToxQCLevelFilter),
-        ('substanceType', substanceTypeFilter), )
+        ('substanceType', substanceTypeFilter),
+    )
 
     aggregations = {
-        'clib': {
-            'name': 'Clib',
-            'filterTerm': 'clibFilter',
-            'aggregation': filtered_aggregation(
-                Filter(
-                    build_query(
-                        id_filter(chidFilter),
-                        term_filters(
-                            filters, exclude='clib'))),
-                term_aggregation('clib'))
-        },
-        'dssToxQCLevel': {
-            'name': 'DSS Tox QC level',
-            'filterTerm': 'dssToxQCLevelFilter',
-            'aggregation': filtered_aggregation(
-                Filter(
-                    build_query(
-                        id_filter(chidFilter),
-                        term_filters(
-                            filters, exclude='dssToxQCLevel'))),
-                term_aggregation('dssToxQCLevel'))
-        },
-        'substanceType': {
-            'name': 'Substance type',
-            'filterTerm': 'substanceTypeFilter',
-            'aggregation': filtered_aggregation(
-                Filter(
-                    build_query(
-                        id_filter(chidFilter),
-                        term_filters(
-                            filters, exclude='substanceType'))),
-                term_aggregation('substanceType'))
-        },
+        'clib': filtered_term_aggregation('Clib', 'clib', 'clibFilter', chidFilter, query, filters),
+        'dssToxQCLevel': filtered_term_aggregation('DSS Tox QC level', 'dssToxQCLevel', 'dssToxQCLevelFilter', chidFilter, query, filters),
+        'substanceType': filtered_term_aggregation('Substance type', 'substanceType', 'substanceTypeFilter', chidFilter, query, filters),
     }
 
     search = Search(using=client, index=INDEX, doc_type='compound')
-    search = search.query(
-        build_query(id_filter(chidFilter), term_filters(filters)))
+    search = search.query(build_query(id_filter(chidFilter), search_query(query), term_filters(filters)))
     search = offset_and_limit(search, offset, limit)
     search.aggs.bucket('global', build_global_aggs(aggregations))
 

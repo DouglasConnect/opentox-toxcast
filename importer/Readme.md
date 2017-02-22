@@ -26,8 +26,8 @@ To see help on how to use the importer run (including Elasticsearch index manage
 
 Examples:
 
-    ./importer/importer.py elastic index create ToxCast importer/releases/2015-10-20/elastic-mapping.yaml
+    ./importer/importer.py elastic index create toxcast importer/releases/release/elastic-mapping.yaml
 
-    ./importer/importer.py import ToxCast /path/to/INVITRODB_V2_SUMMARY/ importer/releases/2015-10-20/parser-schema.yaml
+    ./importer/importer.py import toxcast /path/to/toxcast/release/ importer/releases/release/parser-schema.yaml
 
-    ./importer/importer.py elastic index drop ToxCast
+    ./importer/importer.py elastic index drop toxcast

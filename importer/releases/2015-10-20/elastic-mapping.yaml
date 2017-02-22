@@ -1,13 +1,14 @@
 settings:
-  # Index settings
   # https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules.html
 
 mappings:
-  # Mappings
   # https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html
 
   compound: &compound
     properties:
+      __id__:
+        type: string
+        index: not_analyzed
       chid:
         type: integer
       chnm:
@@ -20,7 +21,10 @@ mappings:
         index: not_analyzed
       clib:
         type: string
-        index: not_analyzed
+        fields:
+          raw:
+            type: string
+            index: not_analyzed
       dssToxSubstanceId:
         type: string
         index: not_analyzed
@@ -29,10 +33,16 @@ mappings:
         index: not_analyzed
       dssToxQCLevel:
         type: string
-        index: not_analyzed
+        fields:
+          raw:
+            type: string
+            index: not_analyzed
       substanceType:
         type: string
-        index: not_analyzed
+        fields:
+          raw:
+            type: string
+            index: not_analyzed
       substanceNote:
         type: string
       structureSMILES:
@@ -52,6 +62,9 @@ mappings:
 
   assay: &assay
     properties:
+      __id__:
+        type: string
+        index: not_analyzed
       aid:
         type: integer
       acid:
@@ -251,10 +264,16 @@ mappings:
 
   result:
     properties:
+      __id__:
+        type: string
+        index: not_analyzed
       assay: *assay
       compound: *compound
       result:
         properties:
+          __id__:
+            type: string
+            index: not_analyzed
           fitc:
             type: integer
           hitc:
