@@ -48,7 +48,7 @@ mappings:
         type: string
         index: not_analyzed
       structureMolWt:
-        type: float
+        type: double
 
   assay: &assay
     properties:
@@ -71,15 +71,27 @@ mappings:
       assayDesc:
         type: string
       timepointHr:
-        type: float
+        type: double
       organismId:
         type: integer
       organism:
         type: string
+        fields:
+          raw:
+            type: string
+            index: not_analyzed
       tissue:
         type: string
+        fields:
+          raw:
+            type: string
+            index: not_analyzed
       cellFormat:
         type: string
+        fields:
+          raw:
+            type: string
+            index: not_analyzed
       cellFreeComponentSource:
         type: string
       cellShortName:
@@ -97,7 +109,7 @@ mappings:
       dilutionSolvent:
         type: string
       dilutionSolventPercentMax:
-        type: float
+        type: double
       assayComponentName:
         type: string
       assayComponentDesc:
@@ -114,6 +126,10 @@ mappings:
         type: string
       detectionTechnologyType:
         type: string
+        fields:
+          raw:
+            type: string
+            index: not_analyzed
       detectionTechnologyTypeSub:
         type: string
       detectionTechnology:
@@ -126,6 +142,10 @@ mappings:
         type: string
       technologicalTargetType:
         type: string
+        fields:
+          raw:
+            type: string
+            index: not_analyzed
       technologicalTargetTypeSub:
         type: string
       assayComponentEndpointName:
@@ -146,10 +166,18 @@ mappings:
         type: string
       intendedTargetType:
         type: string
+        fields:
+          raw:
+            type: string
+            index: not_analyzed
       intendedTargetTypeSub:
         type: string
       intendedTargetFamily:
         type: string
+        fields:
+          raw:
+            type: string
+            index: not_analyzed
       intendedTargetFamilySub:
         type: string
       intendedTargetGeneId:
@@ -232,40 +260,40 @@ mappings:
           hitc:
             type: integer
           logcMax:
-            type: float
+            type: double
           logcMin:
-            type: float
+            type: double
           m4id:
             type: integer
           maxMean:
-            type: float
+            type: double
           maxMed:
-            type: float
+            type: double
           modl:
             type: string
             index: not_analyzed
           modlAc10:
-            type: float
+            type: double
           modlAcb:
-            type: float
+            type: double
           modlAcc:
-            type: float
+            type: double
           modlGa:
-            type: float
+            type: double
           modlGw:
-            type: float
+            type: double
           modlLa:
-            type: float
+            type: double
           modlLw:
-            type: float
+            type: double
           modlRmse:
-            type: float
+            type: double
           modlTp:
-            type: float
+            type: double
           oldstyleAc50:
-            type: float
+            type: double
           oldstyleNegLogAc50:
-            type: float
+            type: double
           spid:
             type: string
             index: not_analyzed
@@ -273,4 +301,4 @@ mappings:
             type: boolean
             index: not_analyzed
           zscore:
-            type: float
+            type: double

@@ -1,308 +1,62 @@
-# OpenTox • ToxCast
+# OpenTox • ToxCast API
 
-## API
+This repository contains the code for a REST API to access the [EPA's ToxCast and Tox21](https://www.epa.gov/chemical-research/toxicity-forecaster-toxcasttm-data) data (currently the summary data release from October 2015), plus a data loader to import the official summary release data csv files into a data store. This API was developed by [Douglas Connect GmbH](http://www.douglasconnect.com) as part of the [OpenTox](http://opentox.net/) initiative.
 
-To recreate the api after an upodate to the swagger definition, either copy the content of the swagger file in this directory into the [online swagger editor](http://editor.swagger.io/#/) and download a generated server api (python flask) or use the command line tool from the [swagger codegen page](https://github.com/swagger-api/swagger-codegen). The generated batch of files can then be dropped into ./api, but take care not to overwrite default_controllers.py which contains the code to serve the various endpoints (but incorporating changes if endpoints were modified).
+Douglas Connect runs a public version of this database at this URL (currently in Beta, so please be aware that things might still change):
+http://toxcast-api.cloud.douglasconnect.com/. At the root url you will find the Swagger UI interface that lets you explore the definitions of the endpoints, see the data schemata and try out the API.
 
-Using swagger codegen:
+This repository contains the authoritative [OpenAPI/Swagger definition](Swagger.yaml) here at the root level, plus one subdirectory each for the [api implementation](api), the [importer](importer) that loads the CSV files into [Elasticsearch](https://www.elastic.co/) and the [tests](tests) that check if the API responses adhere to the OpenAPI definition.
 
-    java -jar swagger-codegen-cli.jar generate -l python-flask -i Swagger.yaml -o api
 
-or
+## Why?
 
-    swagger-codegen generate -l python-flask -i Swagger.yaml -o api
+A [short presentation](http://slides.com/danielbachler/toxcast-api) from OpenTox Euro 2016 is available that explains the rationale for exposing the ToxCast data as an API.
 
-## ToxCast data importer for Elasticsearch
 
-ToxCast data importer is designed around ToxCast summary files releases where each ToxCast release has a separate parser and ElasticSearch mapping config files.
+## Guiding principles
 
-To see help on how to use the importer run (including Elasticsearch index management):
+Guiding principles for exposing the ToxCast data were:
 
-    ./importer/importer.py --help
+* **Stay as true to the upstream data release as possible**. This means use column names in the official CSV files as field names in the API and follow the structure as close as possible.
+* **Provide means for easy data access and exploration**. This means that the API provides options for easy data filtering/searching and data aggregations (facets) that can drive the data exploration.
 
-Examples:
 
-    ./importer/importer.py elastic index create toxcast importer/releases/2015-10-20/elastic-mapping.yaml
+## API overview
 
-    ./importer/importer.py import toxcast /path/to/INVITRODB_V2_SUMMARY/ importer/releases/2015-10-20/parser-schema.yaml
+ToxCast OpenTox provides the following endpoints:
 
-    ./importer/importer.py elastic index drop toxcast
+* [`/assays`](http://toxcast-api.cloud.douglasconnect.com/beta/assays) provides information about assays (assay endpoints) used in ToxCast project,
+* [`/compounds`](http://toxcast-api.cloud.douglasconnect.com/beta/compounds) provides information about compounds used in ToxCast project,
+* [`/results`](http://toxcast-api.cloud.douglasconnect.com/beta/results) provides results of running
+assays.
 
-## Setup
+Results from all three endpoints have two parts: a list of data objects and a list of aggregations of fields in data objects for which aggregations make sense.
 
-Requirements:
+Data objects at the `/results` endpoint are composed not only of the actual results of assays but also complete information about the assay and the compound. While this might look a bit unusual it relieves you of the burden of making multiple API calls and connect those calls with IDs: you simply filter on the desired fields be it from assay, compound or the result and get all the information back in one call. Simple as that!
 
-- Elasticsearch 2.3
-- Python 3
-- Python requirements from requirements.txt
+You can see how this comes together with using aggregations in this [example data explorer](http://opentox-data-explorer.cloud.douglasconnect.com/).
 
-To install python requirements (preferably inside [pyvenv](https://virtualenv.pypa.io/en/stable/)) run:
+You can explore the API details here: http://toxcast-api.cloud.douglasconnect.com/beta/ui/
 
-    pip install -r requirements.txt --upgrade
 
-## TODO
+## Code overview (or how to run this on your machine)
 
-Old Swagger assay fields. Merge annotations with the new assay fields in the Swagger file:
+This section describes how the pieces fit together and how you can run your instance.
 
-    assayId:
-      type: integer
-      description: "Assay endpoint id"
-    assaySourceName:
-      type: string
-      description: "a short name for the entity that conducted the assay"
-    assaySourceLongName:
-      type: string
-      description: "the long name for the entity that conducted the assay"
-    assaySourceDesc:
-      type: string
-      description: "Description of the organization that performed the assay"
-    assayName:
-      type: string
-      description: "a short name for the assay, e.g. BSK_3C"
-    assayDesc:
-      type: string
-      description: "Description of the assay"
-    timepointHr:
-      type: number
-      description: "the duration length to conduct the test portion of the assay"
-    organismId:
-      type: integer
-      description: "The NCBI Taxonomy id of the organism"
-      x-ontology: http://purl.obolibrary.org/obo/OGG_0000000015
-    organism:
-      type: string
-      description: "The target organism"
-    tissue:
-      type: string
-      description: "the organ-level, anatomical entity of the protein or cell used in the assay"
-    cellFormat:
-      type: string
-      description: "The target cell format"
-    cellFreeComponentSource:
-      type: string
-      description: "the cellular or sample tissue source of the assayed gene protein"
-    cellShortName:
-      type: string
-      description: "Cell short name"
-    cellGrowthMode:
-      type: string
-      description: "Cell growth mode"
-    assayFootprint:
-      type: string
-      description: "the physical format, such as plate density, in which an assay is performed"
-    assayFormatType:
-      type: string
-      description: "the conceptual biological and/or chemical features of the assay system"
-    assayFormatTypeSub:
-      type: string
-      description: "assay format subtype"
-    contentReadoutType:
-      type: string
-      description: "the throughput and information content generated"
-    dilutionSolvent:
-      type: string
-      description: "the solvent used as the negative control and to solubilize the test chemical"
-    dilutionSolventPercentMax:
-      type: number
-      description: "the maximal amount of the dilution solvent tolerable for a particular assay"
-    assayComponentName:
-      type: string
-      description: "a short name containing the assay and a component readout, e.g. BSK_3C_IL8"
-    assayComponentDesc:
-      type: string
-      description: "assay component description"
-    assayComponentTargetDesc:
-      type: string
-      description: "assay component target description"
-    parameterReadoutType:
-      type: string
-      description: "parameter readout type"
-    assayDesignType:
-      type: string
-      description: "assay design type"
-    assayDesignTypeSub:
-      type: string
-      description: "assay design subtype"
-    biologicalProcessTarget:
-      type: string
-      description: "biological process target"
-    detectionTechnologyType:
-      type: string
-      description: "detection technology type"
-    detectionTechnologyTypeSub:
-      type: string
-      description: "detection technology subtype"
-    detectionTechnology:
-      type: string
-      description: "detection technology"
-    signalDirectionType:
-      type: string
-      description: "signal direction type"
-    keyAssayReagentType:
-      type: string
-      description: "key assay reagent type"
-    keyAssayReagent:
-      type: string
-      description: "key assay reagent"
-    technologicalTargetType:
-      type: string
-      description: "the measured chemical, molecular, cellular, or anatomical entity"
-    technologicalTargetTypeSub:
-      type: string
-      description: "the measured chemical, molecular, cellular, or anatomical subtype"
-    assayEndpointName:
-      type: string
-      description: "A short name containing the assay, the component readout, and an analysis applied, e.g. BSK_3C_IL8_up"
-    assayEndpointDesc:
-      type: string
-      description: "Description of the assay endpoint"
-    assayFunctionType:
-      type: string
-      description: "assay function type"
-    normalizedDataType:
-      type: string
-      description: "normalized data type"
-    analysisDirection:
-      type: string
-      description: "analysis direction (used values: positive/negative)"
-    burstAssay:
-      type: boolean
-      description: "burst assay"
-    keyPositiveControl:
-      type: string
-      description: "key positive control"
-    signalDirection:
-      type: string
-      description: "signal direction (used values: loss/gain)"
-    intendedTargetType:
-      type: string
-      description: "the objective chemical, molecular, cellular, pathway or anatomical entity"
-    intendedTargetTypeSub:
-      type: string
-      description: "the objective chemical, molecular, cellular, pathway or anatomical entity"
-    intendedTargetFamily:
-      type: string
-      description: "the target family of the objective target for the assay"
-    intendedTargetFamilySub:
-      type: string
-      description: "the target family of the objective target for the assay"
-    intendedTargetGeneId:
-      type: array
-      items:
-        type: integer
-      description: "List of target gene ids that are the objective "
-    intendedTargetEntrezGeneId:
-      type: array
-      items:
-        type: integer
-      description: "List of target gene ids that are the objective (NCBI Entrez gene id)"
-    intendedTargetOfficialFullName:
-      type: array
-      items:
-        type: string
-      description: "List of objective target offical full names"
-    intendedTargetGeneName:
-      type: array
-      items:
-        type: string
-      description: "List of objective target gene names"
-    intendedTargetOfficialSymbol:
-      type: array
-      items:
-        type: string
-      description: "List of objective target offical symbols"
-    intendedTargetGeneSymbol:
-      type: array
-      items:
-        type: string
-      description: "List of objective target symbols"
-    intendedTargetDescription:
-      type: string
-      description: "objective target description"
-    intendedTargetUniprotAccessionNumber:
-      type: string
-      description: "objective target uniprot accesscion number"
-    intendedTargetOrganismId:
-      type: integer
-      description: "intended target organism id"
-    intendedTargetTrackStatus:
-      type: string
-      description: "objective target track status (used values: live)"
-    technologicalTargetGeneId:
-      type: array
-      items:
-        type: integer
-      description: "measured molecular target gene id"
-    technologicalTargetEntrezGeneId:
-      type: array
-      items:
-        type: integer
-      description: "List of measured molecular target gene ids (NCBI Entrez gene id)"
-    technologicalTargetOfficialFullName:
-      type: array
-      items:
-        type: string
-      description: "List of measured molecular target offical full names"
-    technologicalTargetGeneName:
-      type: array
-      items:
-        type: string
-      description: "List of technolmeasured molecularogical target gene names"
-    technologicalTargetOfficialSymbol:
-      type: array
-      items:
-        type: string
-      description: "List of measured molecular target offical symbols"
-    technologicalTargetGeneSymbol:
-      type: array
-      items:
-        type: string
-      description: "List of measured molecular target symbols"
-    technologicalTargetDescription:
-      type: string
-      description: "measured molecular target description"
-    technologicalTargetUniprotAccessionNumber:
-      type: string
-      description: "measured molecular target uniprot accesscion number"
-    technologicalTargetOrganismId:
-      type: integer
-      description: "measured molecular target organism id"
-    technologicalTargetTrackStatus:
-      type: string
-      description: "measured molecular target track status (used values: live)"
-    citationsCitationId:
-      type: array
-      items:
-        type: string
-      description: "List of citation ids"
-    citationsPmid:
-      type: array
-      items:
-        type: string
-      description: "List of PubMed citation ids"
-    citationsDoi:
-      type: array
-      items:
-        type: string
-      description: "List of citation digital object identifiers"
-    citationsCitation:
-      type: array
-      items:
-        type: string
-      description: "List of citation texts"
-    citationsTitle:
-      type: array
-      items:
-        type: string
-      description: "List of citation titles"
-    citationsAuthor:
-      type: array
-      items:
-        type: string
-      description: "List of citation authors"
-    citationsUrl:
-      type: array
-      items:
-        type: string
-        format: url
-      description: "List of citation urls"
+1. You need a running instance of Elasticsearch 2.x. It will be used to store the data and efficiently search/facet it.
+2. Run the importer script, either the wrapping shell script importer/importer.sh or directly the python file. See instructions below for instructions. The importer script downloads the official October 2015 data release from the EPA website, extracts it, and parses the CSV file into elasticsearch. This process typically takes around 3 hours.
+3. Run the API, and access it locally at port 8080. What you are accessing is the python flask code generated via swagger-codegen from the OpenAPI specification. The implementation we wrote takes care of passing the parameters to Elasticsearch and returning the results.
+
+
+## Using Docker and Docker Compose
+
+Each of the 3 main parts comes with it's own dockerfile to simplify it's use. There is also a docker-compose file here at the root level that makes it very easy to get started. All you need to do is install docker, clone this repository and run
+
+    docker-compose up
+
+Then wait until the importer is done.
+
+
+## Using the importer and API without Docker
+
+See the README.md files in the subdirectories for instructions on how to run importer and API without docker.

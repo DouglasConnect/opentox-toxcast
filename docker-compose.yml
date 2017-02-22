@@ -4,25 +4,17 @@ services:
     image: elasticsearch:2.3
     ports:
       - "9200:9200"
-    volumes:
-      - d:/projects/douglasconnect/data/toxcast-elastic:/usr/share/elasticsearch/data
-  chemidconvert:
-    build: https://github.com/DouglasConnect/ChemIdConvert.git
+    # If you want to persist the data between runs, uncomment the volumes section
+    # below and replace HOST-DIR with a path on your host that docker can access
+    # and mount as a volume.
+    #volumes:
+    #  - HOST-DIR:/usr/share/elasticsearch/data
   toxcast-importer:
     build: ./importer
     depends_on:
       - elasticsearch
-      - chemidconvert
     environment:
-      IDENTIFIERCONVERTERHOSTNAME: chemidconvert
-      IDENTIFIERCONVERTERPORT: "8080"
       ELASTICSEARCHHOSTNAME: elasticsearch
-  kibana-sense:
-    image: serandel/kibana-sense
-    depends_on:
-      - elasticsearch
-    ports:
-      - "5601:5601"
   toxcast-api:
     build: ./api
     depends_on:
@@ -31,12 +23,3 @@ services:
       - "8080:8080"
     environment:
       ELASTICSEARCHHOSTNAME: elasticsearch
-#  cpsign-toxcast-adapter:
-#    build: ./cpsignToxCastAdapter
-#    ports:
-#      - "8010:8080"
-#    depends_on:
-#      - toxcast-api
-#    environment:
-#      TOXCASTAPIHOSTNAME: toxcast-api
-#      TOXCASTAPIPORT: 8080

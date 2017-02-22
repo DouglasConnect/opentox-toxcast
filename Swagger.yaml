@@ -2,9 +2,11 @@ swagger: '2.0'
 info:
   title: ToxCast databse API - assay, compound and assay results values for tested compounts.
   description: |
-    This Api exposes the EPA's ToxCast summary dataset (October 2015 release).
+    This Api exposes the EPA's [ToxCast summary dataset](https://www.epa.gov/chemical-research/toxicity-forecaster-toxcasttm-data) (October 2015 release).
 
-    ToxCast contains data for a single chemical endpoint pair for thousands of chemicals and 821 assay endpoints for 20 variables such
+    To learn more about this api, check out the [github repository](https://github.com/douglasconnect/opentox-toxcast).
+
+    The ToxCast database contains data for a single chemical endpoint pair for thousands of chemicals and 821 assay endpoints for 20 variables such
     as the activity or hit call, activity concentrations, whether the chemical was tested in a specific assay, etc.
   version: "1.0.0"
 # service domain - in our use-case somewhat nonsensical but mandatory
@@ -19,7 +21,7 @@ paths:
     get:
       summary: "Get compound data"
       description: "Returns a list of compounds"
-      x-swagger-router-controller: "controllers.default_controller"
+      x-swagger-router-controller: "controllers.compound_controller"
       operationId: "compounds_get"
       produces: ["application/json"]
       tags:
@@ -27,7 +29,7 @@ paths:
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
-        - $ref: '#/parameters/CompoundIds'
+        - $ref: '#/parameters/ChidFilter'
         - $ref: '#/parameters/ClibFilter'
         - $ref: '#/parameters/DssToxQCLevelFilter'
         - $ref: '#/parameters/SubstanceTypeFilter'
@@ -45,7 +47,7 @@ paths:
     get:
       summary: "Get assay data"
       description: "Returns a list of assays (assay endpoints)"
-      x-swagger-router-controller: "controllers.default_controller"
+      x-swagger-router-controller: "controllers.assay_controller"
       operationId: "assays_get"
       produces: ["application/json"]
       tags:
@@ -53,10 +55,19 @@ paths:
       parameters:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
-        - $ref: '#/parameters/AssayIds'
-        - $ref: '#/parameters/AssayEndpointIds'
-        - $ref: '#/parameters/StudyIds'
-        # TODO assay aggregation filters
+        - $ref: '#/parameters/AidFilter'
+        - $ref: '#/parameters/AeidFilter'
+        - $ref: '#/parameters/AsidFilter'
+
+        - $ref: '#/parameters/CellFormatFilter'
+        - $ref: '#/parameters/DetectionTechnologyTypeFilter'
+        - $ref: '#/parameters/IntendedTargetFamilyFilter'
+        - $ref: '#/parameters/IntendedTargetTypeFilter'
+        - $ref: '#/parameters/OrganismFilter'
+        - $ref: '#/parameters/TechnologicalTargetTypeFilter'
+        - $ref: '#/parameters/TimepointHrFilter'
+        - $ref: '#/parameters/TissueFilter'
+
       responses:
         200:
           description: "A list of assay endpoints and aggregations"
@@ -71,7 +82,7 @@ paths:
     get:
       summary: "Get results of compounds beeing tested on assays"
       description: "Returns a list of results with associated compound and assay data"
-      x-swagger-router-controller: "controllers.default_controller"
+      x-swagger-router-controller: "controllers.result_controller"
       operationId: "results_get"
       produces: ["application/json"]
       tags:
@@ -80,18 +91,25 @@ paths:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/Limit'
 
-        - $ref: '#/parameters/CompoundIds'
+        - $ref: '#/parameters/ChidFilter'
         - $ref: '#/parameters/ClibFilter'
         - $ref: '#/parameters/DssToxQCLevelFilter'
         - $ref: '#/parameters/SubstanceTypeFilter'
 
-        - $ref: '#/parameters/AssayIds'
-        - $ref: '#/parameters/AssayEndpointIds'
-        - $ref: '#/parameters/StudyIds'
-        # TODO assay aggregation filters
+        - $ref: '#/parameters/AidFilter'
+        - $ref: '#/parameters/AeidFilter'
+        - $ref: '#/parameters/AsidFilter'
 
-        # TODO results filters
-        # TODO results aggregation filters
+        - $ref: '#/parameters/CellFormatFilter'
+        - $ref: '#/parameters/DetectionTechnologyTypeFilter'
+        - $ref: '#/parameters/IntendedTargetFamilyFilter'
+        - $ref: '#/parameters/IntendedTargetTypeFilter'
+        - $ref: '#/parameters/OrganismFilter'
+        - $ref: '#/parameters/TechnologicalTargetTypeFilter'
+        - $ref: '#/parameters/TimepointHrFilter'
+        - $ref: '#/parameters/TissueFilter'
+
+        - $ref: '#/parameters/HitcFilter'
       responses:
         200:
           description: "A list of results with associated compound and assay data. Aggregations for faceted navigation."
@@ -116,11 +134,12 @@ parameters:
     in: query
     required: false
     type: integer
+    default: 10
 
   # Compound
-  CompoundIds:
-    name: compoundIds
-    description: "Filter by compound IDs"
+  ChidFilter:
+    name: chidFilter
+    description: "Filter by chids (Compound ids)"
     in: query
     type: array
     collectionFormat: csv
@@ -156,8 +175,8 @@ parameters:
       type: string
 
   # Assay
-  AssayIds:
-    name: assayIds
+  AidFilter:
+    name: aidFilter
     description: "Filter by assay IDs"
     in: query
     type: array
@@ -165,17 +184,17 @@ parameters:
     required: false
     items:
       type: string
-  AssayEndpointIds:
-    name: assayEndpointIds
-    description: "Filter by assay IDs"
+  AeidFilter:
+    name: aeidFilter
+    description: "Filter by assay endpoint ID (most specific assay related ID)"
     in: query
     type: array
     collectionFormat: csv
     required: false
     items:
       type: string
-  StudyIds:
-    name: studyIds
+  AsidFilter:
+    name: asidFilter
     description: "Filter by study IDs"
     in: query
     type: array
@@ -184,11 +203,88 @@ parameters:
     items:
       type: string
 
-  # TODO assay aggregation filters
+  CellFormatFilter:
+    name: cellFormatFilter
+    description: "Filter by Cell Format"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  DetectionTechnologyTypeFilter:
+    name: detectionTechnologyTypeFilter
+    description: "Filter by detection technology type filter"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  IntendedTargetFamilyFilter:
+    name: intendedTargetFamilyFilter
+    description: "Filter by intended target family type"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  IntendedTargetTypeFilter:
+    name: intendedTargetTypeFilter
+    description: "Filter by intended target type"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  OrganismFilter:
+    name: organismFilter
+    description: "Filter by Organism"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  TechnologicalTargetTypeFilter:
+    name: technologicalTargetTypeFilter
+    description: "Filter by technological target type"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
+  TimepointHrFilter:
+    name: timepointHrFilter
+    description: "Filter by Timepoint Hr"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: number
+  TissueFilter:
+    name: TissueFilter
+    description: "Filter by Tissue"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: string
 
-  # Results
-  # TODO result filters
-  # TODO results aggregation filters
+  HitcFilter:
+    name: hitcFilter
+    description: "Filter by hitcall (1 = active, 0 = inactive, -1 = inconclusive)"
+    in: query
+    type: array
+    collectionFormat: csv
+    required: false
+    items:
+      type: integer
 
 definitions:
   Compounds:
@@ -257,6 +353,7 @@ definitions:
       structureMolWt:
         type: number
         description: "Molecular weight"
+        x-nullable: true
   Assays:
     type: object
     properties:
@@ -265,10 +362,29 @@ definitions:
         items:
           $ref: '#/definitions/Assay'
       aggregations:
-        $ref: '#/definitions/CompoundAggregations'
+        $ref: '#/definitions/AssayAggregations'
       total:
         type: integer
         description: "Total count of results with current filtering"
+  AssayAggregations:
+    type: object
+    properties:
+      cellFormat:
+        $ref: '#/definitions/Aggregation'
+      detectionTechnologyType:
+        $ref: '#/definitions/Aggregation'
+      intendedTargetFamily:
+        $ref: '#/definitions/Aggregation'
+      intendedTargetType:
+        $ref: '#/definitions/Aggregation'
+      organism:
+        $ref: '#/definitions/Aggregation'
+      technologicalTargetType:
+        $ref: '#/definitions/Aggregation'
+      timepointHr:
+        $ref: '#/definitions/NumericAggregation'
+      tissue:
+        $ref: '#/definitions/Aggregation'
   Assay:
     type: object
     properties:
@@ -299,130 +415,168 @@ definitions:
       assayDesc:
         type: string
         description: "Description of the assay"
+        x-nullable: true
       timepointHr:
         type: number
         description: "Duration length to conduct the test portion of the assay"
+        x-nullable: true
       organismId:
         type: integer
         description: "NCBI Taxonomy id of the organism"
         x-ontology: "http://purl.obolibrary.org/obo/OGG_0000000015"
+        x-nullable: true
       organism:
         type: string
         description: "Target organism"
+        x-nullable: true
       tissue:
         type: string
         description: "Organ-level, anatomical entity of the protein or cell used in the assay"
+        x-nullable: true
       cellFormat:
         type: string
         description: "Target cell format"
+        x-nullable: true
       cellFreeComponentSource:
         type: string
         description: "Cellular or sample tissue source of the assayed gene protein"
+        x-nullable: true
       cellShortName:
         type: string
         description: "Cell short name"
+        x-nullable: true
       cellGrowthMode:
         type: string
         description: "Cell growth mode"
+        x-nullable: true
       assayFootprint:
         type: string
         description: "Physical format, such as plate density, in which an assay is performed"
+        x-nullable: true
       assayFormatType:
         type: string
         description: "The conceptual biological and/or chemical features of the assay system"
+        x-nullable: true
       assayFormatTypeSub:
         type: string
         description: "Assay format subtype"
+        x-nullable: true
       contentReadoutType:
         type: string
         description: "Throughput and information content generated"
+        x-nullable: true
       dilutionSolvent:
         type: string
         description: "The solvent used as the negative control and to solubilize the test chemical"
+        x-nullable: true
       dilutionSolventPercentMax:
         type: number
         description: "Maximal amount of the dilution solvent tolerable for a particular assay"
+        x-nullable: true
       assayComponentName:
+        x-nullable: true
         type: string
         description: "Short name containing the assay and a component readout, e.g. BSK_3C_IL8"
       assayComponentDesc:
         type: string
         description: "Assay component description"
+        x-nullable: true
       assayComponentTargetDesc:
         type: string
         description: "Assay component target description"
+        x-nullable: true
       parameterReadoutType:
         type: string
         description: "Parameter readout type"
       assayDesignType:
         type: string
         description: "Assay design type"
+        x-nullable: true
       assayDesignTypeSub:
         type: string
         description: "Assay design subtype"
+        x-nullable: true
       biologicalProcessTarget:
         type: string
         description: "Biological process target"
+        x-nullable: true
       detectionTechnologyType:
         type: string
         description: "Detection technology type"
+        x-nullable: true
       detectionTechnologyTypeSub:
         type: string
         description: "Detection technology subtype"
+        x-nullable: true
       detectionTechnology:
         type: string
         description: "Detection technology"
+        x-nullable: true
       signalDirectionType:
         type: string
         description: "Signal direction type"
+        x-nullable: true
       keyAssayReagentType:
         type: string
         description: "Key assay reagent type"
+        x-nullable: true
       keyAssayReagent:
         type: string
         description: "Key assay reagent"
+        x-nullable: true
       technologicalTargetType:
         type: string
         description: "Measured chemical, molecular, cellular, or anatomical entity"
+        x-nullable: true
       technologicalTargetTypeSub:
         type: string
         description: "Measured chemical, molecular, cellular, or anatomical subtype"
+        x-nullable: true
       assayComponentEndpointName:
         type: string
         description: "Short name containing the assay, the component readout, and an analysis applied, e.g. BSK_3C_IL8_up"
       assayComponentEndpointDesc:
         type: string
         description: "Description of the assay endpoint"
+        x-nullable: true
       assayFunctionType:
         type: string
         description: "Assay function type"
+        x-nullable: true
       normalizedDataType:
         type: string
         description: "Normalized data type"
       analysisDirection:
         type: string
         description: "Analysis direction (used values: positive/negative)"
+        x-nullable: true
       burstAssay:
         type: boolean
         description: "Burst assay"
       keyPositiveControl:
         type: string
         description: "Key positive control"
+        x-nullable: true
       signalDirection:
         type: string
         description: "Signal direction (used values: loss/gain)"
+        x-nullable: true
       intendedTargetType:
         type: string
         description: "Objective chemical, molecular, cellular, pathway or anatomical entity"
+        x-nullable: true
       intendedTargetTypeSub:
         type: string
         description: "Objective chemical, molecular, cellular, pathway or anatomical entity"
+        x-nullable: true
       intendedTargetFamily:
         type: string
         description: "Target family of the objective target for the assay"
+        x-nullable: true
       intendedTargetFamilySub:
         type: string
         description: "Target family of the objective target for the assay"
+        x-nullable: true
       intendedTargetGeneId:
         type: array
         description: "List of target gene ids that are the objective"
@@ -572,16 +726,18 @@ definitions:
         type: array
         description: ""
         items:
-          type: object
-          properties:
-            arid:
-              type: integer
-            reagentNameValue:
-              type: string
-            reagentNameValueType:
-              type: string
-            cultureOrAssay:
-              type: string
+          $ref: '#/definitions/AssayReagent'
+  AssayReagent:
+    type: object
+    properties:
+      arid:
+        type: integer
+      reagentNameValue:
+        type: string
+      reagentNameValueType:
+        type: string
+      cultureOrAssay:
+        type: string
   Results:
     type: object
     properties:
@@ -591,70 +747,125 @@ definitions:
         items:
           $ref: '#/definitions/Result'
       aggregations:
-        $ref: '#/definitions/CompoundAggregations'
+        $ref: '#/definitions/ResultAggregations'
       total:
         type: integer
         description: "Total count of results with current filtering"
+  ResultAggregations:
+    type: object
+    properties:
+      compound.clib:
+        $ref: '#/definitions/Aggregation'
+      compound.dssToxQCLevel:
+        $ref: '#/definitions/Aggregation'
+      compound.substanceType:
+        $ref: '#/definitions/Aggregation'
+      assay.cellFormat:
+        $ref: '#/definitions/Aggregation'
+      assay.detectionTechnologyType:
+        $ref: '#/definitions/Aggregation'
+      assay.intendedTargetFamily:
+        $ref: '#/definitions/Aggregation'
+      assay.intendedTargetType:
+        $ref: '#/definitions/Aggregation'
+      assay.organism:
+        $ref: '#/definitions/Aggregation'
+      assay.technologicalTargetType:
+        $ref: '#/definitions/Aggregation'
+      assay.timepointHr:
+       $ref: '#/definitions/NumericAggregation'
+      assay.tissue:
+        $ref: '#/definitions/Aggregation'
+      result.hitc:
+       $ref: '#/definitions/NumericAggregation'
   Result:
+    type: object
+    properties:
+      assay:
+        $ref: '#/definitions/Assay'
+      compound:
+        $ref: '#/definitions/Compound'
+      result:
+        $ref: '#/definitions/InnerResult'
+  InnerResult:
     type: object
     properties:
       fitc:
         type: integer
         description: "fit category"
+        x-nullable: true
       hitc:
         type: integer
         description: "Activity or hit call, 1 indicates active"
+        x-nullable: true
       logcMax:
         type: number
         description: "Level 4 id (from database) for the selected sample"
+        x-nullable: true
       logcMin:
         type: number
         description: "Log base 10 of the maximum concentration tested"
+        x-nullable: true
       m4id:
         type: integer
         description: "Log base 10 of the minimum concentration tested"
+        x-nullable: true
       maxMean:
         type: number
         description: "Maximum of the means at each concentration"
+        x-nullable: true
       maxMed:
         type: number
         description: "Maximum of the medians at each concentration"
+        x-nullable: true
       modl:
         type: string
         description: "Activity concentration at 10% of the modeled top value (AC10)"
+        x-nullable: true
       modlAc10:
         type: number
         description: "Activity concentration at 10% of the modeled top value (AC10)"
+        x-nullable: true
       modlAcb:
         type: number
         description: "Activity concentration at baseline"
+        x-nullable: true
       modlAcc:
         type: number
         description: "Activity concentration at cutoff"
+        x-nullable: true
       modlGa:
         type: number
         description: "Gain AC50"
+        x-nullable: true
       modlGw:
         type: number
         description: "Gain hill coefficient"
+        x-nullable: true
       modlLa:
         type: number
         description: "Loss AC50"
+        x-nullable: true
       modlLw:
         type: number
         description: "Loss hill coefficient"
+        x-nullable: true
       modlRmse:
         type: number
         description: "Root mean square error (RMSE)"
+        x-nullable: true
       modlTp:
         type: number
         description: "Modeled top of the curve"
+        x-nullable: true
       oldstyleAc50:
         type: number
         description: ""
+        x-nullable: true
       oldstyleNegLogAc50:
         type: number
         description: ""
+        x-nullable: true
       spid:
         type: string
         description: "Sample id for the selected sample"
@@ -664,6 +875,7 @@ definitions:
       zscore:
         type: number
         description: "Zscore of AC50 values based on the chemical specific cytotoxicity distribution file"
+        x-nullable: true
   CompoundAggregations:
     type: object
     properties:
@@ -686,14 +898,39 @@ definitions:
         type: array
         description: "Aggregation values (buckets) and correspondig item counts"
         items:
-          type: object
-          properties:
-            key:
-              type: string
-              description: "Value to display to the user and use for filtering"
-            doc_count:
-              type: integer
-              description: "Number of items if the current view is filtered by this additional value"
+          $ref: '#/definitions/AggregationBucket'
+  AggregationBucket:
+    type: object
+    properties:
+      key:
+        type: string
+        description: "Value to display to the user and use for filtering"
+      doc_count:
+        type: integer
+        description: "Number of items if the current view is filtered by this additional value"
+  NumericAggregation:
+    type: object
+    properties:
+      name:
+        type: string
+        description: "Aggregation name"
+      filterTerm:
+        type: string
+        description: "Term used to filter the results"
+      buckets:
+        type: array
+        description: "Aggregation values (buckets) and correspondig item counts"
+        items:
+          $ref: '#/definitions/NumericAggregationBucket'
+  NumericAggregationBucket:
+    type: object
+    properties:
+      key:
+        type: number
+        description: "Value to display to the user and use for filtering"
+      doc_count:
+        type: integer
+        description: "Number of items if the current view is filtered by this additional value"
 
   Error:
     type: object
