@@ -326,6 +326,10 @@ definitions:
   Compound:
     type: object
     properties:
+      __id__:
+        type: string
+        title: "Compound ID"
+        description: "Compound unique identifier"
       chid:
         type: integer
         description: "Internal identifier of compounds within Toxcast"
@@ -358,7 +362,7 @@ definitions:
         description: "Substance type (e.g. single compound, mixture, ...)"
       substanceNote:
         type: string
-        description: ""
+        description: "Substance note"
       structureSMILES:
         type: string
         description: "Smiles of the compound (source is the offical DSSTox translation file)"
@@ -412,6 +416,10 @@ definitions:
   Assay:
     type: object
     properties:
+      __id__:
+        type: string
+        title: "Assay ID"
+        description: "Assay unique identifier"
       aid:
         type: integer
         description: "Assay id"
@@ -805,6 +813,10 @@ definitions:
   Result:
     type: object
     properties:
+      __id__:
+        type: string
+        title: "Result ID"
+        description: "Result unique identifier"
       assay:
         $ref: '#/definitions/Assay'
       compound:
@@ -814,6 +826,10 @@ definitions:
   InnerResult:
     type: object
     properties:
+      __id__:
+        type: string
+        title: "Result ID"
+        description: "Result unique identifier"
       fitc:
         type: integer
         description: "fit category"
