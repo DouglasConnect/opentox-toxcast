@@ -1003,6 +1003,7 @@ definitions:
       spid:
         type: "string"
         description: "Sample id for the selected sample"
+        x-nullable: true
       tested:
         type: "boolean"
         description: "Whether the chemical was tested, 1 indicates tested"
