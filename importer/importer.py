@@ -92,7 +92,7 @@ class ToxCastParser(object):
             start_at_row=self.schema['compounds'].get('startAtRow')
         )
         for compound in parser.parse(self.abspath(self.schema['compounds']['file'])):
-            compound['__id__'] = compound['chid']
+            compound['__id__'] = str(compound['chid'])
             yield compound
 
     def parse_assays(self):
@@ -108,7 +108,7 @@ class ToxCastParser(object):
                 to_field='reagent',
                 subfields=('arid', 'reagentNameValue', 'reagentNameValueType', 'cultureOrAssay'),
             )
-            assay['__id__'] = assay['aeid']
+            assay['__id__'] = str(assay['aeid'])
             yield assay
 
     def parse_results(self):
