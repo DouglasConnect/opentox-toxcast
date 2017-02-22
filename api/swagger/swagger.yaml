@@ -412,58 +412,74 @@ definitions:
       chid:
         type: "integer"
         description: "Internal identifier of compounds within Toxcast"
+        title: "Chemical ID"
       chnm:
         type: "string"
         description: "Chemical name (as stored in ToxCast)"
+        title: "Chemical name"
       casn:
         type: "string"
         description: "CAS Number as stored in Toxcast. Can be empty string if no valid\
           \ CAS number is stored in ToxCast."
+        title: "CAS number"
         x-ontology: "http://edamontology.org/data_3102"
       code:
         type: "string"
-        description: ""
+        description: "Code"
+        title: "Code"
       clib:
         type: "array"
+        description: "Clib"
+        title: "Clib"
         items:
           type: "string"
           description: ""
       dssToxSubstanceId:
         type: "string"
         description: "DSSTox Substance ID"
+        title: "DSSTox substance ID"
       dssToxStructureId:
         type: "string"
         description: "DSSTox Structure ID"
+        title: "DSSTox Structure ID"
       dssToxQCLevel:
         type: "string"
         description: "DSSTox Quality Control level"
+        title: "DSSTox Quality Control level"
       substanceType:
         type: "string"
         description: "Substance type (e.g. single compound, mixture, ...)"
+        title: "Substance type"
       substanceNote:
         type: "string"
         description: "Substance note"
+        title: "Substance note"
       structureSMILES:
         type: "string"
         description: "Smiles of the compound (source is the offical DSSTox translation\
           \ file)"
+        title: "SMILES"
         x-ontology: "http://edamontology.org/format_1196"
       structureInChI:
         type: "string"
         description: "InChI of the compound (source is the offical DSSTox translation\
           \ file)"
+        title: "InChI"
         x-ontology: "http://edamontology.org/format_1197"
       structureInChIKey:
         type: "string"
         description: "InChIKey of the compound (source is the offical DSSTox translation\
           \ file)"
+        title: "InChIKey"
         x-ontology: "http://edamontology.org/format_1199"
       structureFormula:
         type: "string"
         description: "Chemical structure formula"
+        title: "Chemical formula"
       structureMolWt:
         type: "number"
         description: "Molecular weight"
+        title: "Molecular weight"
         x-nullable: true
   Assays:
     type: "object"
@@ -506,351 +522,431 @@ definitions:
       aid:
         type: "integer"
         description: "Assay id"
+        title: "Assay ID"
       acid:
         type: "integer"
         description: "Assay component id"
+        title: "Assay component ID"
       aeid:
         type: "integer"
         description: "Assay endpoint id"
+        title: "Assay endpoint ID"
       asid:
         type: "integer"
         description: ""
+        title: "ASID"
       assaySourceName:
         type: "string"
         description: "Short name for the entity that conducted the assay"
+        title: "Assay source name"
       assaySourceLongName:
         type: "string"
         description: "Long name for the entity that conducted the assay"
+        title: "Assay source long name"
       assaySourceDesc:
         type: "string"
         description: "Description of the organization that performed the assay"
+        title: "Assay source desc."
       assayName:
         type: "string"
         description: "Short name for the assay, e.g. BSK_3C"
+        title: "Assay name"
       assayDesc:
         type: "string"
         description: "Description of the assay"
+        title: "Assay desc."
         x-nullable: true
       timepointHr:
         type: "number"
         description: "Duration length to conduct the test portion of the assay"
+        title: "Timepoint Hr"
         x-nullable: true
       organismId:
         type: "integer"
         description: "NCBI Taxonomy id of the organism"
+        title: "Organism ID"
         x-ontology: "http://purl.obolibrary.org/obo/OGG_0000000015"
         x-nullable: true
       organism:
         type: "string"
         description: "Target organism"
+        title: "Organism"
         x-nullable: true
       tissue:
         type: "string"
         description: "Organ-level, anatomical entity of the protein or cell used in\
           \ the assay"
+        title: "Tissue"
         x-nullable: true
       cellFormat:
         type: "string"
         description: "Target cell format"
+        title: "Cell format"
         x-nullable: true
       cellFreeComponentSource:
         type: "string"
         description: "Cellular or sample tissue source of the assayed gene protein"
+        title: "Cell free component source"
         x-nullable: true
       cellShortName:
         type: "string"
         description: "Cell short name"
+        title: "Cell short name"
         x-nullable: true
       cellGrowthMode:
         type: "string"
         description: "Cell growth mode"
+        title: "Cell growth mode"
         x-nullable: true
       assayFootprint:
         type: "string"
         description: "Physical format, such as plate density, in which an assay is\
           \ performed"
+        title: "Assay footprint"
         x-nullable: true
       assayFormatType:
         type: "string"
         description: "The conceptual biological and/or chemical features of the assay\
           \ system"
+        title: "Assay format type"
         x-nullable: true
       assayFormatTypeSub:
         type: "string"
         description: "Assay format subtype"
+        title: "Assay format subtype"
         x-nullable: true
       contentReadoutType:
         type: "string"
         description: "Throughput and information content generated"
+        title: "Content readout type"
         x-nullable: true
       dilutionSolvent:
         type: "string"
         description: "The solvent used as the negative control and to solubilize the\
           \ test chemical"
+        title: "Dilution solvent"
         x-nullable: true
       dilutionSolventPercentMax:
         type: "number"
         description: "Maximal amount of the dilution solvent tolerable for a particular\
           \ assay"
+        title: "Dilution solvent percent Max"
         x-nullable: true
       assayComponentName:
         type: "string"
         description: "Short name containing the assay and a component readout, e.g.\
           \ BSK_3C_IL8"
+        title: "Assay component name"
         x-nullable: true
       assayComponentDesc:
         type: "string"
         description: "Assay component description"
+        title: "Assay component desc."
         x-nullable: true
       assayComponentTargetDesc:
         type: "string"
         description: "Assay component target description"
+        title: "Assay component target desc."
         x-nullable: true
       parameterReadoutType:
         type: "string"
         description: "Parameter readout type"
+        title: "Parameter readout type"
       assayDesignType:
         type: "string"
         description: "Assay design type"
+        title: "Assay design type"
         x-nullable: true
       assayDesignTypeSub:
         type: "string"
         description: "Assay design subtype"
+        title: "Assay design subtype"
         x-nullable: true
       biologicalProcessTarget:
         type: "string"
         description: "Biological process target"
+        title: "Biological process target"
         x-nullable: true
       detectionTechnologyType:
         type: "string"
         description: "Detection technology type"
+        title: "Detection technology type"
         x-nullable: true
       detectionTechnologyTypeSub:
         type: "string"
         description: "Detection technology subtype"
+        title: "Detection technology subtype"
         x-nullable: true
       detectionTechnology:
         type: "string"
         description: "Detection technology"
+        title: "Detection technology"
         x-nullable: true
       signalDirectionType:
         type: "string"
         description: "Signal direction type"
+        title: "Signal direction type"
         x-nullable: true
       keyAssayReagentType:
         type: "string"
         description: "Key assay reagent type"
+        title: "Key assay reagent type"
         x-nullable: true
       keyAssayReagent:
         type: "string"
         description: "Key assay reagent"
+        title: "Key assay reagent"
         x-nullable: true
       technologicalTargetType:
         type: "string"
         description: "Measured chemical, molecular, cellular, or anatomical entity"
+        title: "Technological target type"
         x-nullable: true
       technologicalTargetTypeSub:
         type: "string"
         description: "Measured chemical, molecular, cellular, or anatomical subtype"
+        title: "Technological target subtype"
         x-nullable: true
       assayComponentEndpointName:
         type: "string"
         description: "Short name containing the assay, the component readout, and\
           \ an analysis applied, e.g. BSK_3C_IL8_up"
+        title: "Assay component endpoint name"
       assayComponentEndpointDesc:
         type: "string"
         description: "Description of the assay endpoint"
+        title: "Assay component rndpoint desc."
         x-nullable: true
       assayFunctionType:
         type: "string"
         description: "Assay function type"
+        title: "Assay function type"
         x-nullable: true
       normalizedDataType:
         type: "string"
         description: "Normalized data type"
+        title: "Normalized data type"
       analysisDirection:
         type: "string"
         description: "Analysis direction (used values: positive/negative)"
+        title: "Analysis direction"
         x-nullable: true
       burstAssay:
         type: "boolean"
         description: "Burst assay"
+        title: "Burst assay"
       keyPositiveControl:
         type: "string"
         description: "Key positive control"
+        title: "Key positive control"
         x-nullable: true
       signalDirection:
         type: "string"
         description: "Signal direction (used values: loss/gain)"
+        title: "Signal direction"
         x-nullable: true
       intendedTargetType:
         type: "string"
         description: "Objective chemical, molecular, cellular, pathway or anatomical\
           \ entity"
+        title: "Intended target type"
         x-nullable: true
       intendedTargetTypeSub:
         type: "string"
         description: "Objective chemical, molecular, cellular, pathway or anatomical\
           \ entity"
+        title: "Intended target subtype"
         x-nullable: true
       intendedTargetFamily:
         type: "string"
         description: "Target family of the objective target for the assay"
+        title: "Intended target family"
         x-nullable: true
       intendedTargetFamilySub:
         type: "string"
-        description: "Target family of the objective target for the assay"
+        description: "Target sub-family of the objective target for the assay"
+        title: "Intended target sub-family"
         x-nullable: true
       intendedTargetGeneId:
         type: "array"
         description: "List of target gene ids that are the objective"
+        title: "Intended target gene ID"
         items:
           type: "integer"
       intendedTargetEntrezGeneId:
         type: "array"
         description: "List of target gene ids that are the objective (NCBI Entrez\
           \ gene id)"
+        title: "Intended target Entrez gene ID"
         items:
           type: "integer"
       intendedTargetOfficialFullName:
         type: "array"
         description: "List of objective target offical full names"
+        title: "Intended target official full name"
         items:
           type: "string"
       intendedTargetGeneName:
         type: "array"
         description: "List of objective target gene names"
+        title: "Intended target gene name"
         items:
           type: "string"
       intendedTargetOfficialSymbol:
         type: "array"
         description: "List of objective target offical symbols"
+        title: "Intended target official symbol"
         items:
           type: "string"
       intendedTargetGeneSymbol:
         type: "array"
         description: "List of objective target symbols"
+        title: "Intended target gene symbol"
         items:
           type: "string"
       intendedTargetDescription:
         type: "array"
         description: "Objective target description"
+        title: "Intended target desc."
         items:
           type: "string"
       intendedTargetUniprotAccessionNumber:
         type: "array"
         description: "Objective target uniprot accesscion number"
+        title: "Intended target uniprot accession number"
         items:
           type: "string"
       intendedTargetOrganismId:
         type: "array"
         description: "Intended target organism id"
+        title: "Intended target organism ID"
         items:
           type: "integer"
       intendedTargetTrackStatus:
         type: "array"
         description: "Objective target track status (used values: live)"
+        title: "Intended target track status"
         items:
           type: "string"
       technologicalTargetGeneId:
         type: "array"
         description: "Measured molecular target gene id"
+        title: "Technological target gene ID"
         items:
           type: "integer"
       technologicalTargetEntrezGeneId:
         type: "array"
         description: "List of measured molecular target gene ids (NCBI Entrez gene\
           \ id)"
+        title: "Technological target Entrez gene ID"
         items:
           type: "integer"
       technologicalTargetOfficialFullName:
         type: "array"
         description: "List of measured molecular target offical full names"
+        title: "Technological target official full name"
         items:
           type: "string"
       technologicalTargetGeneName:
         type: "array"
         description: "List of technolmeasured molecularogical target gene names"
+        title: "Technological target gene name"
         items:
           type: "string"
       technologicalTargetOfficialSymbol:
         type: "array"
         description: "List of measured molecular target offical symbols"
+        title: "Technological target official symbol"
         items:
           type: "string"
       technologicalTargetGeneSymbol:
         type: "array"
         description: "List of measured molecular target symbols"
+        title: "Technological target gene symbol"
         items:
           type: "string"
       technologicalTargetDescription:
         type: "array"
         description: "Measured molecular target description"
+        title: "Technological target description"
         items:
           type: "string"
       technologicalTargetUniprotAccessionNumber:
         type: "array"
         description: "Measured molecular target uniprot accesscion number"
+        title: "Technological target uniprot accession number"
         items:
           type: "string"
       technologicalTargetOrganismId:
         type: "array"
         description: "Measured molecular target organism id"
+        title: "Technological target organism ID"
         items:
           type: "integer"
       technologicalTargetTrackStatus:
         type: "array"
         description: "Measured molecular target track status (used values: live)"
+        title: "Technological target track status"
         items:
           type: "string"
       citationsCitationId:
         type: "array"
         description: "List of citation ids"
+        title: "Citation IDs"
         items:
           type: "integer"
       citationsPmid:
         type: "array"
         description: "List of PubMed citation ids"
+        title: "PubMed citation IDs"
         items:
           type: "integer"
       citationsDoi:
         type: "array"
         description: "List of citation digital object identifiers"
+        title: "Citation DOIs"
         items:
           type: "string"
       citationsOtherSource:
         type: "array"
         description: "List of other source citations"
+        title: "Other source citations"
         items:
           type: "string"
       citationsOtherId:
         type: "array"
         description: "Listf of other source citations ids"
+        title: "Other source citation IDs"
         items:
           type: "string"
       citationsCitation:
         type: "array"
         description: "List of citation texts"
+        title: "Citation texts"
         items:
           type: "string"
       citationsTitle:
         type: "array"
         description: "List of citation titles"
+        title: "Citation titles"
         items:
           type: "string"
       citationsAuthor:
         type: "array"
         description: "List of citation authors"
+        title: "Citation authors"
         items:
           type: "string"
       citationsUrl:
         type: "array"
         description: "List of citation URLs"
+        title: "Citation URLs"
         items:
           type: "string"
       reagent:
         type: "array"
         description: ""
+        title: "Reagent"
         items:
           $ref: "#/definitions/AssayReagent"
   AssayReagent:
@@ -926,91 +1022,113 @@ definitions:
         title: "Result ID"
       fitc:
         type: "integer"
-        description: "fit category"
+        description: "Fit category"
+        title: "Fit category"
         x-nullable: true
       hitc:
         type: "integer"
         description: "Activity or hit call, 1 indicates active"
+        title: "Hit call"
         x-nullable: true
       logcMax:
         type: "number"
         description: "Level 4 id (from database) for the selected sample"
+        title: "logcMax"
         x-nullable: true
       logcMin:
         type: "number"
         description: "Log base 10 of the maximum concentration tested"
+        title: "logcMin"
         x-nullable: true
       m4id:
         type: "integer"
         description: "Log base 10 of the minimum concentration tested"
+        title: "m4id"
         x-nullable: true
       maxMean:
         type: "number"
         description: "Maximum of the means at each concentration"
+        title: "maxMean"
         x-nullable: true
       maxMed:
         type: "number"
         description: "Maximum of the medians at each concentration"
+        title: "maxMed"
         x-nullable: true
       modl:
         type: "string"
         description: "Activity concentration at 10% of the modeled top value (AC10)"
+        title: "modl"
         x-nullable: true
       modlAc10:
         type: "number"
         description: "Activity concentration at 10% of the modeled top value (AC10)"
+        title: "modlAc10"
         x-nullable: true
       modlAcb:
         type: "number"
         description: "Activity concentration at baseline"
+        title: "modlAcb"
         x-nullable: true
       modlAcc:
         type: "number"
         description: "Activity concentration at cutoff"
+        title: "modlAcc"
         x-nullable: true
       modlGa:
         type: "number"
         description: "Gain AC50"
+        title: "Gain AC50"
         x-nullable: true
       modlGw:
         type: "number"
         description: "Gain hill coefficient"
+        title: "modlGw"
         x-nullable: true
       modlLa:
         type: "number"
         description: "Loss AC50"
+        title: "Loss AC50"
         x-nullable: true
       modlLw:
         type: "number"
         description: "Loss hill coefficient"
+        title: "modlLw"
         x-nullable: true
       modlRmse:
         type: "number"
         description: "Root mean square error (RMSE)"
+        title: "modlRmse"
         x-nullable: true
       modlTp:
         type: "number"
         description: "Modeled top of the curve"
+        title: "modlTp"
         x-nullable: true
       oldstyleAc50:
         type: "number"
-        description: ""
+        description: "oldstyleAc50"
+        title: "oldstyleAc50"
         x-nullable: true
       oldstyleNegLogAc50:
         type: "number"
-        description: ""
+        description: "oldstyleNegLogAc50"
+        title: "oldstyleNegLogAc50"
         x-nullable: true
       spid:
         type: "string"
-        description: "Sample id for the selected sample"
+        description: "Sample ID for the selected sample"
+        title: "Sample ID"
         x-nullable: true
       tested:
         type: "boolean"
         description: "Whether the chemical was tested, 1 indicates tested"
+        title: "Tested"
       zscore:
         type: "number"
         description: "Zscore of AC50 values based on the chemical specific cytotoxicity\
           \ distribution file"
+        title: "Zscore"
         x-nullable: true
   CompoundAggregations:
     type: "object"
