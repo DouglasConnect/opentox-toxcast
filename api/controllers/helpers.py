@@ -73,8 +73,8 @@ def offset_and_limit(query, offset=None, limit=None):
     return query[offset:limit + offset]
 
 
-def term_aggregation(field, min_doc_count=0, size=AGGREGATION_SIZE_LIMIT):
-    return A('terms', field=field, min_doc_count=min_doc_count, size=size)
+def term_aggregation(field, min_doc_count=0, size=AGGREGATION_SIZE_LIMIT, order=None):
+    return A('terms', field=field, min_doc_count=min_doc_count, size=size, order=order and order or {'_term': 'asc'})
 
 
 def filtered_aggregation(flter, aggregation):
