@@ -462,7 +462,7 @@ definitions:
         description: "Long name for the entity that conducted the assay"
       assaySourceDesc:
         type: string
-        title: "Assay source desc."
+        title: "Assay source description"
         description: "Description of the organization that performed the assay"
       assayName:
         type: string
@@ -470,7 +470,7 @@ definitions:
         description: "Short name for the assay, e.g. BSK_3C"
       assayDesc:
         type: string
-        title: "Assay desc."
+        title: "Assay description"
         description: "Description of the assay"
         x-nullable: true
       timepointHr:
@@ -551,12 +551,12 @@ definitions:
         x-nullable: true
       assayComponentDesc:
         type: string
-        title: "Assay component desc."
+        title: "Assay component description"
         description: "Assay component description"
         x-nullable: true
       assayComponentTargetDesc:
         type: string
-        title: "Assay component target desc."
+        title: "Assay component target description"
         description: "Assay component target description"
         x-nullable: true
       parameterReadoutType:
@@ -624,7 +624,7 @@ definitions:
         description: "Short name containing the assay, the component readout, and an analysis applied, e.g. BSK_3C_IL8_up"
       assayComponentEndpointDesc:
         type: string
-        title: "Assay component rndpoint desc."
+        title: "Assay component endpoint description"
         description: "Description of the assay endpoint"
         x-nullable: true
       assayFunctionType:
@@ -713,7 +713,7 @@ definitions:
           type: string
       intendedTargetDescription:
         type: array
-        title: "Intended target desc."
+        title: "Intended target description"
         description: "Objective target description"
         items:
           type: string

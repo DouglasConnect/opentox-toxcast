@@ -546,7 +546,7 @@ definitions:
       assaySourceDesc:
         type: "string"
         description: "Description of the organization that performed the assay"
-        title: "Assay source desc."
+        title: "Assay source description"
       assayName:
         type: "string"
         description: "Short name for the assay, e.g. BSK_3C"
@@ -554,7 +554,7 @@ definitions:
       assayDesc:
         type: "string"
         description: "Description of the assay"
-        title: "Assay desc."
+        title: "Assay description"
         x-nullable: true
       timepointHr:
         type: "number"
@@ -641,12 +641,12 @@ definitions:
       assayComponentDesc:
         type: "string"
         description: "Assay component description"
-        title: "Assay component desc."
+        title: "Assay component description"
         x-nullable: true
       assayComponentTargetDesc:
         type: "string"
         description: "Assay component target description"
-        title: "Assay component target desc."
+        title: "Assay component target description"
         x-nullable: true
       parameterReadoutType:
         type: "string"
@@ -715,7 +715,7 @@ definitions:
       assayComponentEndpointDesc:
         type: "string"
         description: "Description of the assay endpoint"
-        title: "Assay component rndpoint desc."
+        title: "Assay component endpoint description"
         x-nullable: true
       assayFunctionType:
         type: "string"
@@ -807,7 +807,7 @@ definitions:
       intendedTargetDescription:
         type: "array"
         description: "Objective target description"
-        title: "Intended target desc."
+        title: "Intended target description"
         items:
           type: "string"
       intendedTargetUniprotAccessionNumber:
