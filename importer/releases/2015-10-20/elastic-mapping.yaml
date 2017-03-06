@@ -6,7 +6,7 @@ mappings:
 
   compound: &compound
     properties:
-      __id__:
+      _id_:
         type: string
         index: not_analyzed
       chid:
@@ -62,7 +62,7 @@ mappings:
 
   assay: &assay
     properties:
-      __id__:
+      _id_:
         type: string
         index: not_analyzed
       aid:
@@ -264,14 +264,14 @@ mappings:
 
   result:
     properties:
-      __id__:
+      _id_:
         type: string
         index: not_analyzed
       assay: *assay
       compound: *compound
       result:
         properties:
-          __id__:
+          _id_:
             type: string
             index: not_analyzed
           fitc:

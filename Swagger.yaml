@@ -326,7 +326,7 @@ definitions:
   Compound:
     type: object
     properties:
-      __id__:
+      _id_:
         type: string
         title: "Compound ID"
         description: "Compound unique identifier"
@@ -432,7 +432,7 @@ definitions:
   Assay:
     type: object
     properties:
-      __id__:
+      _id_:
         type: string
         title: "Assay ID"
         description: "Assay unique identifier"
@@ -909,7 +909,7 @@ definitions:
   Result:
     type: object
     properties:
-      __id__:
+      _id_:
         type: string
         title: "Result ID"
         description: "Result unique identifier"
@@ -922,7 +922,7 @@ definitions:
   InnerResult:
     type: object
     properties:
-      __id__:
+      _id_:
         type: string
         title: "Result ID"
         description: "Result unique identifier"

@@ -405,7 +405,7 @@ definitions:
   Compound:
     type: "object"
     properties:
-      __id__:
+      _id_:
         type: "string"
         description: "Compound unique identifier"
         title: "Compound ID"
@@ -444,8 +444,8 @@ definitions:
         title: "DSSTox Structure ID"
       dssToxQCLevel:
         type: "string"
-        description: "DSSTox QC level"
-        title: "DSSTox Quality Control level"
+        description: "DSSTox Quality Control level"
+        title: "DSSTox QC level"
       substanceType:
         type: "string"
         description: "Substance type (e.g. single compound, mixture, ...)"
@@ -515,7 +515,7 @@ definitions:
   Assay:
     type: "object"
     properties:
-      __id__:
+      _id_:
         type: "string"
         description: "Assay unique identifier"
         title: "Assay ID"
@@ -1003,7 +1003,7 @@ definitions:
   Result:
     type: "object"
     properties:
-      __id__:
+      _id_:
         type: "string"
         description: "Result unique identifier"
         title: "Result ID"
@@ -1016,7 +1016,7 @@ definitions:
   InnerResult:
     type: "object"
     properties:
-      __id__:
+      _id_:
         type: "string"
         description: "Result unique identifier"
         title: "Result ID"

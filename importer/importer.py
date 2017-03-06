@@ -92,7 +92,7 @@ class ToxCastParser(object):
             start_at_row=self.schema['compounds'].get('startAtRow')
         )
         for compound in parser.parse(self.abspath(self.schema['compounds']['file'])):
-            compound['__id__'] = str(compound['chid'])
+            compound['_id_'] = str(compound['chid'])
             yield compound
 
     def parse_assays(self):
@@ -108,7 +108,7 @@ class ToxCastParser(object):
                 to_field='reagent',
                 subfields=('arid', 'reagentNameValue', 'reagentNameValueType', 'cultureOrAssay'),
             )
-            assay['__id__'] = str(assay['aeid'])
+            assay['_id_'] = str(assay['aeid'])
             yield assay
 
     def parse_results(self):
@@ -180,7 +180,7 @@ def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host,
     bulk(es, ({
         '_index': index,
         '_type': 'compound',
-        '_id': compound['__id__'],
+        '_id': compound['_id_'],
         '_source': compound
     } for compound in compound_cache.values()))
 
@@ -193,7 +193,7 @@ def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host,
     bulk(es, ({
         '_index': index,
         '_type': 'assay',
-        '_id': assay['__id__'],
+        '_id': assay['_id_'],
         '_source': assay
     } for assay in assay_cache.values()))
 
@@ -201,14 +201,14 @@ def import_to_elastic(es, index, dirname, parser_schema, chemid_conversion_host,
     logger.info('Parsing and indexing results')
 
     def build_result(result, compound_cache, assay_cache):
-        result_id = '%s-%s' % (assay_cache[result['assay']]['__id__'], compound_cache[result['compound']]['__id__'])
-        result['result']['__id__'] = result_id
+        result_id = '%s-%s' % (assay_cache[result['assay']]['_id_'], compound_cache[result['compound']]['_id_'])
+        result['result']['_id_'] = result_id
         return {
             '_index': index,
             '_type': 'result',
             '_id': result_id,
             '_source': {
-                '__id__': result_id,
+                '_id_': result_id,
                 'compound': compound_cache[result['compound']],
                 'assay': assay_cache[result['assay']],
                 'result': result['result']
