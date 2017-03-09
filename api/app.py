@@ -14,6 +14,11 @@ from docopt import docopt
 from flask_cors import CORS
 from flask import redirect
 
+# Patch yaml loader to preserve key order
+import yaml
+import ruamel.yaml
+yaml.load = lambda stream, Loader: ruamel.yaml.load(stream, Loader=ruamel.yaml.RoundTripLoader)
+
 if __name__ == '__main__':
     args = docopt(__doc__)
     app = connexion.App(__name__, specification_dir='./swagger/')
