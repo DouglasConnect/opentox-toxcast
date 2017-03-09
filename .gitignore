@@ -4,6 +4,7 @@
 *.pyc
 __pycache__
 
+/venv/
 /var/virtualenv/
 /*/var/virtualenv/
 tests/venv/
