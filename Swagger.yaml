@@ -12,7 +12,7 @@ info:
 # service domain - in our use-case somewhat nonsensical but mandatory
 host: toxcast-api.cloud.douglasconnect.com
 schemes:
-  - http
+  - https
 basePath: /beta
 produces:
   - application/json

@@ -14,7 +14,7 @@ info:
 host: "toxcast-api.cloud.douglasconnect.com"
 basePath: "/beta"
 schemes:
-- "http"
+- "https"
 produces:
 - "application/json"
 paths:
